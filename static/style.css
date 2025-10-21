@@ -1,0 +1,352 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #4CAF50;
+    --header-height: 60px;
+    --footer-height: 60px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: var(--header-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.logo i {
+    margin-right: 10px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #666;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--primary-color);
+    background-color: #f0f0f0;
+}
+
+.language-selector {
+    position: relative;
+    margin-left: 20px;
+}
+
+.lang-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+}
+
+.lang-btn:hover {
+    color: var(--primary-color);
+}
+
+.language-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 5px 0;
+    min-width: 120px;
+}
+
+.language-menu.show {
+    display: block;
+}
+
+.language-menu a {
+    display: block;
+    padding: 8px 15px;
+    color: #666;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.language-menu a:hover,
+.language-menu a.active {
+    background-color: #f0f0f0;
+    color: var(--primary-color);
+}
+
+.footer {
+    background-color: white;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+    height: var(--footer-height);
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-info {
+    color: #666;
+}
+
+.footer-info i {
+    color: #ff4444;
+}
+
+.footer-links {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: var(--header-height) auto 0;
+    padding: 20px;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.upload-section, .schedule-section, .schedules-list {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+input[type="file"] {
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.schedule-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.file-select, .time-select {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+select, input[type="time"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.days-select {
+    margin-bottom: 15px;
+}
+
+.days-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.days-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#schedulesList {
+    margin-top: 15px;
+}
+
+.schedule-item {
+    background: #f8f8f8;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.schedule-item button {
+    background-color: #ff4444;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.schedule-item button:hover {
+    background-color: #cc0000;
+}
+
+.schedules-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.schedules-table th, .schedules-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+.schedules-table th {
+    background: #f7f7f7;
+    font-weight: 600;
+    color: #333;
+}
+.schedules-table tbody td:first-child {
+    font-weight: bold;
+    color: #222;
+}
+.schedules-table tbody {
+    background: #f5f7fa;
+}
+.schedules-table tbody tr:hover {
+    background: #f0f4fa;
+}
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3em 0.5em;
+    font-size: 1.1em;
+    color: #555;
+    transition: color 0.2s;
+    margin-right: 0.3em;
+}
+.action-btn:hover {
+    color: #2196F3;
+}
+.action-btn.delete {
+    color: #dc3545;
+}
+.action-btn.delete:hover {
+    color: #b71c1c;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 2rem 2.5rem;
+    min-width: 320px;
+    max-width: 90vw;
+    text-align: center;
+}
+.modal-box h3 {
+    margin-top: 0;
+    color: #dc3545;
+}
+.modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+.auth-button.delete {
+    background: #dc3545;
+    color: #fff;
+}
+.auth-button.delete:hover {
+    background: #b71c1c;
+}

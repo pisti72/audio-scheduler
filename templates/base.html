@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Scheduler</title>
+    <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-volume-up"></i>
+                <span>Audio Scheduler</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/" {% if request.endpoint == 'index' %}class="active"{% endif %}>{{ translations.navigation.dashboard }}</a>
+                <a href="/settings" {% if request.endpoint == 'settings' %}class="active"{% endif %}>{{ translations.navigation.settings }}</a>
+                <a href="https://github.com/pisti72/ivbela" target="_blank">{{ translations.navigation.github }}</a>
+                <a href="/logout" title="{{ translations.navigation.logout }}"><i class="fas fa-sign-out-alt"></i></a>
+                <div class="language-selector">
+                    <button onclick="toggleLanguageMenu()" class="lang-btn">
+                        <i class="fas fa-globe"></i>
+                        <span>{{ current_lang.upper() }}</span>
+                    </button>
+                    <div id="languageMenu" class="language-menu">
+                        <a href="#" onclick="changeLanguage('en')" {% if current_lang == 'en' %}class="active"{% endif %}>
+                            🇬🇧 English
+                        </a>
+                        <a href="#" onclick="changeLanguage('hu')" {% if current_lang == 'hu' %}class="active"{% endif %}>
+                            🇭🇺 Magyar
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    {% block content %}{% endblock %}
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <p>&copy; 2025 Audio Scheduler. Made with <i class="fas fa-heart"></i> by István Szalontai</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" title="Help"><i class="fas fa-question-circle"></i></a>
+                <a href="https://github.com/pisti72/ivbela" target="_blank" title="Source Code"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Pass translations to JavaScript -->
+    <script type="application/json" id="translations-data">
+        {{ js_translations|safe if js_translations }}
+    </script>
+    <script>
+        var translationsElement = document.getElementById('translations-data');
+        var appTranslations = translationsElement ? JSON.parse(translationsElement.textContent) : {};
+        var currentLang = "{{ current_lang }}";
+    </script>
+    <script src="/static/script.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

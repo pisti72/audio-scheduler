@@ -1,0 +1,158 @@
+{
+    "en": {
+        "title": "Audio Scheduler",
+        "login": {
+            "username": "Username",
+            "password": "Password",
+            "submit": "Login",
+            "error": {
+                "title": "Login Failed",
+                "message": "Invalid username or password",
+                "server_error": "An error occurred. Please try again",
+                "ok": "OK"
+            }
+        },
+        "navigation": {
+            "dashboard": "Dashboard",
+            "settings": "Settings",
+            "github": "GitHub",
+            "logout": "Logout"
+        },
+        "settings": {
+            "title": "Settings",
+            "new_username": "New Username",
+            "current_password": "Current Password",
+            "new_password": "New Password",
+            "confirm_password": "Confirm Password",
+            "save_button": "Save Changes",
+            "password_mismatch": "New passwords do not match",
+            "update_success": "Settings updated successfully",
+            "update_error": "Failed to update settings",
+            "server_error": "An error occurred. Please try again"
+        },
+        "upload": {
+            "title": "Upload Audio File",
+            "button": "Upload"
+        },
+        "schedule": {
+            "title": "Schedule Audio",
+            "select_file": "Select File",
+            "time": "Time",
+            "days": "Days",
+            "days_list": {
+                "monday": "Monday",
+                "tuesday": "Tuesday",
+                "wednesday": "Wednesday",
+                "thursday": "Thursday",
+                "friday": "Friday",
+                "saturday": "Saturday",
+                "sunday": "Sunday"
+            },
+            "add_button": "Add Schedule"
+        },
+        "current_schedules": {
+            "title": "Current Schedules",
+            "file": "File",
+            "time": "Time",
+            "days": "Days",
+            "next_run": "Next run",
+            "not_scheduled": "Not scheduled",
+            "delete": "Delete",
+            "action": "Action"
+        },
+        "modals": {
+            "delete": {
+                "title": "Confirm Delete",
+                "message": "Are you sure you want to delete this schedule?",
+                "confirm": "Delete",
+                "cancel": "Cancel"
+            },
+            "info": {
+                "title": "Info",
+                "ok": "OK"
+            }
+        },
+        "footer": {
+            "made_with": "Made with",
+            "by": "by"
+        }
+    },
+    "hu": {
+        "title": "Hangütemező",
+        "login": {
+            "username": "Felhasználónév",
+            "password": "Jelszó",
+            "submit": "Bejelentkezés",
+            "error": {
+                "title": "Bejelentkezés sikertelen",
+                "message": "Érvénytelen felhasználónév vagy jelszó",
+                "server_error": "Hiba történt. Kérjük, próbálja újra",
+                "ok": "OK"
+            }
+        },
+        "navigation": {
+            "dashboard": "Vezérlőpult",
+            "settings": "Beállítások",
+            "github": "GitHub",
+            "logout": "Kijelentkezés"
+        },
+        "settings": {
+            "title": "Beállítások",
+            "new_username": "Új felhasználónév",
+            "current_password": "Jelenlegi jelszó",
+            "new_password": "Új jelszó",
+            "confirm_password": "Jelszó megerősítése",
+            "save_button": "Módosítások mentése",
+            "password_mismatch": "Az új jelszavak nem egyeznek",
+            "update_success": "Beállítások sikeresen frissítve",
+            "update_error": "Nem sikerült frissíteni a beállításokat",
+            "server_error": "Hiba történt. Kérjük, próbálja újra"
+        },
+        "upload": {
+            "title": "Hangfájl feltöltése",
+            "button": "Feltöltés"
+        },
+        "schedule": {
+            "title": "Hangfájl ütemezése",
+            "select_file": "Fájl kiválasztása",
+            "time": "Időpont",
+            "days": "Napok",
+            "days_list": {
+                "monday": "Hétfő",
+                "tuesday": "Kedd",
+                "wednesday": "Szerda",
+                "thursday": "Csütörtök",
+                "friday": "Péntek",
+                "saturday": "Szombat",
+                "sunday": "Vasárnap"
+            },
+            "add_button": "Ütemezés hozzáadása"
+        },
+        "current_schedules": {
+            "title": "Jelenlegi ütemezések",
+            "file": "Fájl",
+            "time": "Időpont",
+            "days": "Napok",
+            "next_run": "Következő lejátszás",
+            "not_scheduled": "Nincs ütemezve",
+            "delete": "Törlés",
+            "action": "Művelet"
+        },
+        "modals": {
+            "delete": {
+                "title": "Törlés megerősítése",
+                "message": "Biztosan törölni szeretné ezt az ütemezést?",
+                "confirm": "Törlés",
+                "cancel": "Mégsem"
+            },
+            "info": {
+                "title": "Információ",
+                "ok": "OK"
+            }
+        },
+        "footer": {
+            "made_with": "Készítette",
+            "by": "által"
+        }
+    }
+}

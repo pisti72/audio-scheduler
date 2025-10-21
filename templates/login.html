@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h1><i class="fas fa-volume-up"></i> Audio Scheduler</h1>
+        <form id="loginForm" class="auth-form" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label for="username">{{ translations.login.username }}</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">{{ translations.login.password }}</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="auth-button">{{ translations.login.submit }}</button>
+        </form>
+    </div>
+</div>
+<!-- Custom Login Error Modal -->
+<div id="loginErrorModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>{{ translations.login.error.title }}</h3>
+        <p id="loginErrorMsg">{{ translations.login.error.message }}</p>
+        <div class="modal-actions">
+            <button id="closeLoginErrorBtn" class="auth-button">{{ translations.login.error.ok }}</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function showLoginErrorModal(message) {
+        document.getElementById('loginErrorMsg').textContent = message;
+        document.getElementById('loginErrorModal').style.display = 'flex';
+    }
+    function hideLoginErrorModal() {
+        document.getElementById('loginErrorModal').style.display = 'none';
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    }
+    document.getElementById('closeLoginErrorBtn').onclick = hideLoginErrorModal;
+
+    async function handleLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('loginError');
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            if (data.success) {
+                window.location.href = '/';
+            } else {
+                showLoginErrorModal(data.error || appTranslations.login.error.message);
+            }
+        } catch (error) {
+            showLoginErrorModal(appTranslations.login.error.server_error);
+        }
+        return false;
+    }
+</script>
+{% endblock %}

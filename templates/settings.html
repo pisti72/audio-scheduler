@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="settings-section">
+        <h2 class="settings-title">{{ translations.settings.title }}</h2>
+        <form id="settingsForm" class="settings-form" onsubmit="return handleSettingsUpdate(event)">
+            <div class="form-group">
+                <label for="newUsername">{{ translations.settings.new_username }}</label>
+                <input type="text" id="newUsername" name="newUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="currentPassword">{{ translations.settings.current_password }}</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">{{ translations.settings.new_password }}</label>
+                <input type="password" id="newPassword" name="newPassword">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">{{ translations.settings.confirm_password }}</label>
+                <input type="password" id="confirmPassword" name="confirmPassword">
+            </div>
+            <button type="submit" class="settings-button">{{ translations.settings.save_button }}</button>
+            <div id="settingsError" class="auth-error"></div>
+            <div id="settingsSuccess" style="color: green; text-align: center; margin-top: 1rem; display: none;"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    async function handleSettingsUpdate(event) {
+        event.preventDefault();
+        const newUsername = document.getElementById('newUsername').value;
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorDiv = document.getElementById('settingsError');
+        const successDiv = document.getElementById('settingsSuccess');
+        
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+
+        if (newPassword && newPassword !== confirmPassword) {
+            errorDiv.textContent = '{{ translations.settings.password_mismatch }}';
+            errorDiv.style.display = 'block';
+            return false;
+        }
+
+        try {
+            const response = await fetch('/settings/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    newUsername,
+                    currentPassword,
+                    newPassword
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                successDiv.textContent = '{{ translations.settings.update_success }}';
+                successDiv.style.display = 'block';
+                if (data.requireRelogin) {
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                }
+            } else {
+                errorDiv.textContent = data.error || '{{ translations.settings.update_error }}';
+                errorDiv.style.display = 'block';
+            }
+        } catch (error) {
+            errorDiv.textContent = '{{ translations.settings.server_error }}';
+            errorDiv.style.display = 'block';
+        }
+        return false;
+    }
+</script>
+{% endblock %}

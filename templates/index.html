@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ translations.title }}</h1>
+    
+    <div class="upload-section">
+        <h2>{{ translations.upload.title }}</h2>
+        <input type="file" id="audioFile" accept="audio/*">
+        <button onclick="uploadFile()">{{ translations.upload.button }}</button>
+    </div>
+
+    <div class="schedule-section">
+        <h2>{{ translations.schedule.title }}</h2>
+        <div class="schedule-form">
+            <div class="file-select">
+                <label for="selectedFile">{{ translations.schedule.select_file }}:</label>
+                <div class="file-select-group">
+                    <select id="selectedFile">
+                        {% for file in uploaded_files %}
+                        <option value="{{ file }}">{{ file }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="action-btn" title="Play" onclick="playSelectedFile()">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="time-select">
+                <label for="scheduleTime">{{ translations.schedule.time }}:</label>
+                <input type="time" id="scheduleTime">
+            </div>
+
+            <div class="days-select">
+                <label>{{ translations.schedule.days }}:</label>
+                <div class="days-checkboxes">
+                    <label><input type="checkbox" value="0"> {{ translations.schedule.days_list.monday }}</label>
+                    <label><input type="checkbox" value="1"> {{ translations.schedule.days_list.tuesday }}</label>
+                    <label><input type="checkbox" value="2"> {{ translations.schedule.days_list.wednesday }}</label>
+                    <label><input type="checkbox" value="3"> {{ translations.schedule.days_list.thursday }}</label>
+                    <label><input type="checkbox" value="4"> {{ translations.schedule.days_list.friday }}</label>
+                    <label><input type="checkbox" value="5"> {{ translations.schedule.days_list.saturday }}</label>
+                    <label><input type="checkbox" value="6"> {{ translations.schedule.days_list.sunday }}</label>
+                </div>
+            </div>
+
+            <button onclick="addSchedule()">{{ translations.schedule.add_button }}</button>
+        </div>
+    </div>
+
+    <div class="schedules-list">
+        <h2>{{ translations.current_schedules.title }}</h2>
+        <table class="schedules-table">
+            <thead>
+                <tr>
+                    <th>{{ translations.current_schedules.file }}</th>
+                    <th>{{ translations.current_schedules.time }}</th>
+                    <th>{{ translations.current_schedules.days }}</th>
+                    <th>{{ translations.current_schedules.next_run }}</th>
+                    <th>{{ translations.current_schedules.action }}</th>
+                </tr>
+            </thead>
+            <tbody id="schedulesList">
+                <!-- Rows will be rendered by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Custom Delete Confirmation Modal -->
+<div id="deleteModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>{{ translations.modals.delete.title }}</h3>
+        <p>{{ translations.modals.delete.message }}</p>
+        <div class="modal-actions">
+            <button id="confirmDeleteBtn" class="auth-button delete">{{ translations.modals.delete.confirm }}</button>
+            <button id="cancelDeleteBtn" class="auth-button">{{ translations.modals.delete.cancel }}</button>
+        </div>
+    </div>
+</div>
+<!-- Custom Message Modal -->
+<div id="messageModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3 id="messageModalTitle">{{ translations.modals.info.title }}</h3>
+        <p id="messageModalText"></p>
+        <div class="modal-actions">
+            <button id="closeMessageModalBtn" class="auth-button">{{ translations.modals.info.ok }}</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
