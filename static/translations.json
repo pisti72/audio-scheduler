@@ -82,6 +82,10 @@
             "info": {
                 "title": "Info",
                 "ok": "OK"
+            },
+            "edit": {
+                "title": "Edit Schedule",
+                "save": "Save"
             }
         },
         "footer": {
@@ -172,6 +176,10 @@
             "info": {
                 "title": "Információ",
                 "ok": "OK"
+            },
+            "edit": {
+                "title": "Ütemezés szerkesztése",
+                "save": "Mentés"
             }
         },
         "footer": {

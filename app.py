@@ -302,6 +302,42 @@ def delete_schedule(schedule_id):
     
     return jsonify({'success': True})
 
+@app.route('/update_schedule/<int:schedule_id>', methods=['POST'])
+def update_schedule(schedule_id):
+    """Update an existing schedule's time and days, then refresh its job."""
+    schedule = Schedule.query.get_or_404(schedule_id)
+    data = request.get_json() or {}
+
+    # Extract fields
+    new_time = data.get('time')
+    new_days = data.get('days', [])  # expects list of indices 0..6
+
+    # Basic validation
+    if not new_time or not isinstance(new_days, list):
+        return jsonify({'success': False, 'error': 'Invalid update payload'}), 400
+
+    # Update fields
+    schedule.time = new_time
+    schedule.monday = 0 in new_days
+    schedule.tuesday = 1 in new_days
+    schedule.wednesday = 2 in new_days
+    schedule.thursday = 3 in new_days
+    schedule.friday = 4 in new_days
+    schedule.saturday = 5 in new_days
+    schedule.sunday = 6 in new_days
+
+    db.session.commit()
+
+    # Refresh job in scheduler
+    job_id = f"schedule_{schedule.id}"
+    if scheduler.get_job(job_id):
+        scheduler.remove_job(job_id)
+
+    # Only re-add if not muted and file exists
+    add_job_to_scheduler(schedule)
+
+    return jsonify({'success': True, 'schedule': schedule.to_dict()})
+
 @app.route('/toggle_mute/<int:schedule_id>', methods=['POST'])
 @login_required
 def toggle_mute(schedule_id):

@@ -1,6 +1,7 @@
 // Store uploaded files
 let uploadedFiles = [];
 let activeListId = null;
+let currentSchedules = [];
 
 // Load schedule lists
 async function loadScheduleLists() {
@@ -367,6 +368,7 @@ async function loadSchedules() {
     try {
         const response = await fetch('/get_schedules');
         const schedules = await response.json();
+        currentSchedules = schedules;
         
         const schedulesList = document.getElementById('schedulesList');
         schedulesList.innerHTML = '';
@@ -392,6 +394,9 @@ async function loadSchedules() {
                 <td>${dayNames.join(', ')}</td>
                 <td>${nextRun}</td>
                 <td>
+                    <button class="action-btn" title="${appTranslations.current_schedules?.edit || 'Edit'}" onclick="openEditModal(${schedule.id})">
+                        <i class="fas fa-pen"></i>
+                    </button>
                     <button class="action-btn ${muteButtonClass}" title="${muteButtonTitle}" onclick="toggleMute(${schedule.id})">
                         <i class="fas ${muteButtonIcon}"></i>
                     </button>
@@ -404,6 +409,65 @@ async function loadSchedules() {
         });
     } catch (error) {
         console.error('Error loading schedules:', error);
+    }
+}
+
+// Edit schedule modal logic
+function openEditModal(id) {
+    const schedule = currentSchedules.find(s => s.id === id);
+    if (!schedule) return;
+
+    // Set hidden id
+    document.getElementById('editScheduleId').value = id;
+
+    // Set time
+    const timeInput = document.getElementById('editScheduleTime');
+    timeInput.value = schedule.time;
+
+    // Set days
+    const dayCheckboxes = document.querySelectorAll('#editDaysCheckboxes input[type="checkbox"]');
+    dayCheckboxes.forEach(cb => cb.checked = false);
+    schedule.days.forEach(d => {
+        const cb = document.querySelector(`#editDaysCheckboxes input[type="checkbox"][value="${d}"]`);
+        if (cb) cb.checked = true;
+    });
+
+    // Show modal
+    document.getElementById('editModal').style.display = 'flex';
+}
+
+function hideEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+async function confirmEdit() {
+    const id = parseInt(document.getElementById('editScheduleId').value, 10);
+    const time = document.getElementById('editScheduleTime').value;
+    const dayCheckboxes = document.querySelectorAll('#editDaysCheckboxes input[type="checkbox"]');
+    const days = [];
+    dayCheckboxes.forEach(cb => { if (cb.checked) days.push(parseInt(cb.value)); });
+
+    if (!time || days.length === 0) {
+        showMessageModal('Error', 'Please select time and at least one day');
+        return;
+    }
+
+    try {
+        const resp = await fetch(`/update_schedule/${id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ time, days })
+        });
+        const data = await resp.json();
+        if (data.success) {
+            hideEditModal();
+            loadSchedules();
+        } else {
+            showMessageModal('Error', data.error || 'Failed to update schedule');
+        }
+    } catch (e) {
+        console.error(e);
+        showMessageModal('Error', 'Failed to update schedule');
     }
 }
 
@@ -442,6 +506,10 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('confirmDeleteBtn').onclick = confirmDelete;
     document.getElementById('cancelDeleteBtn').onclick = hideDeleteModal;
     document.getElementById('closeMessageModalBtn').onclick = hideMessageModal;
+    const confirmEditBtn = document.getElementById('confirmEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    if (confirmEditBtn) confirmEditBtn.onclick = confirmEdit;
+    if (cancelEditBtn) cancelEditBtn.onclick = hideEditModal;
     loadScheduleLists();
     loadSchedules();
 });
