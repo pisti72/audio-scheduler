@@ -13,7 +13,7 @@ import pygame
 import os
 from datetime import datetime
 import json
-from models import db, Schedule
+from models import db, Schedule, ScheduleList
 from auth import login_required, init_credentials, check_credentials, set_credentials
 
 # Load translations
@@ -44,7 +44,17 @@ print("Credentials initialization completed") # Debug log
 def init_schedules():
     """Initialize schedules from database"""
     with app.app_context():
-        schedules = Schedule.query.all()
+        # Get active schedule list
+        active_list = ScheduleList.query.filter_by(is_active=True).first()
+        
+        # Create default list if none exists
+        if not active_list:
+            active_list = ScheduleList(name='Default', is_active=True)
+            db.session.add(active_list)
+            db.session.commit()
+        
+        # Load schedules from active list only
+        schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
         for schedule in schedules:
             add_job_to_scheduler(schedule)
 
@@ -158,6 +168,7 @@ def index():
            'navigation': translations['navigation'],
         'days_list': translations['schedule']['days_list'],
            'current_schedules': translations['current_schedules'],
+           'schedule_lists': translations.get('schedule_lists', {}),
            'modals': translations['modals']
     })
     
@@ -228,8 +239,18 @@ def schedule_audio():
     if not time or not days:
         return jsonify({'error': 'Missing time or days'}), 400
 
+    # Get active schedule list
+    active_list = ScheduleList.query.filter_by(is_active=True).first()
+    
+    # Create default list if none exists
+    if not active_list:
+        active_list = ScheduleList(name='Default', is_active=True)
+        db.session.add(active_list)
+        db.session.commit()
+
     # Create new schedule in database
     schedule = Schedule(
+        schedule_list_id=active_list.id,
         filename=filename,
         time=time,
         monday=0 in days,
@@ -254,7 +275,16 @@ def schedule_audio():
 
 @app.route('/get_schedules', methods=['GET'])
 def get_schedules():
-    schedules = Schedule.query.all()
+    # Get active schedule list
+    active_list = ScheduleList.query.filter_by(is_active=True).first()
+    
+    if not active_list:
+        # Create default list if none exists
+        active_list = ScheduleList(name='Default', is_active=True)
+        db.session.add(active_list)
+        db.session.commit()
+    
+    schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
     return jsonify([schedule.to_dict() for schedule in schedules])
 
 @app.route('/delete_schedule/<int:schedule_id>', methods=['DELETE'])
@@ -293,6 +323,96 @@ def toggle_mute(schedule_id):
         add_job_to_scheduler(schedule)
     
     return jsonify({'success': True, 'is_muted': schedule.is_muted})
+
+@app.route('/schedule_lists', methods=['GET'])
+@login_required
+def get_schedule_lists():
+    lists = ScheduleList.query.all()
+    return jsonify([list.to_dict() for list in lists])
+
+@app.route('/schedule_lists', methods=['POST'])
+@login_required
+def create_schedule_list():
+    data = request.json
+    name = data.get('name')
+    
+    if not name:
+        return jsonify({'error': 'Name is required'}), 400
+    
+    # Create new schedule list
+    schedule_list = ScheduleList(name=name, is_active=False)
+    db.session.add(schedule_list)
+    db.session.commit()
+    
+    return jsonify({'success': True, 'list': schedule_list.to_dict()})
+
+@app.route('/schedule_lists/<int:list_id>/activate', methods=['POST'])
+@login_required
+def activate_schedule_list(list_id):
+    # Deactivate all lists
+    ScheduleList.query.update({ScheduleList.is_active: False})
+    
+    # Activate the selected list
+    schedule_list = ScheduleList.query.get_or_404(list_id)
+    schedule_list.is_active = True
+    db.session.commit()
+    
+    # Reload all schedules
+    # Remove all current jobs
+    for job in scheduler.get_jobs():
+        scheduler.remove_job(job.id)
+    
+    # Add jobs from active list
+    schedules = Schedule.query.filter_by(schedule_list_id=list_id).all()
+    for schedule in schedules:
+        add_job_to_scheduler(schedule)
+    
+    return jsonify({'success': True})
+
+@app.route('/schedule_lists/<int:list_id>', methods=['DELETE'])
+@login_required
+def delete_schedule_list(list_id):
+    schedule_list = ScheduleList.query.get_or_404(list_id)
+    
+    # Don't allow deleting the active list if it's the only one
+    if schedule_list.is_active and ScheduleList.query.count() == 1:
+        return jsonify({'error': 'Cannot delete the last schedule list'}), 400
+    
+    # If deleting active list, activate another one
+    if schedule_list.is_active:
+        other_list = ScheduleList.query.filter(ScheduleList.id != list_id).first()
+        if other_list:
+            other_list.is_active = True
+    
+    db.session.delete(schedule_list)
+    db.session.commit()
+    
+    # Reload schedules
+    for job in scheduler.get_jobs():
+        scheduler.remove_job(job.id)
+    
+    active_list = ScheduleList.query.filter_by(is_active=True).first()
+    if active_list:
+        schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
+        for schedule in schedules:
+            add_job_to_scheduler(schedule)
+    
+    return jsonify({'success': True})
+
+@app.route('/schedule_lists/<int:list_id>/rename', methods=['POST'])
+@login_required
+def rename_schedule_list(list_id):
+    data = request.json
+    new_name = data.get('name')
+    
+    if not new_name:
+        return jsonify({'error': 'Name is required'}), 400
+    
+    schedule_list = ScheduleList.query.get_or_404(list_id)
+    schedule_list.name = new_name
+    db.session.commit()
+    
+    return jsonify({'success': True})
 
 if __name__ == '__main__':
     # Create database tables

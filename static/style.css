@@ -266,6 +266,97 @@ select, input[type="time"] {
     background-color: #cc0000;
 }
 
+/* Schedule Lists Tabs */
+.schedule-lists-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.schedule-list-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.tab:hover {
+    background: #e0e0e0;
+}
+
+.tab.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.tab.new-tab {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.tab.new-tab:hover {
+    background: #45a049;
+}
+
+.tab-name {
+    font-weight: 500;
+}
+
+.tab-name-edit {
+    font-weight: 500;
+    padding: 0.2rem 0.4rem;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: inherit;
+    font-family: inherit;
+    min-width: 80px;
+}
+
+.tab-name-edit:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.tab.active .tab-name-edit {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.tab-action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.tab-action:hover {
+    opacity: 1;
+}
+
+.tab.active .tab-action {
+    color: white;
+}
+
 .schedules-table {
     width: 100%;
     border-collapse: collapse;

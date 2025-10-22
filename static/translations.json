@@ -62,6 +62,16 @@
             "unmute": "Unmute",
             "action": "Action"
         },
+        "schedule_lists": {
+            "title": "Schedule Lists",
+            "new_list": "New List",
+            "create": "Create",
+            "rename": "Rename",
+            "delete_list": "Delete List",
+            "active": "Active",
+            "name_prompt": "Enter list name:",
+            "rename_prompt": "Enter new name:"
+        },
         "modals": {
             "delete": {
                 "title": "Confirm Delete",
@@ -141,6 +151,16 @@
             "mute": "Némítás",
             "unmute": "Némítás feloldása",
             "action": "Művelet"
+        },
+        "schedule_lists": {
+            "title": "Ütemezési listák",
+            "new_list": "Új lista",
+            "create": "Létrehozás",
+            "rename": "Átnevezés",
+            "delete_list": "Lista törlése",
+            "active": "Aktív",
+            "name_prompt": "Add meg a lista nevét:",
+            "rename_prompt": "Add meg az új nevet:"
         },
         "modals": {
             "delete": {

@@ -1,5 +1,140 @@
 // Store uploaded files
 let uploadedFiles = [];
+let activeListId = null;
+
+// Load schedule lists
+async function loadScheduleLists() {
+    try {
+        const response = await fetch('/schedule_lists');
+        const lists = await response.json();
+        
+        const tabsContainer = document.getElementById('scheduleListTabs');
+        if (!tabsContainer) return;
+        
+        tabsContainer.innerHTML = '';
+        
+        lists.forEach(list => {
+            const tab = document.createElement('div');
+            tab.className = `tab ${list.is_active ? 'active' : ''}`;
+            tab.onclick = () => activateList(list.id);
+            
+            if (list.is_active) {
+                activeListId = list.id;
+            }
+            
+            tab.innerHTML = `
+                <span class="tab-name" id="tab-name-${list.id}">${list.name}</span>
+                <input type="text" class="tab-name-edit" id="tab-edit-${list.id}" value="${list.name}" style="display:none;" />
+                <button class="tab-action" onclick="event.stopPropagation(); startRenameList(${list.id})" title="${appTranslations.schedule_lists?.rename || 'Rename'}">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="tab-action" onclick="event.stopPropagation(); deleteList(${list.id})" title="${appTranslations.schedule_lists?.delete_list || 'Delete'}">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            tabsContainer.appendChild(tab);
+        });
+        
+        // Add new list button
+        const newTabBtn = document.createElement('div');
+        newTabBtn.className = 'tab new-tab';
+        newTabBtn.onclick = createNewList;
+        newTabBtn.innerHTML = `<i class="fas fa-plus"></i> ${appTranslations.schedule_lists?.new_list || 'New List'}`;
+        tabsContainer.appendChild(newTabBtn);
+        
+    } catch (error) {
+        console.error('Error loading schedule lists:', error);
+    }
+}
+
+async function createNewList() {
+    const name = prompt(appTranslations.schedule_lists?.name_prompt || 'Enter list name:', '');
+    if (!name) return;
+    
+    try {
+        const response = await fetch('/schedule_lists', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+        });
+        const data = await response.json();
+        if (data.success) {
+            loadScheduleLists();
+        }
+    } catch (error) {
+        console.error('Error creating list:', error);
+        showMessageModal('Error', 'Failed to create list');
+    }
+}
+
+async function activateList(listId) {
+    try {
+        const response = await fetch(`/schedule_lists/${listId}/activate`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        if (data.success) {
+            activeListId = listId;
+            loadScheduleLists();
+            loadSchedules();
+        }
+    } catch (error) {
+        console.error('Error activating list:', error);
+        showMessageModal('Error', 'Failed to activate list');
+    }
+}
+
+function startRenameList(listId) {
+    const nameSpan = document.getElementById(`tab-name-${listId}`);
+    const editInput = document.getElementById(`tab-edit-${listId}`);
+    
+    if (!nameSpan || !editInput) return;
+    
+    // Show input, hide span
+    nameSpan.style.display = 'none';
+    editInput.style.display = 'inline-block';
+    editInput.focus();
+    editInput.select();
+    
+    // Handle save on Enter or blur
+    const saveRename = async () => {
+        const newName = editInput.value.trim();
+        if (!newName) {
+            loadScheduleLists(); // Reset if empty
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/schedule_lists/${listId}/rename`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newName })
+            });
+            const data = await response.json();
+            if (data.success) {
+                loadScheduleLists();
+            }
+        } catch (error) {
+            console.error('Error renaming list:', error);
+            showMessageModal('Error', 'Failed to rename list');
+        }
+    };
+    
+    editInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            saveRename();
+        } else if (e.key === 'Escape') {
+            loadScheduleLists(); // Cancel
+        }
+    };
+    
+    editInput.onblur = saveRename;
+}
+
+function deleteList(listId) {
+    showDeleteListModal(listId);
+}
 
 // Upload audio file
 async function uploadFile() {
@@ -155,32 +290,56 @@ async function addSchedule() {
 
 // Delete confirmation modal
 let pendingDeleteId = null;
+let pendingDeleteType = null; // 'schedule' or 'list'
 
 function showDeleteModal(id) {
     pendingDeleteId = id;
+    pendingDeleteType = 'schedule';
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function showDeleteListModal(id) {
+    pendingDeleteId = id;
+    pendingDeleteType = 'list';
     document.getElementById('deleteModal').style.display = 'flex';
 }
 
 function hideDeleteModal() {
     pendingDeleteId = null;
+    pendingDeleteType = null;
     document.getElementById('deleteModal').style.display = 'none';
 }
 
 async function confirmDelete() {
-    if (!pendingDeleteId) return;
+    if (!pendingDeleteId || !pendingDeleteType) return;
+    
     try {
-        const response = await fetch(`/delete_schedule/${pendingDeleteId}`, {
-            method: 'DELETE'
-        });
-        const data = await response.json();
-        if (data.success) {
-            loadSchedules();
-        } else {
-            alert('Error deleting schedule');
+        let response;
+        if (pendingDeleteType === 'schedule') {
+            response = await fetch(`/delete_schedule/${pendingDeleteId}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+            if (data.success) {
+                loadSchedules();
+            } else {
+                showMessageModal('Error', 'Error deleting schedule');
+            }
+        } else if (pendingDeleteType === 'list') {
+            response = await fetch(`/schedule_lists/${pendingDeleteId}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+            if (data.success) {
+                loadScheduleLists();
+                loadSchedules();
+            } else if (data.error) {
+                showMessageModal('Error', data.error);
+            }
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error deleting schedule');
+        showMessageModal('Error', 'Error deleting item');
     }
     hideDeleteModal();
 }
@@ -283,10 +442,12 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('confirmDeleteBtn').onclick = confirmDelete;
     document.getElementById('cancelDeleteBtn').onclick = hideDeleteModal;
     document.getElementById('closeMessageModalBtn').onclick = hideMessageModal;
+    loadScheduleLists();
     loadSchedules();
 });
 
 // Load schedules when page loads
 document.addEventListener('DOMContentLoaded', () => {
+    loadScheduleLists();
     loadSchedules();
 });

@@ -49,7 +49,12 @@
     </div>
 
     <div class="schedules-list">
-        <h2>{{ translations.current_schedules.title }}</h2>
+        <div class="schedule-lists-header">
+            <h2>{{ translations.current_schedules.title }}</h2>
+            <div id="scheduleListTabs" class="schedule-list-tabs">
+                <!-- Tabs will be rendered by JS -->
+            </div>
+        </div>
         <table class="schedules-table">
             <thead>
                 <tr>

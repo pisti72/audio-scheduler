@@ -3,8 +3,24 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+class ScheduleList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    is_active = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    schedules = db.relationship('Schedule', backref='schedule_list', lazy=True, cascade='all, delete-orphan')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'is_active': self.is_active,
+            'schedule_count': len(self.schedules)
+        }
+
 class Schedule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    schedule_list_id = db.Column(db.Integer, db.ForeignKey('schedule_list.id'), nullable=True)
     filename = db.Column(db.String(255), nullable=False)
     time = db.Column(db.String(5), nullable=False)  # Format: "HH:MM"
     monday = db.Column(db.Boolean, default=False)
