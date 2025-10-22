@@ -76,6 +76,24 @@ body {
     margin-left: 20px;
 }
 
+/* Realtime clock in header */
+.realtime-clock {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    color: #666;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: #f7f7f7;
+    margin-left: 10px;
+    min-width: 7.5ch; /* e.g. 12:34:56 width */
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .realtime-clock {
+        display: none; /* hide on very small screens to save space */
+    }
+}
+
 .lang-btn {
     background: none;
     border: none;

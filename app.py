@@ -108,6 +108,16 @@ def login():
         return jsonify({'success': True})
     return jsonify({'success': False, 'error': 'Invalid username or password'})
 
+@app.route('/manual')
+@login_required
+def manual():
+    # Render the manual page with current language translations
+    current_lang = session.get('lang', 'en')
+    translations = TRANSLATIONS[current_lang]
+    return render_template('manual.html', 
+                           translations=translations,
+                           current_lang=current_lang)
+
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)

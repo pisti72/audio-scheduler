@@ -91,6 +91,39 @@
         "footer": {
             "made_with": "Made with",
             "by": "by"
+        },
+        "manual": {
+            "title": "User Manual",
+            "overview": {
+                "title": "Overview",
+                "body": "Audio Scheduler lets you upload audio files and schedule them to play at specific times and days. Use it for school bells, announcements, and timed alerts."
+            },
+            "install": {
+                "title": "Installation",
+                "manual_title": "Manual Installation",
+                "manual_body": "Install Python, pip install -r requirements.txt, run flask db upgrade, then python app.py to start the server.",
+                "docker_title": "Docker",
+                "docker_body": "Build with 'docker build -t audioscheduler .' and run with persistent volumes, then open http://localhost:5000."
+            },
+            "usage": {
+                "title": "Usage",
+                "upload_title": "Upload Audio",
+                "upload_body": "Choose an audio file and click Upload. The file appears in the Select File dropdown.",
+                "schedule_title": "Create Schedule",
+                "schedule_body": "Select a file, pick a time, select days, then click Add Schedule.",
+                "lists_title": "Schedule Lists (Tabs)",
+                "lists_body": "Use tabs to maintain multiple schedule lists. Only the active tab plays. Create, rename, activate, or delete lists from the tab bar.",
+                "mute_title": "Mute/Unmute",
+                "mute_body": "Click the speaker icon to mute a schedule (it won't play) or unmute it.",
+                "edit_title": "Edit Schedule",
+                "edit_body": "Click the pen icon to change time and days. Save to apply immediately.",
+                "delete_title": "Delete Schedule",
+                "delete_body": "Click the trash icon. Confirm in the modal to remove the schedule."
+            },
+            "settings": {
+                "title": "Settings & Login",
+                "body": "Change username and password in Settings. Language can be switched from the header."
+            }
         }
     },
     "hu": {
@@ -185,6 +218,39 @@
         "footer": {
             "made_with": "Készítette",
             "by": "által"
+        },
+        "manual": {
+            "title": "Felhasználói kézikönyv",
+            "overview": {
+                "title": "Áttekintés",
+                "body": "A Hangütemező lehetővé teszi hangfájlok feltöltését és meghatározott időpontokra és napokra történő lejátszását. Hasznos iskolai csengetéshez, közleményekhez, időzített jelzésekhez."
+            },
+            "install": {
+                "title": "Telepítés",
+                "manual_title": "Kézi telepítés",
+                "manual_body": "Telepítsd a Pythont, futtasd: pip install -r requirements.txt, majd flask db upgrade és python app.py a szerver indításához.",
+                "docker_title": "Docker",
+                "docker_body": "Építsd: 'docker build -t audioscheduler .', futtasd tartós kötetekkel, majd nyisd meg a http://localhost:5000 címet."
+            },
+            "usage": {
+                "title": "Használat",
+                "upload_title": "Hang feltöltése",
+                "upload_body": "Válassz egy hangfájlt és kattints a Feltöltés gombra. A fájl megjelenik a Fájl kiválasztása listában.",
+                "schedule_title": "Ütemezés létrehozása",
+                "schedule_body": "Válaszd ki a fájlt, add meg az időpontot, jelöld a napokat, majd kattints az Ütemezés hozzáadása gombra.",
+                "lists_title": "Ütemezési listák (fülek)",
+                "lists_body": "Több ütemezési lista kezelhető fülekkel. Csak az aktív fül ütemezései játszódnak le. A fülsávon létrehozhatsz, átnevezhetsz, aktiválhatsz és törölhetsz listákat.",
+                "mute_title": "Némítás / feloldás",
+                "mute_body": "A hangszóró ikonra kattintva némíthatod az ütemezést (nem játszik le), újra kattintva feloldhatod.",
+                "edit_title": "Ütemezés szerkesztése",
+                "edit_body": "A ceruza ikonra kattintva módosíthatod az időpontot és a napokat. Mentés után azonnal érvénybe lép.",
+                "delete_title": "Ütemezés törlése",
+                "delete_body": "A kuka ikonra kattintva és a megerősítő ablakban jóváhagyva törölheted az ütemezést."
+            },
+            "settings": {
+                "title": "Beállítások és bejelentkezés",
+                "body": "A Beállítások menüben módosítható a felhasználónév és a jelszó. A nyelv a fejlécből váltható."
+            }
         }
     }
 }

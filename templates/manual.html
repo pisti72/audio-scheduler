@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>{{ translations.manual.title }}</h1>
+
+  <section>
+    <h2>{{ translations.manual.overview.title }}</h2>
+    <p>{{ translations.manual.overview.body }}</p>
+  </section>
+
+  <section>
+    <h2>{{ translations.manual.install.title }}</h2>
+    <h3>{{ translations.manual.install.manual_title }}</h3>
+    <p>{{ translations.manual.install.manual_body }}</p>
+    <h3>{{ translations.manual.install.docker_title }}</h3>
+    <p>{{ translations.manual.install.docker_body }}</p>
+  </section>
+
+  <section>
+    <h2>{{ translations.manual.usage.title }}</h2>
+    <h3>{{ translations.manual.usage.upload_title }}</h3>
+    <p>{{ translations.manual.usage.upload_body }}</p>
+    <h3>{{ translations.manual.usage.schedule_title }}</h3>
+    <p>{{ translations.manual.usage.schedule_body }}</p>
+    <h3>{{ translations.manual.usage.lists_title }}</h3>
+    <p>{{ translations.manual.usage.lists_body }}</p>
+    <h3>{{ translations.manual.usage.mute_title }}</h3>
+    <p>{{ translations.manual.usage.mute_body }}</p>
+    <h3>{{ translations.manual.usage.edit_title }}</h3>
+    <p>{{ translations.manual.usage.edit_body }}</p>
+    <h3>{{ translations.manual.usage.delete_title }}</h3>
+    <p>{{ translations.manual.usage.delete_body }}</p>
+  </section>
+
+  <section>
+    <h2>{{ translations.manual.settings.title }}</h2>
+    <p>{{ translations.manual.settings.body }}</p>
+  </section>
+</div>
+{% endblock %}

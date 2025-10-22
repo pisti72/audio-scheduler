@@ -19,7 +19,7 @@
             <nav class="nav-links">
                 <a href="/" {% if request.endpoint == 'index' %}class="active"{% endif %}>{{ translations.navigation.dashboard }}</a>
                 <a href="/settings" {% if request.endpoint == 'settings' %}class="active"{% endif %}>{{ translations.navigation.settings }}</a>
-                <a href="/logout" title="{{ translations.navigation.logout }}"><i class="fas fa-sign-out-alt"></i></a>
+                <div id="realtimeClock" class="realtime-clock" aria-label="Current time"></div>
                 <div class="language-selector">
                     <button onclick="toggleLanguageMenu()" class="lang-btn">
                         <i class="fas fa-globe"></i>
@@ -34,6 +34,7 @@
                         </a>
                     </div>
                 </div>
+                <a href="/logout" title="{{ translations.navigation.logout }}"><i class="fas fa-sign-out-alt"></i></a>
             </nav>
         </div>
     </header>
@@ -46,7 +47,7 @@
                 <p>&copy; 2025 Audio Scheduler. Made with <i class="fas fa-heart"></i> by István Szalontai</p>
             </div>
             <div class="footer-links">
-                <a href="#" title="Help"><i class="fas fa-question-circle"></i></a>
+                <a href="{{ url_for('manual') }}" title="Help"><i class="fas fa-question-circle"></i></a>
                 <a href="https://github.com/pisti72/audio-scheduler" target="_blank" title="Source Code"><i class="fab fa-github"></i></a>
             </div>
         </div>

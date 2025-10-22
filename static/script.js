@@ -510,6 +510,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const cancelEditBtn = document.getElementById('cancelEditBtn');
     if (confirmEditBtn) confirmEditBtn.onclick = confirmEdit;
     if (cancelEditBtn) cancelEditBtn.onclick = hideEditModal;
+    startRealtimeClock();
     loadScheduleLists();
     loadSchedules();
 });
@@ -519,3 +520,23 @@ document.addEventListener('DOMContentLoaded', () => {
     loadScheduleLists();
     loadSchedules();
 });
+
+// Realtime clock updater
+function startRealtimeClock() {
+    const el = document.getElementById('realtimeClock');
+    if (!el) return;
+    const update = () => {
+        try {
+            const now = new Date();
+            const locale = (typeof currentLang === 'string' && currentLang === 'hu') ? 'hu-HU' : 'en-US';
+            const time = now.toLocaleTimeString(locale, { hour12: false });
+            el.textContent = time;
+            el.title = now.toLocaleString(locale);
+        } catch (e) {
+            // Fallback
+            el.textContent = new Date().toISOString().slice(11, 19);
+        }
+    };
+    update();
+    setInterval(update, 1000);
+}
