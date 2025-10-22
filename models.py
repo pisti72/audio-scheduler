@@ -14,6 +14,7 @@ class Schedule(db.Model):
     friday = db.Column(db.Boolean, default=False)
     saturday = db.Column(db.Boolean, default=False)
     sunday = db.Column(db.Boolean, default=False)
+    is_muted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -27,6 +28,7 @@ class Schedule(db.Model):
                     self.thursday, self.friday, self.saturday, self.sunday
                 ]) if day
             ],
+            'is_muted': self.is_muted,
             'next_run': self.next_run_time()
         }
     

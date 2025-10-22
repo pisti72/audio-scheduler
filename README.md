@@ -20,9 +20,30 @@ These directories are essential for persistent storage:
 - `uploads/`: Stores all uploaded audio files
 - `instance/`: Contains the SQLite database (schedules.db)
 
-## Docker
+## Installation and Running
 
-## Docker
+### Manual Installation (without Docker)
+
+1. Install Python 3.7 or higher on your system
+
+2. Install the required Python packages:
+	```bash
+	pip install -r requirements.txt
+	```
+
+3. Initialize the database:
+	```bash
+	flask db upgrade
+	```
+
+4. Run the application:
+	```bash
+	python app.py
+	```
+
+The application will be available at http://localhost:5000
+
+### Docker
 
 To build and run this application with Docker:
 

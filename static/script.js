@@ -185,6 +185,24 @@ async function confirmDelete() {
     hideDeleteModal();
 }
 
+// Toggle mute/unmute
+async function toggleMute(id) {
+    try {
+        const response = await fetch(`/toggle_mute/${id}`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        if (data.success) {
+            loadSchedules();
+        } else {
+            showMessageModal('Error', 'Error toggling mute status');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showMessageModal('Error', 'Error toggling mute status');
+    }
+}
+
 // Load current schedules
 async function loadSchedules() {
     try {
@@ -199,14 +217,26 @@ async function loadSchedules() {
             const nextRun = schedule.next_run
                 ? new Date(schedule.next_run).toLocaleString(currentLang === 'hu' ? 'hu-HU' : 'en-US')
                 : appTranslations.current_schedules.not_scheduled || 'Not scheduled';
+            
+            const muteButtonTitle = schedule.is_muted 
+                ? (appTranslations.current_schedules.unmute || 'Unmute')
+                : (appTranslations.current_schedules.mute || 'Mute');
+            const muteButtonIcon = schedule.is_muted ? 'fa-volume-up' : 'fa-volume-mute';
+            const muteButtonClass = schedule.is_muted ? 'unmute' : 'mute';
+            const rowClass = schedule.is_muted ? 'muted' : '';
+            
             const row = document.createElement('tr');
+            row.className = rowClass;
             row.innerHTML = `
                 <td>${schedule.filename}</td>
                 <td>${schedule.time}</td>
                 <td>${dayNames.join(', ')}</td>
                 <td>${nextRun}</td>
                 <td>
-                    <button class="action-btn delete" title="Delete" onclick="showDeleteModal(${schedule.id})">
+                    <button class="action-btn ${muteButtonClass}" title="${muteButtonTitle}" onclick="toggleMute(${schedule.id})">
+                        <i class="fas ${muteButtonIcon}"></i>
+                    </button>
+                    <button class="action-btn delete" title="${appTranslations.current_schedules.delete || 'Delete'}" onclick="showDeleteModal(${schedule.id})">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>

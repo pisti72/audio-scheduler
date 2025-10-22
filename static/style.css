@@ -295,6 +295,11 @@ select, input[type="time"] {
 .schedules-table tbody tr:hover {
     background: #f0f4fa;
 }
+.schedules-table td:last-child {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+}
 .action-btn {
     background: none;
     border: none;
@@ -313,6 +318,28 @@ select, input[type="time"] {
 }
 .action-btn.delete:hover {
     color: #b71c1c;
+}
+.action-btn.mute {
+    color: #ff9800;
+}
+.action-btn.mute:hover {
+    color: #f57c00;
+}
+.action-btn.unmute {
+    color: #4CAF50;
+}
+.action-btn.unmute:hover {
+    color: #388E3C;
+}
+
+/* Muted schedule row styling */
+tr.muted {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+}
+tr.muted td {
+    text-decoration: line-through;
+    color: #999;
 }
 
 .modal-overlay {

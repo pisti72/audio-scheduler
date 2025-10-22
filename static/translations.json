@@ -58,6 +58,8 @@
             "next_run": "Next run",
             "not_scheduled": "Not scheduled",
             "delete": "Delete",
+            "mute": "Mute",
+            "unmute": "Unmute",
             "action": "Action"
         },
         "modals": {
@@ -136,6 +138,8 @@
             "next_run": "Következő lejátszás",
             "not_scheduled": "Nincs ütemezve",
             "delete": "Törlés",
+            "mute": "Némítás",
+            "unmute": "Némítás feloldása",
             "action": "Művelet"
         },
         "modals": {

@@ -184,6 +184,10 @@ def upload_file():
 
 def add_job_to_scheduler(schedule):
     """Add a schedule to the APScheduler"""
+    # Skip muted schedules
+    if schedule.is_muted:
+        return True
+    
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], schedule.filename)
     if not os.path.exists(file_path):
         return False
@@ -267,6 +271,28 @@ def delete_schedule(schedule_id):
     db.session.commit()
     
     return jsonify({'success': True})
+
+@app.route('/toggle_mute/<int:schedule_id>', methods=['POST'])
+@login_required
+def toggle_mute(schedule_id):
+    schedule = Schedule.query.get_or_404(schedule_id)
+    
+    # Toggle mute status
+    schedule.is_muted = not schedule.is_muted
+    db.session.commit()
+    
+    # Update scheduler job
+    job_id = f"schedule_{schedule.id}"
+    
+    if schedule.is_muted:
+        # Remove job from scheduler when muted
+        if scheduler.get_job(job_id):
+            scheduler.remove_job(job_id)
+    else:
+        # Add job back to scheduler when unmuted
+        add_job_to_scheduler(schedule)
+    
+    return jsonify({'success': True, 'is_muted': schedule.is_muted})
 
 if __name__ == '__main__':
     # Create database tables
