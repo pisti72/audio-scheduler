@@ -76,8 +76,19 @@ def serve_audio(filename):
 
 @app.route('/set-language/<lang>')
 def set_language(lang):
-    if lang in TRANSLATIONS:
-        session['lang'] = lang
+    """Set UI language in session.
+    If the requested language isn't currently loaded, attempt to reload translations from disk
+    so newly added languages in translations.json are recognized without restarting the server.
+    """
+    global TRANSLATIONS
+    if lang not in TRANSLATIONS:
+        try:
+            with open(TRANSLATIONS_PATH, 'r', encoding='utf-8') as f:
+                TRANSLATIONS = json.load(f)
+        except Exception:
+            # If reload fails, still set the session; views will fallback to English
+            pass
+    session['lang'] = lang
     return jsonify({'success': True})
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -86,7 +97,7 @@ def login():
         if 'logged_in' in session:
             return redirect(url_for('index'))
         current_lang = session.get('lang', 'en')
-        translations = TRANSLATIONS[current_lang]
+        translations = TRANSLATIONS.get(current_lang, TRANSLATIONS['en'])
         js_translations = json.dumps({
             'login': translations.get('login', {})
         })
@@ -113,7 +124,7 @@ def login():
 def manual():
     # Render the manual page with current language translations
     current_lang = session.get('lang', 'en')
-    translations = TRANSLATIONS[current_lang]
+    translations = TRANSLATIONS.get(current_lang, TRANSLATIONS['en'])
     return render_template('manual.html', 
                            translations=translations,
                            current_lang=current_lang)
@@ -128,7 +139,7 @@ def logout():
 @login_required
 def settings():
     current_lang = session.get('lang', 'en')
-    translations = TRANSLATIONS[current_lang]
+    translations = TRANSLATIONS.get(current_lang, TRANSLATIONS['en'])
     js_translations = json.dumps({
         'settings': translations.get('settings', {})
     })
@@ -171,7 +182,7 @@ def index():
     
     # Get current language from session or default to English
     current_lang = session.get('lang', 'en')
-    translations = TRANSLATIONS[current_lang]
+    translations = TRANSLATIONS.get(current_lang, TRANSLATIONS['en'])
     
     # Pre-serialize the translations data needed for JavaScript
     js_translations = json.dumps({

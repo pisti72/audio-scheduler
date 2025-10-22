@@ -253,4 +253,262 @@
             }
         }
     }
+    ,
+    "de": {
+        "title": "Audio Scheduler",
+        "login": {
+            "username": "Benutzername",
+            "password": "Passwort",
+            "submit": "Anmelden",
+            "error": {
+                "title": "Anmeldung fehlgeschlagen",
+                "message": "Ungültiger Benutzername oder Passwort",
+                "server_error": "Ein Fehler ist aufgetreten. Bitte erneut versuchen",
+                "ok": "OK"
+            }
+        },
+        "navigation": {
+            "dashboard": "Übersicht",
+            "settings": "Einstellungen",
+            "github": "GitHub",
+            "logout": "Abmelden"
+        },
+        "settings": {
+            "title": "Einstellungen",
+            "new_username": "Neuer Benutzername",
+            "current_password": "Aktuelles Passwort",
+            "new_password": "Neues Passwort",
+            "confirm_password": "Passwort bestätigen",
+            "save_button": "Änderungen speichern",
+            "password_mismatch": "Die neuen Passwörter stimmen nicht überein",
+            "update_success": "Einstellungen erfolgreich aktualisiert",
+            "update_error": "Einstellungen konnten nicht aktualisiert werden",
+            "server_error": "Ein Fehler ist aufgetreten. Bitte erneut versuchen"
+        },
+        "upload": {
+            "title": "Audio-Datei hochladen",
+            "button": "Hochladen"
+        },
+        "schedule": {
+            "title": "Audio planen",
+            "select_file": "Datei auswählen",
+            "time": "Zeit",
+            "days": "Tage",
+            "days_list": {
+                "monday": "Montag",
+                "tuesday": "Dienstag",
+                "wednesday": "Mittwoch",
+                "thursday": "Donnerstag",
+                "friday": "Freitag",
+                "saturday": "Samstag",
+                "sunday": "Sonntag"
+            },
+            "add_button": "Plan hinzufügen"
+        },
+        "current_schedules": {
+            "title": "Aktuelle Pläne",
+            "file": "Datei",
+            "time": "Zeit",
+            "days": "Tage",
+            "next_run": "Nächste Ausführung",
+            "not_scheduled": "Nicht geplant",
+            "delete": "Löschen",
+            "action": "Aktion",
+            "mute": "Stummschalten",
+            "unmute": "Aktivieren",
+            "edit": "Bearbeiten"
+        },
+        "modals": {
+            "delete": {
+                "title": "Löschen bestätigen",
+                "message": "Möchten Sie diesen Eintrag wirklich löschen?",
+                "confirm": "Löschen",
+                "cancel": "Abbrechen"
+            },
+            "info": {
+                "title": "Info",
+                "ok": "OK"
+            },
+            "edit": {
+                "title": "Plan bearbeiten",
+                "save": "Speichern"
+            }
+        },
+        "schedule_lists": {
+            "title": "Plan-Listen",
+            "new_list": "Neue Liste",
+            "create": "Erstellen",
+            "rename": "Umbenennen",
+            "delete_list": "Liste löschen",
+            "active": "Aktiv",
+            "name_prompt": "Listenname eingeben:",
+            "rename_prompt": "Neuen Namen eingeben:"
+        },
+        "footer": {
+            "made_with": "Gemacht mit",
+            "by": "von"
+        },
+        "manual": {
+            "title": "Benutzerhandbuch",
+            "overview": {
+                "title": "Überblick",
+                "body": "Audio Scheduler ermöglicht das Hochladen von Audiodateien und das Planen für bestimmte Zeiten und Tage. Ideal für Schulglocken, Ansagen und zeitgesteuerte Hinweise."
+            },
+            "install": {
+                "title": "Installation",
+                "manual_title": "Manuelle Installation",
+                "manual_body": "Python installieren, dann 'pip install -r requirements.txt', 'flask db upgrade' und 'python app.py' starten.",
+                "docker_title": "Docker",
+                "docker_body": "Mit 'docker build -t audioscheduler .' bauen und mit persistenten Volumes starten, dann http://localhost:5000 öffnen."
+            },
+            "usage": {
+                "title": "Verwendung",
+                "upload_title": "Audio hochladen",
+                "upload_body": "Wählen Sie eine Audiodatei und klicken Sie auf Hochladen. Die Datei erscheint in der Auswahl.",
+                "schedule_title": "Plan erstellen",
+                "schedule_body": "Datei wählen, Zeit einstellen, Tage auswählen und Plan hinzufügen.",
+                "lists_title": "Plan-Listen (Tabs)",
+                "lists_body": "Verwalten Sie mehrere Plan-Listen über Tabs. Nur die aktive Liste spielt ab.",
+                "mute_title": "Stummschalten",
+                "mute_body": "Über das Lautsprecher-Symbol einen Plan stummschalten oder aktivieren.",
+                "edit_title": "Plan bearbeiten",
+                "edit_body": "Mit dem Stift-Symbol Zeit und Tage anpassen und speichern.",
+                "delete_title": "Plan löschen",
+                "delete_body": "Papierkorb anklicken und im Modal bestätigen."
+            },
+            "settings": {
+                "title": "Einstellungen & Anmeldung",
+                "body": "Benutzername und Passwort unter Einstellungen ändern. Sprache oben im Header umschalten."
+            }
+        }
+    }
+    ,
+    "es": {
+        "title": "Programador de Audio",
+        "login": {
+            "username": "Usuario",
+            "password": "Contraseña",
+            "submit": "Entrar",
+            "error": {
+                "title": "Error de inicio",
+                "message": "Usuario o contraseña inválidos",
+                "server_error": "Ha ocurrido un error. Inténtalo de nuevo",
+                "ok": "OK"
+            }
+        },
+        "navigation": {
+            "dashboard": "Panel",
+            "settings": "Ajustes",
+            "github": "GitHub",
+            "logout": "Salir"
+        },
+        "settings": {
+            "title": "Ajustes",
+            "new_username": "Nuevo usuario",
+            "current_password": "Contraseña actual",
+            "new_password": "Nueva contraseña",
+            "confirm_password": "Confirmar contraseña",
+            "save_button": "Guardar cambios",
+            "password_mismatch": "Las nuevas contraseñas no coinciden",
+            "update_success": "Ajustes actualizados",
+            "update_error": "No se pudieron actualizar los ajustes",
+            "server_error": "Ha ocurrido un error. Inténtalo de nuevo"
+        },
+        "upload": {
+            "title": "Subir archivo de audio",
+            "button": "Subir"
+        },
+        "schedule": {
+            "title": "Programar audio",
+            "select_file": "Seleccionar archivo",
+            "time": "Hora",
+            "days": "Días",
+            "days_list": {
+                "monday": "Lunes",
+                "tuesday": "Martes",
+                "wednesday": "Miércoles",
+                "thursday": "Jueves",
+                "friday": "Viernes",
+                "saturday": "Sábado",
+                "sunday": "Domingo"
+            },
+            "add_button": "Añadir programación"
+        },
+        "current_schedules": {
+            "title": "Programaciones actuales",
+            "file": "Archivo",
+            "time": "Hora",
+            "days": "Días",
+            "next_run": "Próxima ejecución",
+            "not_scheduled": "No programado",
+            "delete": "Eliminar",
+            "action": "Acción",
+            "mute": "Silenciar",
+            "unmute": "Activar sonido",
+            "edit": "Editar"
+        },
+        "modals": {
+            "delete": {
+                "title": "Confirmar eliminación",
+                "message": "¿Seguro que deseas eliminar esta programación?",
+                "confirm": "Eliminar",
+                "cancel": "Cancelar"
+            },
+            "info": {
+                "title": "Información",
+                "ok": "OK"
+            },
+            "edit": {
+                "title": "Editar programación",
+                "save": "Guardar"
+            }
+        },
+        "schedule_lists": {
+            "title": "Listas de programación",
+            "new_list": "Nueva lista",
+            "create": "Crear",
+            "rename": "Renombrar",
+            "delete_list": "Eliminar lista",
+            "active": "Activa",
+            "name_prompt": "Introduce el nombre de la lista:",
+            "rename_prompt": "Introduce el nuevo nombre:"
+        },
+        "footer": {
+            "made_with": "Hecho con",
+            "by": "por"
+        },
+        "manual": {
+            "title": "Manual de usuario",
+            "overview": {
+                "title": "Descripción",
+                "body": "Programador de Audio permite subir archivos de audio y programarlos para horas y días específicos. Ideal para timbres escolares, avisos y recordatorios temporizados."
+            },
+            "install": {
+                "title": "Instalación",
+                "manual_title": "Instalación manual",
+                "manual_body": "Instala Python, ejecuta 'pip install -r requirements.txt', 'flask db upgrade' y luego 'python app.py'.",
+                "docker_title": "Docker",
+                "docker_body": "Construye con 'docker build -t audioscheduler .' y ejecuta con volúmenes persistentes. Abre http://localhost:5000."
+            },
+            "usage": {
+                "title": "Uso",
+                "upload_title": "Subir audio",
+                "upload_body": "Elige un archivo de audio y pulsa Subir. El archivo aparecerá en la lista.",
+                "schedule_title": "Crear programación",
+                "schedule_body": "Selecciona archivo, elige hora, días y añade la programación.",
+                "lists_title": "Listas (pestañas)",
+                "lists_body": "Gestiona varias listas de programación con pestañas. Solo la activa reproduce.",
+                "mute_title": "Silenciar",
+                "mute_body": "Usa el icono de altavoz para silenciar o activar una programación.",
+                "edit_title": "Editar programación",
+                "edit_body": "Pulsa el icono de lápiz para cambiar hora y días. Guarda para aplicar.",
+                "delete_title": "Eliminar programación",
+                "delete_body": "Pulsa el icono de papelera y confirma en el modal."
+            },
+            "settings": {
+                "title": "Ajustes e inicio de sesión",
+                "body": "Cambia usuario y contraseña en Ajustes. Cambia el idioma en el encabezado."
+            }
+        }
+    }
 }

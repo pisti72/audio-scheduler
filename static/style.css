@@ -324,13 +324,13 @@ select, input[type="time"] {
 }
 
 .tab.new-tab {
-    background: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
+    background: #f0f0f0; /* same as inactive */
+    color: inherit;
+    border-color: #ddd;   /* same as inactive */
 }
 
 .tab.new-tab:hover {
-    background: #45a049;
+    background: #e0e0e0; /* same as inactive hover */
 }
 
 .tab-name {

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ current_lang or 'en' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Scheduler</title>
+    <title>{{ translations.title if translations and translations.title else 'Audio Scheduler' }}</title>
     <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/auth.css">
@@ -14,7 +14,7 @@
         <div class="header-content">
             <div class="logo">
                 <i class="fas fa-volume-up"></i>
-                <span>Audio Scheduler</span>
+                <span>{{ translations.title if translations and translations.title else 'Audio Scheduler' }}</span>
             </div>
             <nav class="nav-links">
                 <a href="/" {% if request.endpoint == 'index' %}class="active"{% endif %}>{{ translations.navigation.dashboard }}</a>
@@ -26,11 +26,17 @@
                         <span>{{ current_lang.upper() }}</span>
                     </button>
                     <div id="languageMenu" class="language-menu">
-                        <a href="#" onclick="changeLanguage('en')" {% if current_lang == 'en' %}class="active"{% endif %}>
+                        <a href="#" onclick="return changeLanguage('en')" {% if current_lang == 'en' %}class="active"{% endif %}>
                             🇬🇧 English
                         </a>
-                        <a href="#" onclick="changeLanguage('hu')" {% if current_lang == 'hu' %}class="active"{% endif %}>
+                        <a href="#" onclick="return changeLanguage('hu')" {% if current_lang == 'hu' %}class="active"{% endif %}>
                             🇭🇺 Magyar
+                        </a>
+                        <a href="#" onclick="return changeLanguage('de')" {% if current_lang == 'de' %}class="active"{% endif %}>
+                            🇩🇪 Deutsch
+                        </a>
+                        <a href="#" onclick="return changeLanguage('es')" {% if current_lang == 'es' %}class="active"{% endif %}>
+                            🇪🇸 Español
                         </a>
                     </div>
                 </div>

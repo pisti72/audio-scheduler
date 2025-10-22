@@ -371,12 +371,17 @@ async function loadSchedules() {
         currentSchedules = schedules;
         
         const schedulesList = document.getElementById('schedulesList');
+        if (!schedulesList) {
+            // Not on a page with schedules table (e.g., login/settings)
+            return;
+        }
         schedulesList.innerHTML = '';
         schedules.forEach(schedule => {
             const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             const dayNames = schedule.days.map(d => appTranslations.days_list[dayKeys[d]]);
+            const locale = mapLangToLocale(currentLang);
             const nextRun = schedule.next_run
-                ? new Date(schedule.next_run).toLocaleString(currentLang === 'hu' ? 'hu-HU' : 'en-US')
+                ? new Date(schedule.next_run).toLocaleString(locale)
                 : appTranslations.current_schedules.not_scheduled || 'Not scheduled';
             
             const muteButtonTitle = schedule.is_muted 
@@ -490,14 +495,24 @@ document.addEventListener('click', function(event) {
 async function changeLanguage(lang) {
     try {
         const response = await fetch(`/set-language/${lang}`, {
-            method: 'GET'
+            method: 'GET',
+            credentials: 'same-origin'
         });
         const data = await response.json();
-        if (data.success) {
+        if (data && data.success) {
+            // Close menu and reload
+            const menu = document.getElementById('languageMenu');
+            if (menu) menu.classList.remove('show');
             window.location.reload();
+            return false;
+        } else {
+            showMessageModal('Error', 'Failed to change language');
+            return false;
         }
     } catch (error) {
         console.error('Error changing language:', error);
+        showMessageModal('Error', 'Failed to change language');
+        return false;
     }
 }
 
@@ -528,7 +543,7 @@ function startRealtimeClock() {
     const update = () => {
         try {
             const now = new Date();
-            const locale = (typeof currentLang === 'string' && currentLang === 'hu') ? 'hu-HU' : 'en-US';
+            const locale = mapLangToLocale(currentLang);
             const time = now.toLocaleTimeString(locale, { hour12: false });
             el.textContent = time;
             el.title = now.toLocaleString(locale);
@@ -539,4 +554,15 @@ function startRealtimeClock() {
     };
     update();
     setInterval(update, 1000);
+}
+
+// Map app language code to full locale
+function mapLangToLocale(lang) {
+    switch (lang) {
+        case 'hu': return 'hu-HU';
+        case 'de': return 'de-DE';
+        case 'es': return 'es-ES';
+        case 'en':
+        default: return 'en-US';
+    }
 }
