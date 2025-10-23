@@ -14,10 +14,6 @@ venv/
 instance/*
 !instance/.gitkeep
 
-# Uploads
-uploads/*
-!uploads/.gitkeep
-
 # IDE
 .vscode/
 .idea/
