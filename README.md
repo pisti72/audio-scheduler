@@ -9,7 +9,7 @@ Audio Scheduler is a web application that lets you upload audio files and schedu
 Before running the application, ensure you have the required directories:
 
 ```bash
-# Create uploads directory for audio files
+# Create uploads directory for audio files if not exists
 mkdir -p uploads
 
 # Create instance directory for the SQLite database
@@ -26,17 +26,54 @@ These directories are essential for persistent storage:
 
 1. Install Python 3.7 or higher on your system
 
-2. Install the required Python packages:
+2. Install system dependencies (Fedora/RHEL/CentOS):
+	```bash
+	sudo dnf install SDL2-devel SDL2_mixer-devel SDL2_image-devel SDL2_ttf-devel
+	sudo dnf install portmidi-devel
+	sudo dnf install python3-devel
+	sudo dnf install python3-pygame
+	```
+
+	For Ubuntu/Debian systems, use equivalent packages:
+	```bash
+	sudo apt-get install libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev libsdl2-ttf-dev
+	sudo apt-get install libportmidi-dev
+	sudo apt-get install python3-dev
+	sudo apt-get install python3-pygame
+	```
+
+	For Windows systems:
+	```cmd
+	# Install Visual C++ Build Tools if not already installed
+	# Download from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+	
+	# Update pip and install wheel first
+	python -m pip install --upgrade pip wheel
+	
+	# Install pygame separately (often resolves SDL dependency issues)
+	pip install pygame
+	
+	# If pygame installation fails, try pre-compiled wheel:
+	pip install --upgrade pygame --force-reinstall
+	```
+
+3. Install the required Python packages:
 	```bash
 	pip install -r requirements.txt
 	```
 
-3. Initialize the database:
+	If you encounter compatibility issues, try installing specific versions:
+	```bash
+	pip install Flask==2.0.1 APScheduler==3.9.1 python-dotenv==0.19.0
+	pip install 'Werkzeug<2.1.0'
+	```
+
+4. Initialize the database:
 	```bash
 	flask db upgrade
 	```
 
-4. Run the application:
+5. Run the application:
 	```bash
 	python app.py
 	```
