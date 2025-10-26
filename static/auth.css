@@ -1,81 +1,80 @@
+/* Authentication specific styling - extends unified form styling */
+
 .auth-container {
-    max-width: 400px;
+    max-width: 450px;
     margin: 100px auto 20px;
-    padding: 20px;
+    padding: 2.5rem;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+}
+
+.auth-box h1 {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.auth-box h1 i {
+    color: var(--primary-color);
+    font-size: 2rem;
 }
 
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+/* Override for auth specific button styling */
+.auth-button {
+    width: 100%;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1rem;
 }
 
-.form-group label {
-    font-weight: 500;
-    color: #444;
-    margin-bottom: 0.3rem;
-}
-
-.form-control {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-}
-
+/* Flash message styling for auth pages */
 .flash-message {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
     background-color: #fff3cd;
     color: #856404;
     border: 1px solid #ffeeba;
+    border-left: 4px solid var(--warning-color);
 }
 
 .auth-links {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 1.5rem;
 }
 
 .auth-links a {
     color: var(--primary-color);
     text-decoration: none;
+    font-weight: 500;
 }
 
 .auth-links a:hover {
     text-decoration: underline;
+    color: var(--primary-color-hover);
 }
 
-.auth-form input[type="text"],
-.auth-form input[type="password"] {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.1rem;
-    border: 1.5px solid #d0d7de;
-    border-radius: 6px;
-    background: #f7f9fc;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-}
-
-.auth-form input[type="text"]:focus,
-.auth-form input[type="password"]:focus {
-    border-color: #2196F3;
-    box-shadow: 0 0 0 2px rgba(33,150,243,0.15);
-    outline: none;
+/* Auth error styling */
+.auth-error {
+    color: var(--danger-color);
+    text-align: center;
+    margin-top: 1rem;
+    font-weight: 500;
+    padding: 0.75rem;
+    background: #f8d7da;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--danger-color);
 }

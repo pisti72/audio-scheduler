@@ -3,27 +3,51 @@
 {% block content %}
 <div class="container">
     <div class="settings-section">
-        <h2 class="settings-title">{{ translations.settings.title }}</h2>
+        <h2 class="settings-title">
+            <i class="fas fa-cog"></i>
+            {{ translations.settings.title }}
+        </h2>
+        
         <form id="settingsForm" class="settings-form" onsubmit="return handleSettingsUpdate(event)">
             <div class="form-group">
-                <label for="newUsername">{{ translations.settings.new_username }}</label>
-                <input type="text" id="newUsername" name="newUsername" required>
+                <label for="newUsername">
+                    <i class="fas fa-user"></i>
+                    {{ translations.settings.new_username }}
+                </label>
+                <input type="text" id="newUsername" name="newUsername" placeholder="Enter new username" required>
             </div>
+            
             <div class="form-group">
-                <label for="currentPassword">{{ translations.settings.current_password }}</label>
-                <input type="password" id="currentPassword" name="currentPassword" required>
+                <label for="currentPassword">
+                    <i class="fas fa-lock"></i>
+                    {{ translations.settings.current_password }}
+                </label>
+                <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password to confirm changes" required>
             </div>
+            
             <div class="form-group">
-                <label for="newPassword">{{ translations.settings.new_password }}</label>
-                <input type="password" id="newPassword" name="newPassword">
+                <label for="newPassword">
+                    <i class="fas fa-key"></i>
+                    {{ translations.settings.new_password }}
+                </label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="Leave empty to keep current password">
             </div>
+            
             <div class="form-group">
-                <label for="confirmPassword">{{ translations.settings.confirm_password }}</label>
-                <input type="password" id="confirmPassword" name="confirmPassword">
+                <label for="confirmPassword">
+                    <i class="fas fa-key"></i>
+                    {{ translations.settings.confirm_password }}
+                </label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
             </div>
-            <button type="submit" class="settings-button">{{ translations.settings.save_button }}</button>
-            <div id="settingsError" class="auth-error"></div>
-            <div id="settingsSuccess" style="color: green; text-align: center; margin-top: 1rem; display: none;"></div>
+            
+            <button type="submit" class="settings-button btn-primary">
+                <i class="fas fa-save"></i>
+                {{ translations.settings.save_button }}
+            </button>
+            
+            <div id="settingsError" class="message error" style="display: none;"></div>
+            <div id="settingsSuccess" class="message success" style="display: none;"></div>
         </form>
     </div>
 </div>

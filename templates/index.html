@@ -2,19 +2,40 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ translations.title }}</h1>
+    <h1>
+        <i class="fas fa-calendar-alt"></i>
+        {{ translations.title }}
+    </h1>
     
     <div class="upload-section">
-        <h2>{{ translations.upload.title }}</h2>
-        <input type="file" id="audioFile" accept="audio/*">
-        <button onclick="uploadFile()">{{ translations.upload.button }}</button>
+        <h2>
+            <i class="fas fa-upload"></i>
+            {{ translations.upload.title }}
+        </h2>
+        <div class="form-group">
+            <label for="audioFile">
+                <i class="fas fa-file-audio"></i>
+                Choose audio file to upload
+            </label>
+            <input type="file" id="audioFile" accept="audio/*">
+        </div>
+        <button onclick="uploadFile()" class="btn-primary">
+            <i class="fas fa-cloud-upload-alt"></i>
+            {{ translations.upload.button }}
+        </button>
     </div>
 
     <div class="schedule-section">
-        <h2>{{ translations.schedule.title }}</h2>
+        <h2>
+            <i class="fas fa-clock"></i>
+            {{ translations.schedule.title }}
+        </h2>
         <div class="schedule-form">
-            <div class="file-select">
-                <label for="selectedFile">{{ translations.schedule.select_file }}:</label>
+            <div class="form-group">
+                <label for="selectedFile">
+                    <i class="fas fa-music"></i>
+                    {{ translations.schedule.select_file }}:
+                </label>
                 <div class="file-select-group">
                     <select id="selectedFile">
                         {% for file in uploaded_files %}
@@ -26,13 +47,19 @@
                     </button>
                 </div>
             </div>
-            <div class="time-select">
-                <label for="scheduleTime">{{ translations.schedule.time }}:</label>
-                <input type="time" id="scheduleTime">
+            <div class="form-group">
+                <label for="scheduleTime">
+                    <i class="fas fa-clock"></i>
+                    {{ translations.schedule.time }}:
+                </label>
+                <input type="time" id="scheduleTime" required>
             </div>
 
-            <div class="days-select">
-                <label>{{ translations.schedule.days }}:</label>
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-calendar-week"></i>
+                    {{ translations.schedule.days }}:
+                </label>
                 <div class="days-checkboxes">
                     <label><input type="checkbox" value="0"> {{ translations.schedule.days_list.monday }}</label>
                     <label><input type="checkbox" value="1"> {{ translations.schedule.days_list.tuesday }}</label>
@@ -44,7 +71,10 @@
                 </div>
             </div>
 
-            <button onclick="addSchedule()">{{ translations.schedule.add_button }}</button>
+            <button onclick="addSchedule()" class="btn-primary">
+                <i class="fas fa-plus"></i>
+                {{ translations.schedule.add_button }}
+            </button>
         </div>
     </div>
 
