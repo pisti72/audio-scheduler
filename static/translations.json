@@ -28,7 +28,24 @@
             "password_mismatch": "New passwords do not match",
             "update_success": "Settings updated successfully",
             "update_error": "Failed to update settings",
-            "server_error": "An error occurred. Please try again"
+            "server_error": "An error occurred. Please try again",
+            "export": {
+                "title": "Export Schedules",
+                "description": "Download your current schedule list as a CSV file for backup or analysis purposes.",
+                "button": "Export Current Schedules to CSV",
+                "success": "Schedules exported successfully!",
+                "error": "Export failed"
+            },
+            "import": {
+                "title": "Import Schedules",
+                "description": "Upload a CSV file to replace your current schedule list. This will delete all existing schedules and import the new ones.",
+                "choose_file": "Choose CSV File",
+                "button": "Import Schedules from CSV",
+                "warning": "Warning: This will permanently replace all schedules in your current list. Make sure to export a backup first!",
+                "select_file_error": "Please select a CSV file first",
+                "importing": "Importing...",
+                "exporting": "Exporting..."
+            }
         },
         "upload": {
             "title": "Upload Audio File",
@@ -155,7 +172,24 @@
             "password_mismatch": "Az új jelszavak nem egyeznek",
             "update_success": "Beállítások sikeresen frissítve",
             "update_error": "Nem sikerült frissíteni a beállításokat",
-            "server_error": "Hiba történt. Kérjük, próbálja újra"
+            "server_error": "Hiba történt. Kérjük, próbálja újra",
+            "export": {
+                "title": "Ütemezések exportálása",
+                "description": "Töltse le a jelenlegi ütemezési listáját CSV fájlként biztonsági mentés vagy elemzés céljából.",
+                "button": "Jelenlegi ütemezések exportálása CSV-be",
+                "success": "Ütemezések sikeresen exportálva!",
+                "error": "Az exportálás sikertelen"
+            },
+            "import": {
+                "title": "Ütemezések importálása",
+                "description": "Töltsön fel egy CSV fájlt a jelenlegi ütemezési lista lecseréléséhez. Ez törli az összes meglévő ütemezést és importálja az újakat.",
+                "choose_file": "CSV fájl kiválasztása",
+                "button": "Ütemezések importálása CSV-ből",
+                "warning": "Figyelem: Ez véglegesen lecseréli az összes ütemezést a jelenlegi listájában. Először készítsen biztonsági mentést az exportálással!",
+                "select_file_error": "Először válasszon ki egy CSV fájlt",
+                "importing": "Importálás...",
+                "exporting": "Exportálás..."
+            }
         },
         "upload": {
             "title": "Hangfájl feltöltése",
@@ -283,7 +317,24 @@
             "password_mismatch": "Die neuen Passwörter stimmen nicht überein",
             "update_success": "Einstellungen erfolgreich aktualisiert",
             "update_error": "Einstellungen konnten nicht aktualisiert werden",
-            "server_error": "Ein Fehler ist aufgetreten. Bitte erneut versuchen"
+            "server_error": "Ein Fehler ist aufgetreten. Bitte erneut versuchen",
+            "export": {
+                "title": "Zeitpläne exportieren",
+                "description": "Laden Sie Ihre aktuelle Zeitplanliste als CSV-Datei für Backup- oder Analysezwecke herunter.",
+                "button": "Aktuelle Zeitpläne als CSV exportieren",
+                "success": "Zeitpläne erfolgreich exportiert!",
+                "error": "Export fehlgeschlagen"
+            },
+            "import": {
+                "title": "Zeitpläne importieren",
+                "description": "Laden Sie eine CSV-Datei hoch, um Ihre aktuelle Zeitplanliste zu ersetzen. Dies löscht alle vorhandenen Zeitpläne und importiert die neuen.",
+                "choose_file": "CSV-Datei auswählen",
+                "button": "Zeitpläne aus CSV importieren",
+                "warning": "Warnung: Dies ersetzt dauerhaft alle Zeitpläne in Ihrer aktuellen Liste. Erstellen Sie zuerst ein Backup durch Exportieren!",
+                "select_file_error": "Bitte wählen Sie zuerst eine CSV-Datei aus",
+                "importing": "Importiere...",
+                "exporting": "Exportiere..."
+            }
         },
         "upload": {
             "title": "Audio-Datei hochladen",
@@ -412,7 +463,24 @@
             "password_mismatch": "Las nuevas contraseñas no coinciden",
             "update_success": "Ajustes actualizados",
             "update_error": "No se pudieron actualizar los ajustes",
-            "server_error": "Ha ocurrido un error. Inténtalo de nuevo"
+            "server_error": "Ha ocurrido un error. Inténtalo de nuevo",
+            "export": {
+                "title": "Exportar horarios",
+                "description": "Descarga tu lista de horarios actual como archivo CSV para respaldo o análisis.",
+                "button": "Exportar horarios actuales a CSV",
+                "success": "¡Horarios exportados exitosamente!",
+                "error": "Error en exportación"
+            },
+            "import": {
+                "title": "Importar horarios",
+                "description": "Sube un archivo CSV para reemplazar tu lista de horarios actual. Esto eliminará todos los horarios existentes e importará los nuevos.",
+                "choose_file": "Elegir archivo CSV",
+                "button": "Importar horarios desde CSV",
+                "warning": "Advertencia: Esto reemplazará permanentemente todos los horarios en tu lista actual. ¡Asegúrate de exportar un respaldo primero!",
+                "select_file_error": "Por favor selecciona un archivo CSV primero",
+                "importing": "Importando...",
+                "exporting": "Exportando..."
+            }
         },
         "upload": {
             "title": "Subir archivo de audio",

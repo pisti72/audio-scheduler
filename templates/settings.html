@@ -54,14 +54,14 @@
         <div class="export-section">
             <h3 class="export-title">
                 <i class="fas fa-download"></i>
-                Export Schedules
+                {{ translations.settings.export.title }}
             </h3>
             <p class="export-description">
-                Download your current schedule list as a CSV file for backup or analysis purposes.
+                {{ translations.settings.export.description }}
             </p>
             <button type="button" id="exportCsvBtn" class="export-button btn-secondary" onclick="exportSchedulesCSV()">
                 <i class="fas fa-file-csv"></i>
-                Export Current Schedules to CSV
+                {{ translations.settings.export.button }}
             </button>
             <div id="exportStatus" class="message" style="display: none;"></div>
         </div>
@@ -70,29 +70,29 @@
         <div class="import-section">
             <h3 class="import-title">
                 <i class="fas fa-upload"></i>
-                Import Schedules
+                {{ translations.settings.import.title }}
             </h3>
             <p class="import-description">
-                Upload a CSV file to replace your current schedule list. This will delete all existing schedules and import the new ones.
+                {{ translations.settings.import.description }}
             </p>
             <div class="import-form">
                 <div class="file-input-wrapper">
                     <input type="file" id="csvFileInput" accept=".csv" class="file-input">
                     <label for="csvFileInput" class="file-input-label">
                         <i class="fas fa-file-csv"></i>
-                        Choose CSV File
+                        {{ translations.settings.import.choose_file }}
                     </label>
                     <span id="fileName" class="file-name"></span>
                 </div>
                 <button type="button" id="importCsvBtn" class="import-button btn-primary" onclick="importSchedulesCSV()" disabled>
                     <i class="fas fa-upload"></i>
-                    Import Schedules from CSV
+                    {{ translations.settings.import.button }}
                 </button>
             </div>
             <div id="importStatus" class="message" style="display: none;"></div>
             <div class="import-warning">
                 <i class="fas fa-exclamation-triangle"></i>
-                <strong>Warning:</strong> This will permanently replace all schedules in your current list. Make sure to export a backup first!
+                <strong>{{ translations.settings.import.warning }}</strong>
             </div>
         </div>
     </div>
@@ -157,7 +157,7 @@
         
         // Show loading state
         exportBtn.disabled = true;
-        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {{ translations.settings.import.exporting }}';
         statusDiv.style.display = 'none';
         
         try {
@@ -170,7 +170,7 @@
                 if (contentType && contentType.includes('application/json')) {
                     // Handle JSON error response
                     const data = await response.json();
-                    statusDiv.textContent = data.error || 'Export failed';
+                    statusDiv.textContent = data.error || '{{ translations.settings.export.error }}';
                     statusDiv.className = 'message error';
                     statusDiv.style.display = 'block';
                 } else {
@@ -198,7 +198,7 @@
                     window.URL.revokeObjectURL(url);
                     
                     // Show success message
-                    statusDiv.textContent = 'Schedules exported successfully!';
+                    statusDiv.textContent = '{{ translations.settings.export.success }}';
                     statusDiv.className = 'message success';
                     statusDiv.style.display = 'block';
                 }
@@ -207,13 +207,13 @@
             }
         } catch (error) {
             console.error('Export error:', error);
-            statusDiv.textContent = 'Export failed: ' + error.message;
+            statusDiv.textContent = '{{ translations.settings.export.error }}: ' + error.message;
             statusDiv.className = 'message error';
             statusDiv.style.display = 'block';
         } finally {
             // Restore button state
             exportBtn.disabled = false;
-            exportBtn.innerHTML = '<i class="fas fa-file-csv"></i> Export Current Schedules to CSV';
+            exportBtn.innerHTML = '<i class="fas fa-file-csv"></i> {{ translations.settings.export.button }}';
             
             // Hide status message after 5 seconds
             setTimeout(() => {
@@ -243,7 +243,7 @@
         const statusDiv = document.getElementById('importStatus');
         
         if (!fileInput.files[0]) {
-            statusDiv.textContent = 'Please select a CSV file first';
+            statusDiv.textContent = '{{ translations.settings.import.select_file_error }}';
             statusDiv.className = 'message error';
             statusDiv.style.display = 'block';
             return;
@@ -253,7 +253,7 @@
         
         // Show loading state
         importBtn.disabled = true;
-        importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+        importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {{ translations.settings.import.importing }}';
         statusDiv.style.display = 'none';
         
         try {
@@ -282,20 +282,20 @@
                 }, 2000);
                 
             } else {
-                statusDiv.textContent = data.error || 'Import failed';
+                statusDiv.textContent = data.error || '{{ translations.settings.export.error }}';
                 statusDiv.className = 'message error';
                 statusDiv.style.display = 'block';
             }
             
         } catch (error) {
             console.error('Import error:', error);
-            statusDiv.textContent = 'Import failed: ' + error.message;
+            statusDiv.textContent = '{{ translations.settings.export.error }}: ' + error.message;
             statusDiv.className = 'message error';
             statusDiv.style.display = 'block';
         } finally {
             // Restore button state
             importBtn.disabled = fileInput.files.length === 0;
-            importBtn.innerHTML = '<i class="fas fa-upload"></i> Import Schedules from CSV';
+            importBtn.innerHTML = '<i class="fas fa-upload"></i> {{ translations.settings.import.button }}';
             
             // Hide status message after 8 seconds (longer for import due to refresh)
             setTimeout(() => {
