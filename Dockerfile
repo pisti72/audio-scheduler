@@ -1,5 +1,5 @@
 # Use official Python image
-FROM python:3.13-slim
+FROM python:3.11-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -13,7 +13,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
         libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev libsdl2-ttf-dev \
-        portmidi-dev \
+        libportmidi-dev \
         gcc \
         libasound2-dev \
         && rm -rf /var/lib/apt/lists/*
@@ -32,4 +32,4 @@ EXPOSE 5000
 RUN mkdir -p uploads
 
 # Run the application
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+CMD ["python", "app.py"]

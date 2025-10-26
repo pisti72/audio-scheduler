@@ -26,7 +26,15 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///schedules.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'your-secret-key-here'  # Required for session management
-pygame.mixer.init()
+
+# Initialize pygame mixer - handle gracefully if no audio device available
+try:
+    pygame.mixer.init()
+    audio_available = True
+    print("Audio system initialized successfully")
+except Exception as e:
+    audio_available = False
+    print(f"Audio system not available: {str(e)}")
 
 # Initialize database
 db.init_app(app)
@@ -63,8 +71,12 @@ init_credentials()
 
 def play_audio(file_path):
     try:
+        if not audio_available:
+            print(f"Audio playback skipped (no audio device): {file_path}")
+            return
         pygame.mixer.music.load(file_path)
         pygame.mixer.music.play()
+        print(f"Playing audio: {file_path}")
     except Exception as e:
         print(f"Error playing audio: {str(e)}")
 

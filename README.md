@@ -97,5 +97,33 @@ To build and run this application with Docker:
 	  audioscheduler
 	```
 
+### Podman
+
+To build and run this application with Podman (Docker alternative):
+
+1. Build the Podman image:
+	```bash
+	podman build -t audioscheduler .
+	```
+
+2. Run the container (with persistent uploads and database):
+	```bash
+	podman run -d -p 5000:5000 --name audioscheduler \
+	  -v $(pwd)/uploads:/app/uploads \
+	  -v $(pwd)/schedules.db:/app/schedules.db \
+	  audioscheduler
+	```
+
+3. Alternative: Run as systemd service (rootless):
+	```bash
+	# Generate systemd unit file
+	podman generate systemd --new --name audioscheduler > ~/.config/systemd/user/audioscheduler.service
+	
+	# Enable and start the service
+	systemctl --user daemon-reload
+	systemctl --user enable --now audioscheduler.service
+	```
+
+**Both Docker and Podman:**
 - The app will be available at http://localhost:5000
 - Uploaded files and the database will be stored on your host machine.
