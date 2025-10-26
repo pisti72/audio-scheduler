@@ -436,6 +436,210 @@ textarea:focus {
     background: var(--primary-color-hover);
 }
 
+/* Export section styling */
+.export-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--background-light);
+    border-radius: var(--border-radius);
+    border: 1.5px solid var(--border-color);
+}
+
+.export-title {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.export-title i {
+    color: var(--secondary-color);
+}
+
+.export-description {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.export-button {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.export-button:hover:not(:disabled) {
+    background: #1976D2;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.export-button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.export-button .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Import section styling */
+.import-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--background-light);
+    border-radius: var(--border-radius);
+    border: 1.5px solid var(--border-color);
+}
+
+.import-title {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.import-title i {
+    color: var(--primary-color);
+}
+
+.import-description {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.import-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-input-label {
+    background: var(--background-color);
+    color: var(--text-color);
+    border: 2px dashed var(--border-color);
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.file-input-label:hover {
+    border-color: var(--primary-color);
+    background: var(--primary-color-light);
+}
+
+.file-input-label i {
+    color: var(--primary-color);
+}
+
+.file-name {
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 0.5rem;
+}
+
+.import-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: flex-start;
+}
+
+.import-button:hover:not(:disabled) {
+    background: var(--primary-color-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.import-button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.import-button .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+.import-warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.import-warning i {
+    color: #f39c12;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .file-input-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .import-form {
+        gap: 1.5rem;
+    }
+}
+
 /* Message styling */
 .message, .flash-message {
     padding: 1rem;

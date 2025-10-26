@@ -49,6 +49,52 @@
             <div id="settingsError" class="message error" style="display: none;"></div>
             <div id="settingsSuccess" class="message success" style="display: none;"></div>
         </form>
+        
+        <!-- CSV Export Section -->
+        <div class="export-section">
+            <h3 class="export-title">
+                <i class="fas fa-download"></i>
+                Export Schedules
+            </h3>
+            <p class="export-description">
+                Download your current schedule list as a CSV file for backup or analysis purposes.
+            </p>
+            <button type="button" id="exportCsvBtn" class="export-button btn-secondary" onclick="exportSchedulesCSV()">
+                <i class="fas fa-file-csv"></i>
+                Export Current Schedules to CSV
+            </button>
+            <div id="exportStatus" class="message" style="display: none;"></div>
+        </div>
+        
+        <!-- CSV Import Section -->
+        <div class="import-section">
+            <h3 class="import-title">
+                <i class="fas fa-upload"></i>
+                Import Schedules
+            </h3>
+            <p class="import-description">
+                Upload a CSV file to replace your current schedule list. This will delete all existing schedules and import the new ones.
+            </p>
+            <div class="import-form">
+                <div class="file-input-wrapper">
+                    <input type="file" id="csvFileInput" accept=".csv" class="file-input">
+                    <label for="csvFileInput" class="file-input-label">
+                        <i class="fas fa-file-csv"></i>
+                        Choose CSV File
+                    </label>
+                    <span id="fileName" class="file-name"></span>
+                </div>
+                <button type="button" id="importCsvBtn" class="import-button btn-primary" onclick="importSchedulesCSV()" disabled>
+                    <i class="fas fa-upload"></i>
+                    Import Schedules from CSV
+                </button>
+            </div>
+            <div id="importStatus" class="message" style="display: none;"></div>
+            <div class="import-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Warning:</strong> This will permanently replace all schedules in your current list. Make sure to export a backup first!
+            </div>
+        </div>
     </div>
 </div>
 
@@ -103,6 +149,159 @@
             errorDiv.style.display = 'block';
         }
         return false;
+    }
+    
+    async function exportSchedulesCSV() {
+        const exportBtn = document.getElementById('exportCsvBtn');
+        const statusDiv = document.getElementById('exportStatus');
+        
+        // Show loading state
+        exportBtn.disabled = true;
+        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+        statusDiv.style.display = 'none';
+        
+        try {
+            const response = await fetch('/settings/export_csv');
+            
+            if (response.ok) {
+                // Check if response is JSON (error) or CSV (success)
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    // Handle JSON error response
+                    const data = await response.json();
+                    statusDiv.textContent = data.error || 'Export failed';
+                    statusDiv.className = 'message error';
+                    statusDiv.style.display = 'block';
+                } else {
+                    // Handle CSV file download
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    
+                    // Get filename from response headers
+                    const contentDisposition = response.headers.get('content-disposition');
+                    let filename = 'audio_schedules.csv';
+                    if (contentDisposition) {
+                        const matches = contentDisposition.match(/filename="([^"]+)"/);
+                        if (matches) {
+                            filename = matches[1];
+                        }
+                    }
+                    
+                    // Create download link and trigger download
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    // Show success message
+                    statusDiv.textContent = 'Schedules exported successfully!';
+                    statusDiv.className = 'message success';
+                    statusDiv.style.display = 'block';
+                }
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error('Export error:', error);
+            statusDiv.textContent = 'Export failed: ' + error.message;
+            statusDiv.className = 'message error';
+            statusDiv.style.display = 'block';
+        } finally {
+            // Restore button state
+            exportBtn.disabled = false;
+            exportBtn.innerHTML = '<i class="fas fa-file-csv"></i> Export Current Schedules to CSV';
+            
+            // Hide status message after 5 seconds
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+    
+    // File input handling
+    document.getElementById('csvFileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const fileName = document.getElementById('fileName');
+        const importBtn = document.getElementById('importCsvBtn');
+        
+        if (file) {
+            fileName.textContent = file.name;
+            importBtn.disabled = false;
+        } else {
+            fileName.textContent = '';
+            importBtn.disabled = true;
+        }
+    });
+    
+    async function importSchedulesCSV() {
+        const fileInput = document.getElementById('csvFileInput');
+        const importBtn = document.getElementById('importCsvBtn');
+        const statusDiv = document.getElementById('importStatus');
+        
+        if (!fileInput.files[0]) {
+            statusDiv.textContent = 'Please select a CSV file first';
+            statusDiv.className = 'message error';
+            statusDiv.style.display = 'block';
+            return;
+        }
+        
+        const file = fileInput.files[0];
+        
+        // Show loading state
+        importBtn.disabled = true;
+        importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+        statusDiv.style.display = 'none';
+        
+        try {
+            const formData = new FormData();
+            formData.append('csv_file', file);
+            
+            const response = await fetch('/settings/import_csv', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                statusDiv.textContent = data.message;
+                statusDiv.className = 'message success';
+                statusDiv.style.display = 'block';
+                
+                // Clear file input
+                fileInput.value = '';
+                document.getElementById('fileName').textContent = '';
+                
+                // Refresh the page after a short delay to show updated schedules
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+                
+            } else {
+                statusDiv.textContent = data.error || 'Import failed';
+                statusDiv.className = 'message error';
+                statusDiv.style.display = 'block';
+            }
+            
+        } catch (error) {
+            console.error('Import error:', error);
+            statusDiv.textContent = 'Import failed: ' + error.message;
+            statusDiv.className = 'message error';
+            statusDiv.style.display = 'block';
+        } finally {
+            // Restore button state
+            importBtn.disabled = fileInput.files.length === 0;
+            importBtn.innerHTML = '<i class="fas fa-upload"></i> Import Schedules from CSV';
+            
+            // Hide status message after 8 seconds (longer for import due to refresh)
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 8000);
+        }
     }
 </script>
 {% endblock %}

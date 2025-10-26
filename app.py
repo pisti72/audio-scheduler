@@ -1,6 +1,8 @@
 import sys
 import pathlib
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, make_response
+import csv
+from io import StringIO
 
 # Ensure local package imports work when running from different cwds
 APP_ROOT = pathlib.Path(__file__).resolve().parent
@@ -62,6 +64,23 @@ def init_schedules():
             db.session.commit()
         
         # Load schedules from active list only
+        schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
+        for schedule in schedules:
+            add_job_to_scheduler(schedule)
+
+def reload_all_schedules():
+    """Reload all schedules from the active list into the scheduler"""
+    # Clear all existing schedule jobs
+    try:
+        for job in scheduler.get_jobs():
+            if job.id.startswith('schedule_'):
+                scheduler.remove_job(job.id)
+    except:
+        pass
+    
+    # Get active list and reload schedules
+    active_list = ScheduleList.query.filter_by(is_active=True).first()
+    if active_list:
         schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
         for schedule in schedules:
             add_job_to_scheduler(schedule)
@@ -181,6 +200,210 @@ def update_settings():
         })
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/settings/export_csv')
+@login_required
+def export_schedules_csv():
+    try:
+        # Get the active schedule list
+        active_list = ScheduleList.query.filter_by(is_active=True).first()
+        if not active_list:
+            return jsonify({'success': False, 'error': 'No active schedule list found'})
+        
+        # Get all schedules for the active list
+        schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
+        
+        # Create CSV content
+        output = StringIO()
+        writer = csv.writer(output)
+        
+        # Write CSV header
+        writer.writerow([
+            'Schedule List Name',
+            'Audio File',
+            'Time',
+            'Days',
+            'Is Muted',
+            'Created Date'
+        ])
+        
+        # Write schedule data
+        for schedule in schedules:
+            # Convert days list to readable format
+            days_map = {
+                0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday',
+                4: 'Friday', 5: 'Saturday', 6: 'Sunday'
+            }
+            
+            # Get active days from boolean columns
+            days_boolean = [
+                schedule.monday, schedule.tuesday, schedule.wednesday,
+                schedule.thursday, schedule.friday, schedule.saturday, schedule.sunday
+            ]
+            
+            active_days = [i for i, day in enumerate(days_boolean) if day]
+            days_names = [days_map.get(day, f'Day{day}') for day in active_days]
+            days_str = ', '.join(days_names) if days_names else 'No days selected'
+            
+            writer.writerow([
+                active_list.name,
+                schedule.filename,
+                schedule.time,
+                days_str,
+                'Yes' if schedule.is_muted else 'No',
+                schedule.created_at.strftime('%Y-%m-%d %H:%M:%S') if hasattr(schedule, 'created_at') and schedule.created_at else 'Unknown'
+            ])
+        
+        # Create response
+        csv_content = output.getvalue()
+        output.close()
+        
+        # Generate filename with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"audio_schedules_{active_list.name}_{timestamp}.csv"
+        
+        # Create response with CSV content
+        response = make_response(csv_content)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Export failed: {str(e)}'})
+
+@app.route('/settings/import_csv', methods=['POST'])
+@login_required
+def import_schedules_csv():
+    try:
+        # Check if file was uploaded
+        if 'csv_file' not in request.files:
+            return jsonify({'success': False, 'error': 'No file uploaded'})
+        
+        file = request.files['csv_file']
+        if file.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'})
+        
+        if not file.filename.lower().endswith('.csv'):
+            return jsonify({'success': False, 'error': 'File must be a CSV file'})
+        
+        # Get the active schedule list
+        active_list = ScheduleList.query.filter_by(is_active=True).first()
+        if not active_list:
+            return jsonify({'success': False, 'error': 'No active schedule list found'})
+        
+        # Read and parse CSV content
+        content = file.read().decode('utf-8')
+        csv_reader = csv.DictReader(StringIO(content))
+        
+        # Validate CSV headers
+        required_headers = ['Audio File', 'Time', 'Days']
+        missing_headers = [h for h in required_headers if h not in csv_reader.fieldnames]
+        if missing_headers:
+            return jsonify({'success': False, 'error': f'Missing required columns: {", ".join(missing_headers)}'})
+        
+        # Parse and validate CSV data
+        new_schedules = []
+        days_map = {
+            'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3,
+            'friday': 4, 'saturday': 5, 'sunday': 6
+        }
+        
+        for row_num, row in enumerate(csv_reader, start=2):  # Start at 2 since row 1 is headers
+            try:
+                # Validate audio file
+                audio_file = row['Audio File'].strip()
+                if not audio_file:
+                    return jsonify({'success': False, 'error': f'Row {row_num}: Audio file cannot be empty'})
+                
+                # Validate time format (HH:MM)
+                time_str = row['Time'].strip()
+                try:
+                    datetime.strptime(time_str, '%H:%M')
+                except ValueError:
+                    return jsonify({'success': False, 'error': f'Row {row_num}: Invalid time format. Use HH:MM (e.g., 14:30)'})
+                
+                # Parse days
+                days_str = row['Days'].strip().lower()
+                schedule_days = {
+                    'monday': False, 'tuesday': False, 'wednesday': False, 'thursday': False,
+                    'friday': False, 'saturday': False, 'sunday': False
+                }
+                
+                if days_str and days_str != 'no days selected':
+                    day_names = [d.strip().lower() for d in days_str.split(',')]
+                    for day_name in day_names:
+                        if day_name in days_map:
+                            schedule_days[day_name] = True
+                        else:
+                            return jsonify({'success': False, 'error': f'Row {row_num}: Invalid day name "{day_name}". Use Monday, Tuesday, etc.'})
+                
+                # Parse muted status
+                is_muted = False
+                if 'Is Muted' in row:
+                    muted_str = row['Is Muted'].strip().lower()
+                    is_muted = muted_str in ['yes', 'true', '1']
+                
+                new_schedules.append({
+                    'filename': audio_file,
+                    'time': time_str,
+                    'days': schedule_days,
+                    'is_muted': is_muted
+                })
+                
+            except Exception as e:
+                return jsonify({'success': False, 'error': f'Row {row_num}: {str(e)}'})
+        
+        if not new_schedules:
+            return jsonify({'success': False, 'error': 'No valid schedules found in CSV file'})
+        
+        # Delete existing schedules for the active list and insert new ones
+        try:
+            # Remove existing schedules from scheduler
+            existing_schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
+            for schedule in existing_schedules:
+                try:
+                    scheduler.remove_job(f'schedule_{schedule.id}')
+                except:
+                    pass  # Job might not exist in scheduler
+            
+            # Delete existing schedules from database
+            Schedule.query.filter_by(schedule_list_id=active_list.id).delete()
+            
+            # Add new schedules
+            for schedule_data in new_schedules:
+                new_schedule = Schedule(
+                    filename=schedule_data['filename'],
+                    time=schedule_data['time'],
+                    monday=schedule_data['days']['monday'],
+                    tuesday=schedule_data['days']['tuesday'],
+                    wednesday=schedule_data['days']['wednesday'],
+                    thursday=schedule_data['days']['thursday'],
+                    friday=schedule_data['days']['friday'],
+                    saturday=schedule_data['days']['saturday'],
+                    sunday=schedule_data['days']['sunday'],
+                    is_muted=schedule_data['is_muted'],
+                    schedule_list_id=active_list.id
+                )
+                db.session.add(new_schedule)
+            
+            # Commit all changes
+            db.session.commit()
+            
+            # Re-schedule all jobs
+            reload_all_schedules()
+            
+            return jsonify({
+                'success': True, 
+                'message': f'Successfully imported {len(new_schedules)} schedules. Existing schedules were replaced.'
+            })
+            
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'error': f'Database error: {str(e)}'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Import failed: {str(e)}'})
 
 @app.route('/')
 @login_required
