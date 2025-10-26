@@ -49,6 +49,7 @@
         },
         "upload": {
             "title": "Upload Audio File",
+            "choose_file": "Choose audio file to upload",
             "button": "Upload"
         },
         "schedule": {
@@ -193,6 +194,7 @@
         },
         "upload": {
             "title": "Hangfájl feltöltése",
+            "choose_file": "Válasszon hangfájlt a feltöltéshez",
             "button": "Feltöltés"
         },
         "schedule": {
@@ -338,6 +340,7 @@
         },
         "upload": {
             "title": "Audio-Datei hochladen",
+            "choose_file": "Audio-Datei zum Hochladen auswählen",
             "button": "Hochladen"
         },
         "schedule": {
@@ -484,6 +487,7 @@
         },
         "upload": {
             "title": "Subir archivo de audio",
+            "choose_file": "Elegir archivo de audio para subir",
             "button": "Subir"
         },
         "schedule": {
