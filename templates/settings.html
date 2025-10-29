@@ -95,6 +95,31 @@
                 <strong>{{ translations.settings.import.warning }}</strong>
             </div>
         </div>
+        
+        <!-- Network Access Section -->
+        <div class="network-section">
+            <h3 class="network-title">
+                <i class="fas fa-network-wired"></i>
+                Network Access
+            </h3>
+            <p class="network-description">
+                Access this web interface from other devices on your local network using:
+            </p>
+            <div class="network-info">
+                <div class="ip-display">
+                    <strong>Local IP Address:</strong>
+                    <span id="localIpAddress" class="ip-address">Loading...</span>
+                </div>
+                <div class="url-display">
+                    <strong>Access URL:</strong>
+                    <span id="accessUrl" class="access-url">Loading...</span>
+                </div>
+            </div>
+            <div class="network-note">
+                <i class="fas fa-info-circle"></i>
+                Make sure devices are on the same local network and firewall allows port 5000
+            </div>
+        </div>
     </div>
 </div>
 
@@ -303,5 +328,69 @@
             }, 8000);
         }
     }
+    
+    // Network IP display functionality
+    async function getLocalIPAddress() {
+        try {
+            // Try to get IP from a simple API call to our own server
+            const response = await fetch('/get_server_ip');
+            if (response.ok) {
+                const data = await response.json();
+                return data.ip;
+            }
+        } catch (error) {
+            console.log('Failed to get IP from server, trying WebRTC method');
+        }
+        
+        // Fallback: Use WebRTC to get local IP
+        return new Promise((resolve) => {
+            const pc = new RTCPeerConnection({
+                iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
+            });
+            
+            pc.createDataChannel('');
+            pc.createOffer().then(offer => pc.setLocalDescription(offer));
+            
+            pc.onicecandidate = (ice) => {
+                if (!ice || !ice.candidate || !ice.candidate.candidate) return;
+                const candidate = ice.candidate.candidate;
+                const ipMatch = candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3})/);
+                if (ipMatch) {
+                    pc.close();
+                    resolve(ipMatch[1]);
+                }
+            };
+            
+            // Timeout fallback
+            setTimeout(() => {
+                pc.close();
+                resolve('Unable to detect');
+            }, 3000);
+        });
+    }
+    
+    // Initialize network info display
+    document.addEventListener('DOMContentLoaded', async function() {
+        const ipElement = document.getElementById('localIpAddress');
+        const urlElement = document.getElementById('accessUrl');
+        
+        try {
+            const ip = await getLocalIPAddress();
+            const port = window.location.port || '5000';
+            const protocol = window.location.protocol;
+            
+            if (ip && ip !== 'Unable to detect') {
+                ipElement.textContent = ip;
+                urlElement.innerHTML = `<a href="${protocol}//${ip}:${port}" target="_blank">${protocol}//${ip}:${port}</a>`;
+            } else {
+                ipElement.textContent = 'Unable to detect automatically';
+                urlElement.textContent = 'Check your network settings or use "ip addr" command';
+            }
+        } catch (error) {
+            console.error('Error getting IP address:', error);
+            ipElement.textContent = 'Detection failed';
+            urlElement.textContent = 'Manual network configuration required';
+        }
+    });
 </script>
 {% endblock %}

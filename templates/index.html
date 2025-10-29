@@ -7,7 +7,7 @@
         {{ translations.title }}
     </h1>
     
-    <div class="upload-section">
+        <div class="upload-section">
         <h2>
             <i class="fas fa-upload"></i>
             {{ translations.upload.title }}
@@ -25,80 +25,205 @@
         </button>
     </div>
 
-    <div class="schedule-section">
-        <h2>
-            <i class="fas fa-clock"></i>
-            {{ translations.schedule.title }}
-        </h2>
-        <div class="schedule-form">
-            <div class="form-group">
-                <label for="selectedFile">
-                    <i class="fas fa-music"></i>
-                    {{ translations.schedule.select_file }}:
-                </label>
-                <div class="file-select-group">
-                    <select id="selectedFile">
-                        {% for file in uploaded_files %}
-                        <option value="{{ file }}">{{ file }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="button" class="action-btn" title="Play" onclick="playSelectedFile()">
-                        <i class="fas fa-play"></i>
+    <!-- Main Content Tabs -->
+    <div class="main-tabs">
+        <div class="tab-buttons">
+            <button id="schedulesTabBtn" class="tab-button active" onclick="showTab('schedules')">
+                <i class="fas fa-clock"></i>
+                {{ translations.current_schedules.title }}
+            </button>
+            <button id="playlistsTabBtn" class="tab-button" onclick="showTab('playlists')">
+                <i class="fas fa-list-ul"></i>
+                Playlists
+            </button>
+        </div>
+        
+        <!-- Schedules Tab Content -->
+        <div id="schedulesTab" class="tab-content active">
+            <div class="schedule-section">
+                <h2>
+                    <i class="fas fa-clock"></i>
+                    {{ translations.schedule.title }}
+                </h2>
+                <div class="schedule-form">
+                    <div class="form-group">
+                        <label for="fileSelect">
+                            <i class="fas fa-file-audio"></i>
+                            {{ translations.schedule.select_file }}
+                        </label>
+                        <div class="file-select-group">
+                            <select id="fileSelect" required>
+                                <option value="">{{ translations.schedule.select_file }}</option>
+                                {% for file in uploaded_files %}
+                                <option value="{{ file }}">{{ file }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="button" class="action-btn" title="Play" onclick="playSelectedFile()">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeInput">
+                            <i class="fas fa-clock"></i>
+                            {{ translations.schedule.time }}
+                        </label>
+                        <input type="time" id="timeInput" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ translations.schedule.days }}
+                        </label>
+                        <div class="days-selector">
+                            <label class="day-checkbox"><input type="checkbox" id="monday" name="days" value="0"> {{ translations.schedule.days_list.monday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="tuesday" name="days" value="1"> {{ translations.schedule.days_list.tuesday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="wednesday" name="days" value="2"> {{ translations.schedule.days_list.wednesday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="thursday" name="days" value="3"> {{ translations.schedule.days_list.thursday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="friday" name="days" value="4"> {{ translations.schedule.days_list.friday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="saturday" name="days" value="5"> {{ translations.schedule.days_list.saturday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="sunday" name="days" value="6"> {{ translations.schedule.days_list.sunday }}</label>
+                        </div>
+                    </div>
+
+                    <button onclick="addSchedule()" class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        {{ translations.schedule.add_button }}
                     </button>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="scheduleTime">
-                    <i class="fas fa-clock"></i>
-                    {{ translations.schedule.time }}:
-                </label>
-                <input type="time" id="scheduleTime" required>
-            </div>
 
-            <div class="form-group">
-                <label>
-                    <i class="fas fa-calendar-week"></i>
-                    {{ translations.schedule.days }}:
-                </label>
-                <div class="days-checkboxes">
-                    <label><input type="checkbox" value="0"> {{ translations.schedule.days_list.monday }}</label>
-                    <label><input type="checkbox" value="1"> {{ translations.schedule.days_list.tuesday }}</label>
-                    <label><input type="checkbox" value="2"> {{ translations.schedule.days_list.wednesday }}</label>
-                    <label><input type="checkbox" value="3"> {{ translations.schedule.days_list.thursday }}</label>
-                    <label><input type="checkbox" value="4"> {{ translations.schedule.days_list.friday }}</label>
-                    <label><input type="checkbox" value="5"> {{ translations.schedule.days_list.saturday }}</label>
-                    <label><input type="checkbox" value="6"> {{ translations.schedule.days_list.sunday }}</label>
+            <div class="schedules-list">
+                <div class="schedule-lists-header">
+                    <h2>{{ translations.current_schedules.title }}</h2>
+                    <div id="scheduleListTabs" class="schedule-list-tabs">
+                        <!-- Tabs will be rendered by JS -->
+                    </div>
+                </div>
+                <table class="schedules-table">
+                    <thead>
+                        <tr>
+                            <th>{{ translations.current_schedules.file }}</th>
+                            <th>{{ translations.current_schedules.time }}</th>
+                            <th>{{ translations.current_schedules.days }}</th>
+                            <th>{{ translations.current_schedules.next_run }}</th>
+                            <th>{{ translations.current_schedules.action }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedulesList">
+                        <!-- Rows will be rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Playlists Tab Content -->
+        <div id="playlistsTab" class="tab-content">
+            <div class="playlist-section">
+                <h2>
+                    <i class="fas fa-list-ul"></i>
+                    Create Playlist Schedule
+                </h2>
+                <div class="playlist-form">
+                    <div class="form-group">
+                        <label for="folderSelect">
+                            <i class="fas fa-folder"></i>
+                            Playlist Folder
+                        </label>
+                        <select id="folderSelect" required>
+                            <option value="">Select a playlist folder</option>
+                        </select>
+                        <div id="folderPreview" class="folder-preview"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="playlistTimeInput">
+                            <i class="fas fa-clock"></i>
+                            Start Time
+                        </label>
+                        <input type="time" id="playlistTimeInput" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-calendar-alt"></i>
+                            Days
+                        </label>
+                        <div class="days-selector">
+                            <label class="day-checkbox"><input type="checkbox" id="pl_monday" name="playlist_days" value="0"> {{ translations.schedule.days_list.monday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="pl_tuesday" name="playlist_days" value="1"> {{ translations.schedule.days_list.tuesday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="pl_wednesday" name="playlist_days" value="2"> {{ translations.schedule.days_list.wednesday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="pl_thursday" name="playlist_days" value="3"> {{ translations.schedule.days_list.thursday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="pl_friday" name="playlist_days" value="4"> {{ translations.schedule.days_list.friday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="pl_saturday" name="playlist_days" value="5"> {{ translations.schedule.days_list.saturday }}</label>
+                            <label class="day-checkbox"><input type="checkbox" id="pl_sunday" name="playlist_days" value="6"> {{ translations.schedule.days_list.sunday }}</label>
+                        </div>
+                    </div>
+
+                    <div class="playlist-options">
+                        <div class="form-group playlist-option-group">
+                            <label for="playlistDuration">
+                                <i class="fas fa-stopwatch"></i>
+                                Duration (minutes)
+                            </label>
+                            <input type="number" id="playlistDuration" class="playlist-number-input" min="1" max="480" placeholder="e.g., 30">
+                            <small>Leave empty for unlimited duration</small>
+                        </div>
+                        
+                        <div class="form-group playlist-option-group">
+                            <label for="maxTracks">
+                                <i class="fas fa-hashtag"></i>
+                                Max Tracks
+                            </label>
+                            <input type="number" id="maxTracks" class="playlist-number-input" min="1" max="100" placeholder="e.g., 10">
+                            <small>Leave empty for unlimited tracks</small>
+                        </div>
+                        
+                        <div class="form-group playlist-option-group">
+                            <label for="trackInterval">
+                                <i class="fas fa-clock"></i>
+                                Interval between tracks (seconds)
+                            </label>
+                            <input type="number" id="trackInterval" class="playlist-number-input" min="0" max="300" value="10" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="shuffleMode" checked>
+                                <i class="fas fa-random"></i>
+                                Shuffle/Random playback
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="addPlaylistSchedule()" class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Playlist Schedule
+                    </button>
                 </div>
             </div>
 
-            <button onclick="addSchedule()" class="btn-primary">
-                <i class="fas fa-plus"></i>
-                {{ translations.schedule.add_button }}
-            </button>
-        </div>
-    </div>
-
-    <div class="schedules-list">
-        <div class="schedule-lists-header">
-            <h2>{{ translations.current_schedules.title }}</h2>
-            <div id="scheduleListTabs" class="schedule-list-tabs">
-                <!-- Tabs will be rendered by JS -->
+            <div class="playlists-list">
+                <h2>Active Playlist Schedules</h2>
+                <table class="schedules-table">
+                    <thead>
+                        <tr>
+                            <th>Folder</th>
+                            <th>Time</th>
+                            <th>Days</th>
+                            <th>Duration</th>
+                            <th>Tracks</th>
+                            <th>Next run</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playlistsList">
+                        <!-- Playlist schedules will be rendered by JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
-        <table class="schedules-table">
-            <thead>
-                <tr>
-                    <th>{{ translations.current_schedules.file }}</th>
-                    <th>{{ translations.current_schedules.time }}</th>
-                    <th>{{ translations.current_schedules.days }}</th>
-                    <th>{{ translations.current_schedules.next_run }}</th>
-                    <th>{{ translations.current_schedules.action }}</th>
-                </tr>
-            </thead>
-            <tbody id="schedulesList">
-                <!-- Rows will be rendered by JS -->
-            </tbody>
-        </table>
     </div>
 </div>
 <!-- Custom Delete Confirmation Modal -->

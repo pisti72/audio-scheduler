@@ -1,5 +1,8 @@
 import sys
 import pathlib
+import random
+import threading
+import time
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, make_response
 import csv
 from io import StringIO
@@ -98,6 +101,116 @@ def play_audio(file_path):
         print(f"Playing audio: {file_path}")
     except Exception as e:
         print(f"Error playing audio: {str(e)}")
+
+def play_playlist(schedule_id):
+    """Play a playlist based on schedule configuration"""
+    
+    try:
+        # Ensure we're in an application context for database access
+        with app.app_context():
+            # Get the schedule
+            schedule = Schedule.query.get(schedule_id)
+            if not schedule or schedule.schedule_type != 'playlist':
+                print(f"Invalid playlist schedule ID: {schedule_id}")
+                return
+                
+            # Check if muted
+            if schedule.is_muted:
+                print(f"Playlist schedule {schedule_id} is muted, skipping")
+                return
+            
+            # Get folder path and validate
+            folder_path = APP_ROOT.joinpath(schedule.folder_path)
+            if not folder_path.exists() or not folder_path.is_dir():
+                print(f"Playlist folder not found: {folder_path}")
+                return
+            
+            # Get audio files
+            audio_files = []
+            for ext in ['*.mp3', '*.wav', '*.ogg', '*.m4a', '*.flac']:
+                audio_files.extend(list(folder_path.glob(ext)))
+                audio_files.extend(list(folder_path.glob(ext.upper())))
+            
+            if not audio_files:
+                print(f"No audio files found in playlist folder: {folder_path}")
+                return
+            
+            # Shuffle if enabled
+            if schedule.shuffle_mode:
+                random.shuffle(audio_files)
+            
+            print(f"Starting playlist: {schedule.folder_path}, Duration: {schedule.playlist_duration or 60}min, Interval: {schedule.track_interval}sec")
+            
+            # Start playlist in a separate thread
+            playlist_thread = threading.Thread(
+                target=_run_playlist,
+                args=(audio_files, schedule.playlist_duration or 60, schedule.track_interval, schedule.max_tracks, schedule.shuffle_mode),
+                daemon=True
+            )
+            playlist_thread.start()
+        
+    except Exception as e:
+        print(f"Error starting playlist {schedule_id}: {str(e)}")
+
+def _run_playlist(audio_files, duration_minutes, interval_minutes, max_tracks, shuffle_mode):
+    """Run the playlist in a separate thread"""
+    
+    if not audio_available:
+        print("Audio playback skipped (no audio device)")
+        return
+    
+    start_time = time.time()
+    # Handle None duration by setting a default of 60 minutes
+    if duration_minutes is None:
+        duration_minutes = 60
+        print("Warning: No duration specified, using default of 60 minutes")
+    end_time = start_time + (duration_minutes * 60)
+    tracks_played = 0
+    file_list = list(audio_files)  # Make a copy
+    
+    while time.time() < end_time and (max_tracks is None or tracks_played < max_tracks):
+        # If we've played all files and shuffle is enabled, reshuffle
+        if not file_list and shuffle_mode:
+            file_list = list(audio_files)
+            random.shuffle(file_list)
+        elif not file_list:
+            # If no shuffle, reset to original list
+            file_list = list(audio_files)
+        
+        # Get next file
+        audio_file = file_list.pop(0)
+        
+        try:
+            print(f"Playing playlist track: {audio_file.name}")
+            pygame.mixer.music.load(str(audio_file))
+            pygame.mixer.music.play()
+            
+            # Wait for the track to finish or for the interval time
+            track_start = time.time()
+            while pygame.mixer.music.get_busy() and (time.time() - track_start) < (interval_minutes * 60):
+                time.sleep(0.1)
+            
+            # Stop the music if it's still playing after interval
+            if pygame.mixer.music.get_busy():
+                pygame.mixer.music.stop()
+            
+            tracks_played += 1
+            
+            # Check if we've exceeded the duration
+            if time.time() >= end_time:
+                break
+                
+            # Wait for the remaining interval time if track ended early
+            elapsed = time.time() - track_start
+            remaining_interval = (interval_minutes * 60) - elapsed
+            if remaining_interval > 0 and time.time() + remaining_interval < end_time:
+                time.sleep(remaining_interval)
+                
+        except Exception as e:
+            print(f"Error playing playlist track {audio_file}: {str(e)}")
+            tracks_played += 1  # Count failed attempts to prevent infinite loops
+    
+    print(f"Playlist finished. Played {tracks_played} tracks in {(time.time() - start_time) / 60:.1f} minutes")
 
 @app.route('/audio/<path:filename>')
 @login_required
@@ -425,6 +538,7 @@ def index():
         'days_list': translations['schedule']['days_list'],
            'current_schedules': translations['current_schedules'],
            'schedule_lists': translations.get('schedule_lists', {}),
+           'playlist': translations.get('playlist', {}),
            'modals': translations['modals']
     })
     
@@ -455,6 +569,14 @@ def add_job_to_scheduler(schedule):
     if schedule.is_muted:
         return True
     
+    # Handle different schedule types
+    if schedule.schedule_type == 'playlist':
+        return add_playlist_job_to_scheduler(schedule)
+    else:
+        return add_single_file_job_to_scheduler(schedule)
+
+def add_single_file_job_to_scheduler(schedule):
+    """Add a single file schedule to the APScheduler"""
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], schedule.filename)
     if not os.path.exists(file_path):
         return False
@@ -476,6 +598,43 @@ def add_job_to_scheduler(schedule):
         play_audio,
         CronTrigger(day_of_week=day_of_week, hour=hour, minute=minute),
         args=[file_path],
+        id=job_id
+    )
+    return True
+
+def add_playlist_job_to_scheduler(schedule):
+    """Add a playlist schedule to the APScheduler"""
+    # Validate folder exists
+    folder_path = APP_ROOT.joinpath(schedule.folder_path)
+    if not folder_path.exists() or not folder_path.is_dir():
+        return False
+    
+    # Check for audio files
+    audio_files = []
+    for ext in ['*.mp3', '*.wav', '*.ogg', '*.m4a', '*.flac']:
+        audio_files.extend(list(folder_path.glob(ext)))
+        audio_files.extend(list(folder_path.glob(ext.upper())))
+    
+    if not audio_files:
+        return False
+
+    days = []
+    if schedule.monday: days.append('0')
+    if schedule.tuesday: days.append('1')
+    if schedule.wednesday: days.append('2')
+    if schedule.thursday: days.append('3')
+    if schedule.friday: days.append('4')
+    if schedule.saturday: days.append('5')
+    if schedule.sunday: days.append('6')
+
+    hour, minute = map(int, schedule.time.split(':'))
+    day_of_week = ','.join(days)
+    
+    job_id = f"schedule_{schedule.id}"
+    scheduler.add_job(
+        play_playlist,
+        CronTrigger(day_of_week=day_of_week, hour=hour, minute=minute),
+        args=[schedule.id],
         id=job_id
     )
     return True
@@ -529,6 +688,88 @@ def schedule_audio():
         db.session.commit()
         return jsonify({'error': 'Audio file not found'}), 404
 
+@app.route('/add_playlist_schedule', methods=['POST'])
+@login_required
+def add_playlist_schedule():
+    """Add a new playlist schedule"""
+    try:
+        data = request.json
+        folder_path = data.get('folder_path')
+        time = data.get('time')
+        days = data.get('days', [])
+        playlist_duration = data.get('playlist_duration')
+        max_tracks = data.get('max_tracks')
+        track_interval = data.get('track_interval', 10)
+        shuffle_mode = data.get('shuffle_mode', True)
+        
+        # Set default duration if not provided or None
+        if playlist_duration is None or playlist_duration == '':
+            playlist_duration = 60  # Default to 60 minutes
+        else:
+            try:
+                playlist_duration = int(playlist_duration)
+                if playlist_duration <= 0:
+                    playlist_duration = 60
+            except (ValueError, TypeError):
+                playlist_duration = 60
+        
+        if not folder_path or not time or not days:
+            return jsonify({'error': 'Missing required fields: folder_path, time, or days'}), 400
+        
+        # Validate folder exists and has audio files
+        full_folder_path = APP_ROOT.joinpath(folder_path)
+        if not full_folder_path.exists() or not full_folder_path.is_dir():
+            return jsonify({'error': 'Playlist folder not found'}), 400
+        
+        # Count audio files
+        audio_files = []
+        for ext in ['*.mp3', '*.wav', '*.ogg', '*.m4a', '*.flac']:
+            audio_files.extend(list(full_folder_path.glob(ext)))
+            audio_files.extend(list(full_folder_path.glob(ext.upper())))
+        
+        if not audio_files:
+            return jsonify({'error': 'No audio files found in the selected folder'}), 400
+        
+        # Get active schedule list
+        active_list = ScheduleList.query.filter_by(is_active=True).first()
+        if not active_list:
+            active_list = ScheduleList(name='Default', is_active=True)
+            db.session.add(active_list)
+            db.session.commit()
+        
+        # Create new playlist schedule
+        schedule = Schedule(
+            schedule_list_id=active_list.id,
+            schedule_type='playlist',
+            folder_path=folder_path,
+            time=time,
+            monday=0 in days,
+            tuesday=1 in days,
+            wednesday=2 in days,
+            thursday=3 in days,
+            friday=4 in days,
+            saturday=5 in days,
+            sunday=6 in days,
+            playlist_duration=playlist_duration,
+            max_tracks=max_tracks,
+            track_interval=track_interval,
+            shuffle_mode=shuffle_mode
+        )
+        
+        db.session.add(schedule)
+        db.session.commit()
+        
+        # Add to scheduler (will be handled by modified scheduler logic)
+        if add_job_to_scheduler(schedule):
+            return jsonify({'success': True, 'id': schedule.id})
+        else:
+            db.session.delete(schedule)
+            db.session.commit()
+            return jsonify({'error': 'Failed to schedule playlist'}), 500
+            
+    except Exception as e:
+        return jsonify({'error': f'Failed to add playlist schedule: {str(e)}'}), 500
+
 @app.route('/get_schedules', methods=['GET'])
 def get_schedules():
     # Get active schedule list
@@ -542,6 +783,41 @@ def get_schedules():
     
     schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
     return jsonify([schedule.to_dict() for schedule in schedules])
+
+@app.route('/get_playlist_folders', methods=['GET'])
+@login_required
+def get_playlist_folders():
+    """Get list of available playlist folders"""
+    try:
+        playlists_dir = APP_ROOT.joinpath('playlists')
+        
+        # Create playlists directory if it doesn't exist
+        if not playlists_dir.exists():
+            playlists_dir.mkdir(exist_ok=True)
+            return jsonify([])
+        
+        folders = []
+        for item in playlists_dir.iterdir():
+            if item.is_dir():
+                # Count audio files in the folder
+                audio_files = []
+                for ext in ['*.mp3', '*.wav', '*.ogg', '*.m4a', '*.flac']:
+                    audio_files.extend(list(item.glob(ext)))
+                    audio_files.extend(list(item.glob(ext.upper())))
+                
+                folders.append({
+                    'name': item.name,
+                    'path': str(item.relative_to(APP_ROOT)),
+                    'file_count': len(audio_files),
+                    'files': [f.name for f in audio_files[:5]]  # Show first 5 files as preview
+                })
+        
+        # Sort folders by name
+        folders.sort(key=lambda x: x['name'])
+        return jsonify(folders)
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to get playlist folders: {str(e)}'}), 500
 
 @app.route('/delete_schedule/<int:schedule_id>', methods=['DELETE'])
 def delete_schedule(schedule_id):
@@ -690,6 +966,27 @@ def delete_schedule_list(list_id):
             add_job_to_scheduler(schedule)
     
     return jsonify({'success': True})
+
+@app.route('/get_server_ip')
+@login_required
+def get_server_ip():
+    """Get the server's local IP address"""
+    import socket
+    try:
+        # Connect to a remote address to determine local IP
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+        return jsonify({'ip': local_ip})
+    except Exception:
+        try:
+            # Fallback method
+            hostname = socket.gethostname()
+            local_ip = socket.gethostbyname(hostname)
+            return jsonify({'ip': local_ip})
+        except Exception:
+            return jsonify({'ip': None, 'error': 'Unable to determine IP'}), 500
 
 @app.route('/schedule_lists/<int:list_id>/rename', methods=['POST'])
 @login_required

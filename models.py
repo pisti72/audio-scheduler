@@ -21,7 +21,9 @@ class ScheduleList(db.Model):
 class Schedule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     schedule_list_id = db.Column(db.Integer, db.ForeignKey('schedule_list.id'), nullable=True)
-    filename = db.Column(db.String(255), nullable=False)
+    
+    # Basic schedule info
+    filename = db.Column(db.String(255), nullable=True)  # Nullable for playlist schedules
     time = db.Column(db.String(5), nullable=False)  # Format: "HH:MM"
     monday = db.Column(db.Boolean, default=False)
     tuesday = db.Column(db.Boolean, default=False)
@@ -32,11 +34,21 @@ class Schedule(db.Model):
     sunday = db.Column(db.Boolean, default=False)
     is_muted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Playlist functionality
+    schedule_type = db.Column(db.String(20), default='single_file')  # 'single_file' or 'playlist'
+    folder_path = db.Column(db.String(500), nullable=True)  # Path to playlist folder
+    playlist_duration = db.Column(db.Integer, nullable=True)  # Duration in minutes
+    track_interval = db.Column(db.Integer, default=10)  # Seconds between tracks
+    max_tracks = db.Column(db.Integer, nullable=True)  # Maximum number of tracks to play
+    shuffle_mode = db.Column(db.Boolean, default=True)  # Random/shuffle playback
 
     def to_dict(self):
         return {
             'id': self.id,
+            'schedule_type': self.schedule_type,
             'filename': self.filename,
+            'folder_path': self.folder_path,
             'time': self.time,
             'days': [
                 i for i, day in enumerate([
@@ -45,6 +57,10 @@ class Schedule(db.Model):
                 ]) if day
             ],
             'is_muted': self.is_muted,
+            'playlist_duration': self.playlist_duration,
+            'track_interval': self.track_interval,
+            'max_tracks': self.max_tracks,
+            'shuffle_mode': self.shuffle_mode,
             'next_run': self.next_run_time()
         }
     

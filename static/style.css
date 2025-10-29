@@ -220,6 +220,13 @@ h2 {
     margin-bottom: 1.5rem;
 }
 
+/* Remove top margins for sections inside tabs */
+.tab-content .schedule-section:first-child,
+.tab-content .schedules-list:first-child,
+.tab-content .playlist-section:first-child {
+    margin-top: 0;
+}
+
 .upload-section h2, .schedule-section h2 {
     color: var(--text-color);
     margin-bottom: 1.5rem;
@@ -356,6 +363,57 @@ textarea:focus {
     background: white;
 }
 
+/* Enhanced playlist number input styling */
+.playlist-number-input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+    text-align: center;
+    min-height: 50px;
+}
+
+.playlist-number-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.15);
+    background: white;
+    transform: translateY(-1px);
+}
+
+.playlist-number-input::placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.playlist-option-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.playlist-option-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.playlist-option-group small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
 /* Button unified styling */
 .btn, button {
     display: inline-flex;
@@ -373,12 +431,12 @@ textarea:focus {
     box-sizing: border-box;
 }
 
-.btn-primary, button:not(.btn) {
+.btn-primary, button:not(.btn):not(.tab-button):not(.tab-action):not(.action-btn) {
     background: var(--primary-color);
     color: white;
 }
 
-.btn-primary:hover, button:not(.btn):hover {
+.btn-primary:hover, button:not(.btn):not(.tab-button):not(.tab-action):not(.action-btn):hover {
     background: var(--primary-color-hover);
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
@@ -850,10 +908,12 @@ textarea:focus {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.9rem;
+    color: #333;
 }
 
 .tab:hover {
     background: #e0e0e0;
+    color: #333;
 }
 
 .tab.active {
@@ -863,13 +923,14 @@ textarea:focus {
 }
 
 .tab.new-tab {
-    background: #f0f0f0; /* same as inactive */
-    color: inherit;
-    border-color: #ddd;   /* same as inactive */
+    background: #f0f0f0;
+    color: #333;
+    border-color: #ddd;
 }
 
 .tab.new-tab:hover {
-    background: #e0e0e0; /* same as inactive hover */
+    background: #e0e0e0;
+    color: #333;
 }
 
 .tab-name {
@@ -1024,4 +1085,246 @@ tr.muted td {
 }
 .auth-button.delete:hover {
     background: #b71c1c;
+}
+
+/* Main tab system */
+.main-tabs {
+    margin-top: 2rem;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.tab-button:hover {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.tab-button.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Playlist form styling */
+.playlist-section {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+}
+
+.playlist-form {
+    max-width: 800px;
+}
+
+.playlist-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.folder-preview {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: var(--background-light);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    display: none;
+}
+
+.folder-preview.show {
+    display: block;
+}
+
+.folder-info {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.folder-files {
+    font-size: 0.8rem;
+    color: var(--text-color);
+}
+
+.folder-files ul {
+    margin: 0.5rem 0 0 1rem;
+    list-style-type: disc;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin: 0;
+}
+
+.playlists-list {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.playlists-list h2 {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+/* Mobile responsiveness for tabs */
+@media (max-width: 768px) {
+    .tab-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .tab-button {
+        border-radius: var(--border-radius);
+        text-align: left;
+    }
+    
+    .playlist-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Network access section styling */
+.network-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f0f7ff 100%);
+    border-radius: var(--border-radius);
+    border: 1.5px solid #bbdefb;
+}
+
+.network-title {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.network-title i {
+    color: var(--secondary-color);
+}
+
+.network-description {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.network-info {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e1f5fe;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.ip-display, .url-display {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.ip-display:last-child, .url-display:last-child {
+    margin-bottom: 0;
+}
+
+.ip-address, .access-url {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    background: #f8f9fa;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    font-weight: 500;
+    color: var(--primary-color);
+    font-size: 0.95rem;
+}
+
+.access-url a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.access-url a:hover {
+    color: #1976D2;
+    text-decoration: underline;
+}
+
+.network-note {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.network-note i {
+    color: #f39c12;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .ip-display, .url-display {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .network-info {
+        padding: 1rem;
+    }
 }

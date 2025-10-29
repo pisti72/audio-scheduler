@@ -14,6 +14,11 @@ venv/
 instance/*
 !instance/.gitkeep
 
+# Audio files
+playlists/*
+!playlists/README.md
+!playlists/.gitkeep
+
 # IDE
 .vscode/
 .idea/

@@ -63,10 +63,18 @@
     <script type="application/json" id="translations-data">
         {{ js_translations|safe if js_translations }}
     </script>
+    {% if uploaded_files is defined %}
+    <script type="application/json" id="uploaded-files-data">
+        {{ uploaded_files|tojson|safe }}
+    </script>
+    {% endif %}
     <script>
         var translationsElement = document.getElementById('translations-data');
         var appTranslations = translationsElement ? JSON.parse(translationsElement.textContent) : {};
         var currentLang = "{{ current_lang }}";
+        
+        var uploadedFilesElement = document.getElementById('uploaded-files-data');
+        var uploadedFiles = uploadedFilesElement ? JSON.parse(uploadedFilesElement.textContent) : [];
     </script>
     <script src="/static/script.js"></script>
     {% block scripts %}{% endblock %}
