@@ -3,6 +3,8 @@ import pathlib
 import random
 import threading
 import time
+import logging
+import logging.handlers
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, make_response
 import csv
 from io import StringIO
@@ -21,6 +23,67 @@ import json
 from models import db, Schedule, ScheduleList
 from auth import login_required, init_credentials, check_credentials, set_credentials
 
+# Configure logging
+def setup_logging():
+    """Configure logging for the application"""
+    # Create logs directory if it doesn't exist
+    logs_dir = APP_ROOT.joinpath('logs')
+    logs_dir.mkdir(exist_ok=True)
+    
+    # Create logger
+    logger = logging.getLogger('audio_scheduler')
+    logger.setLevel(logging.INFO)
+    
+    # Clear any existing handlers
+    logger.handlers.clear()
+    
+    # Create formatters
+    detailed_formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s'
+    )
+    simple_formatter = logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(message)s'
+    )
+    
+    # File handler for all logs (with rotation)
+    file_handler = logging.handlers.RotatingFileHandler(
+        logs_dir / 'audio_scheduler.log',
+        maxBytes=10*1024*1024,  # 10MB
+        backupCount=5
+    )
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(detailed_formatter)
+    
+    # File handler for audio playback logs
+    audio_handler = logging.handlers.RotatingFileHandler(
+        logs_dir / 'audio_playback.log',
+        maxBytes=5*1024*1024,   # 5MB
+        backupCount=3
+    )
+    audio_handler.setLevel(logging.INFO)
+    audio_handler.setFormatter(simple_formatter)
+    audio_handler.addFilter(lambda record: 'audio' in record.name.lower() or 'playlist' in record.getMessage().lower())
+    
+    # Console handler for important messages
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(simple_formatter)
+    
+    # Add handlers to logger
+    logger.addHandler(file_handler)
+    logger.addHandler(audio_handler)
+    logger.addHandler(console_handler)
+    
+    # Create specific loggers
+    audio_logger = logging.getLogger('audio_scheduler.audio')
+    playlist_logger = logging.getLogger('audio_scheduler.playlist')
+    auth_logger = logging.getLogger('audio_scheduler.auth')
+    
+    return logger, audio_logger, playlist_logger, auth_logger
+
+# Setup logging
+logger, audio_logger, playlist_logger, auth_logger = setup_logging()
+
 # Load translations
 TRANSLATIONS_PATH = APP_ROOT.joinpath('static', 'translations.json')
 with open(TRANSLATIONS_PATH, 'r', encoding='utf-8') as f:
@@ -32,14 +95,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///schedules.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'your-secret-key-here'  # Required for session management
 
+# Configure Flask's logging to be less verbose
+if not app.debug:
+    # Only log warnings and errors from werkzeug in production
+    logging.getLogger('werkzeug').setLevel(logging.WARNING)
+
 # Initialize pygame mixer - handle gracefully if no audio device available
 try:
     pygame.mixer.init()
     audio_available = True
-    print("Audio system initialized successfully")
+    audio_logger.info("Audio system initialized successfully")
 except Exception as e:
     audio_available = False
-    print(f"Audio system not available: {str(e)}")
+    audio_logger.warning(f"Audio system not available: {str(e)}")
 
 # Initialize database
 db.init_app(app)
@@ -50,9 +118,9 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 
 # Initialize default credentials
-print("Initializing credentials...") # Debug log
+auth_logger.info("Initializing credentials...")
 init_credentials()
-print("Credentials initialization completed") # Debug log
+auth_logger.info("Credentials initialization completed")
 
 def init_schedules():
     """Initialize schedules from database"""
@@ -94,13 +162,13 @@ init_credentials()
 def play_audio(file_path):
     try:
         if not audio_available:
-            print(f"Audio playback skipped (no audio device): {file_path}")
+            audio_logger.warning(f"Audio playback skipped (no audio device): {file_path}")
             return
         pygame.mixer.music.load(file_path)
         pygame.mixer.music.play()
-        print(f"Playing audio: {file_path}")
+        audio_logger.info(f"Playing audio: {file_path}")
     except Exception as e:
-        print(f"Error playing audio: {str(e)}")
+        audio_logger.error(f"Error playing audio: {str(e)}")
 
 def play_playlist(schedule_id):
     """Play a playlist based on schedule configuration"""
@@ -111,18 +179,18 @@ def play_playlist(schedule_id):
             # Get the schedule
             schedule = Schedule.query.get(schedule_id)
             if not schedule or schedule.schedule_type != 'playlist':
-                print(f"Invalid playlist schedule ID: {schedule_id}")
+                playlist_logger.error(f"Invalid playlist schedule ID: {schedule_id}")
                 return
                 
             # Check if muted
             if schedule.is_muted:
-                print(f"Playlist schedule {schedule_id} is muted, skipping")
+                playlist_logger.info(f"Playlist schedule {schedule_id} is muted, skipping")
                 return
             
             # Get folder path and validate
             folder_path = APP_ROOT.joinpath(schedule.folder_path)
             if not folder_path.exists() or not folder_path.is_dir():
-                print(f"Playlist folder not found: {folder_path}")
+                playlist_logger.error(f"Playlist folder not found: {folder_path}")
                 return
             
             # Get audio files
@@ -132,14 +200,14 @@ def play_playlist(schedule_id):
                 audio_files.extend(list(folder_path.glob(ext.upper())))
             
             if not audio_files:
-                print(f"No audio files found in playlist folder: {folder_path}")
+                playlist_logger.warning(f"No audio files found in playlist folder: {folder_path}")
                 return
             
             # Shuffle if enabled
             if schedule.shuffle_mode:
                 random.shuffle(audio_files)
             
-            print(f"Starting playlist: {schedule.folder_path}, Duration: {schedule.playlist_duration or 60}min, Interval: {schedule.track_interval}sec")
+            playlist_logger.info(f"Starting playlist: {schedule.folder_path}, Duration: {schedule.playlist_duration or 60}min, Interval: {schedule.track_interval}sec")
             
             # Start playlist in a separate thread
             playlist_thread = threading.Thread(
@@ -150,20 +218,20 @@ def play_playlist(schedule_id):
             playlist_thread.start()
         
     except Exception as e:
-        print(f"Error starting playlist {schedule_id}: {str(e)}")
+        playlist_logger.error(f"Error starting playlist {schedule_id}: {str(e)}")
 
 def _run_playlist(audio_files, duration_minutes, interval_minutes, max_tracks, shuffle_mode):
     """Run the playlist in a separate thread"""
     
     if not audio_available:
-        print("Audio playback skipped (no audio device)")
+        playlist_logger.warning("Audio playback skipped (no audio device)")
         return
     
     start_time = time.time()
     # Handle None duration by setting a default of 60 minutes
     if duration_minutes is None:
         duration_minutes = 60
-        print("Warning: No duration specified, using default of 60 minutes")
+        playlist_logger.warning("No duration specified, using default of 60 minutes")
     end_time = start_time + (duration_minutes * 60)
     tracks_played = 0
     file_list = list(audio_files)  # Make a copy
@@ -181,7 +249,7 @@ def _run_playlist(audio_files, duration_minutes, interval_minutes, max_tracks, s
         audio_file = file_list.pop(0)
         
         try:
-            print(f"Playing playlist track: {audio_file.name}")
+            playlist_logger.info(f"Playing playlist track: {audio_file.name}")
             pygame.mixer.music.load(str(audio_file))
             pygame.mixer.music.play()
             
@@ -207,10 +275,10 @@ def _run_playlist(audio_files, duration_minutes, interval_minutes, max_tracks, s
                 time.sleep(remaining_interval)
                 
         except Exception as e:
-            print(f"Error playing playlist track {audio_file}: {str(e)}")
+            playlist_logger.error(f"Error playing playlist track {audio_file}: {str(e)}")
             tracks_played += 1  # Count failed attempts to prevent infinite loops
     
-    print(f"Playlist finished. Played {tracks_played} tracks in {(time.time() - start_time) / 60:.1f} minutes")
+    playlist_logger.info(f"Playlist finished. Played {tracks_played} tracks in {(time.time() - start_time) / 60:.1f} minutes")
 
 @app.route('/audio/<path:filename>')
 @login_required
@@ -250,17 +318,19 @@ def login():
                                current_lang=current_lang,
                                js_translations=js_translations)
 
-    print("Login attempt received") # Debug log
+    auth_logger.info("Login attempt received")
     data = request.get_json()
-    print(f"Received data: {data}") # Debug log
+    auth_logger.debug(f"Received login data from user")
     username = data.get('username')
     password = data.get('password')
-    print(f"Username: {username}, Password: {password}") # Debug log
+    auth_logger.debug(f"Login attempt for username: {username}")
 
     if check_credentials(username, password):
         session['logged_in'] = True
         session['username'] = username
+        auth_logger.info(f"Successful login for user: {username}")
         return jsonify({'success': True})
+    auth_logger.warning(f"Failed login attempt for username: {username}")
     return jsonify({'success': False, 'error': 'Invalid username or password'})
 
 @app.route('/manual')
@@ -561,6 +631,7 @@ def upload_file():
         filename = file.filename
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
+        logger.info(f"Audio file uploaded successfully: {filename}")
         return jsonify({'success': True, 'filename': filename})
 
 def add_job_to_scheduler(schedule):
@@ -682,10 +753,12 @@ def schedule_audio():
 
     # Add to scheduler
     if add_job_to_scheduler(schedule):
+        logger.info(f"Single file schedule added successfully: {filename} at {time} on days {days}")
         return jsonify({'success': True, 'id': schedule.id})
     else:
         db.session.delete(schedule)
         db.session.commit()
+        logger.error(f"Failed to add schedule - audio file not found: {filename}")
         return jsonify({'error': 'Audio file not found'}), 404
 
 @app.route('/add_playlist_schedule', methods=['POST'])
@@ -761,13 +834,16 @@ def add_playlist_schedule():
         
         # Add to scheduler (will be handled by modified scheduler logic)
         if add_job_to_scheduler(schedule):
+            logger.info(f"Playlist schedule added successfully: {folder_path} at {time} on days {days}")
             return jsonify({'success': True, 'id': schedule.id})
         else:
             db.session.delete(schedule)
             db.session.commit()
+            logger.error(f"Failed to add playlist schedule: {folder_path}")
             return jsonify({'error': 'Failed to schedule playlist'}), 500
             
     except Exception as e:
+        logger.error(f"Exception in add_playlist_schedule: {str(e)}")
         return jsonify({'error': f'Failed to add playlist schedule: {str(e)}'}), 500
 
 @app.route('/get_schedules', methods=['GET'])
@@ -781,7 +857,8 @@ def get_schedules():
         db.session.add(active_list)
         db.session.commit()
     
-    schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
+    # Get schedules ordered by time ascending
+    schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).order_by(Schedule.time.asc()).all()
     return jsonify([schedule.to_dict() for schedule in schedules])
 
 @app.route('/get_playlist_folders', methods=['GET'])
@@ -822,6 +899,7 @@ def get_playlist_folders():
 @app.route('/delete_schedule/<int:schedule_id>', methods=['DELETE'])
 def delete_schedule(schedule_id):
     schedule = Schedule.query.get_or_404(schedule_id)
+    schedule_info = f"ID:{schedule_id}, File:{schedule.filename if schedule.schedule_type != 'playlist' else schedule.folder_path}"
     
     # Remove from scheduler
     job_id = f"schedule_{schedule.id}"
@@ -832,6 +910,7 @@ def delete_schedule(schedule_id):
     db.session.delete(schedule)
     db.session.commit()
     
+    logger.info(f"Schedule deleted: {schedule_info}")
     return jsonify({'success': True})
 
 @app.route('/update_schedule/<int:schedule_id>', methods=['POST'])
@@ -874,6 +953,7 @@ def update_schedule(schedule_id):
 @login_required
 def toggle_mute(schedule_id):
     schedule = Schedule.query.get_or_404(schedule_id)
+    schedule_info = f"ID:{schedule_id}, File:{schedule.filename if schedule.schedule_type != 'playlist' else schedule.folder_path}"
     
     # Toggle mute status
     schedule.is_muted = not schedule.is_muted
@@ -886,9 +966,11 @@ def toggle_mute(schedule_id):
         # Remove job from scheduler when muted
         if scheduler.get_job(job_id):
             scheduler.remove_job(job_id)
+        logger.info(f"Schedule muted: {schedule_info}")
     else:
         # Add job back to scheduler when unmuted
         add_job_to_scheduler(schedule)
+        logger.info(f"Schedule unmuted: {schedule_info}")
     
     return jsonify({'success': True, 'is_muted': schedule.is_muted})
 
@@ -1004,11 +1086,18 @@ def rename_schedule_list(list_id):
     return jsonify({'success': True})
 
 if __name__ == '__main__':
+    logger.info("Starting Audio Scheduler application...")
+    
     # Create database tables
     with app.app_context():
         db.create_all()
+        logger.info("Database tables created/verified")
+        
     # Initialize schedules from database
     init_schedules()
+    logger.info("Schedules initialized from database")
+    
+    logger.info("Starting Flask server on 0.0.0.0:5000")
     app.run(debug=True, host='0.0.0.0', port=5000)
 
 if __name__ == '__main__':

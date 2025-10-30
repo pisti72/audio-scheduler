@@ -1,0 +1,111 @@
+2025-10-30 11:51:09,448 - audio_scheduler.audio - INFO - <module>:102 - Audio system initialized successfully
+2025-10-30 11:51:09,457 - audio_scheduler.auth - INFO - <module>:116 - Initializing credentials...
+2025-10-30 11:51:09,457 - audio_scheduler.auth - INFO - <module>:118 - Credentials initialization completed
+2025-10-30 11:51:18,014 - audio_scheduler.audio - INFO - <module>:102 - Audio system initialized successfully
+2025-10-30 11:51:18,037 - audio_scheduler.auth - INFO - <module>:116 - Initializing credentials...
+2025-10-30 11:51:18,038 - audio_scheduler.auth - INFO - <module>:118 - Credentials initialization completed
+2025-10-30 11:51:37,329 - audio_scheduler.audio - INFO - <module>:102 - Audio system initialized successfully
+2025-10-30 11:51:37,342 - audio_scheduler.auth - INFO - <module>:116 - Initializing credentials...
+2025-10-30 11:51:37,342 - audio_scheduler.auth - INFO - <module>:118 - Credentials initialization completed
+2025-10-30 11:52:04,385 - audio_scheduler.audio - INFO - <module>:102 - Audio system initialized successfully
+2025-10-30 11:52:04,402 - audio_scheduler.auth - INFO - <module>:116 - Initializing credentials...
+2025-10-30 11:52:04,406 - audio_scheduler.auth - INFO - <module>:118 - Credentials initialization completed
+2025-10-30 11:52:19,048 - audio_scheduler.audio - INFO - <module>:102 - Audio system initialized successfully
+2025-10-30 11:52:19,055 - audio_scheduler.auth - INFO - <module>:116 - Initializing credentials...
+2025-10-30 11:52:19,056 - audio_scheduler.auth - INFO - <module>:118 - Credentials initialization completed
+2025-10-30 11:52:29,564 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:52:29,576 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:52:29,576 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:52:39,419 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:52:39,437 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:52:39,437 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:52:39,503 - audio_scheduler - INFO - <module>:1077 - Starting Audio Scheduler application...
+2025-10-30 11:52:39,533 - audio_scheduler - INFO - <module>:1082 - Database tables created/verified
+2025-10-30 11:52:39,621 - audio_scheduler - INFO - <module>:1086 - Schedules initialized from database
+2025-10-30 11:52:39,621 - audio_scheduler - INFO - <module>:1088 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:52:50,627 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:52:50,639 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:52:50,641 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:52:50,711 - audio_scheduler - INFO - <module>:1078 - Starting Audio Scheduler application...
+2025-10-30 11:52:50,745 - audio_scheduler - INFO - <module>:1083 - Database tables created/verified
+2025-10-30 11:52:50,799 - audio_scheduler - INFO - <module>:1087 - Schedules initialized from database
+2025-10-30 11:52:50,801 - audio_scheduler - INFO - <module>:1089 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:04,183 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:53:04,202 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:53:04,204 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:53:04,291 - audio_scheduler - INFO - <module>:1080 - Starting Audio Scheduler application...
+2025-10-30 11:53:04,343 - audio_scheduler - INFO - <module>:1085 - Database tables created/verified
+2025-10-30 11:53:04,399 - audio_scheduler - INFO - <module>:1089 - Schedules initialized from database
+2025-10-30 11:53:04,400 - audio_scheduler - INFO - <module>:1091 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:18,761 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:53:18,777 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:53:18,777 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:53:18,807 - audio_scheduler - INFO - <module>:1083 - Starting Audio Scheduler application...
+2025-10-30 11:53:18,824 - audio_scheduler - INFO - <module>:1088 - Database tables created/verified
+2025-10-30 11:53:18,857 - audio_scheduler - INFO - <module>:1092 - Schedules initialized from database
+2025-10-30 11:53:18,857 - audio_scheduler - INFO - <module>:1094 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:46,432 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:53:46,443 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:53:46,443 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:53:46,504 - audio_scheduler - INFO - <module>:1085 - Starting Audio Scheduler application...
+2025-10-30 11:53:46,538 - audio_scheduler - INFO - <module>:1090 - Database tables created/verified
+2025-10-30 11:53:46,572 - audio_scheduler - INFO - <module>:1094 - Schedules initialized from database
+2025-10-30 11:53:46,573 - audio_scheduler - INFO - <module>:1096 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:59,879 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:53:59,890 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:53:59,890 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:53:59,907 - audio_scheduler - INFO - <module>:1088 - Starting Audio Scheduler application...
+2025-10-30 11:53:59,922 - audio_scheduler - INFO - <module>:1093 - Database tables created/verified
+2025-10-30 11:53:59,954 - audio_scheduler - INFO - <module>:1097 - Schedules initialized from database
+2025-10-30 11:53:59,954 - audio_scheduler - INFO - <module>:1099 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:54:29,546 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:54:29,555 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:54:29,556 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:54:29,575 - audio_scheduler - INFO - <module>:1088 - Starting Audio Scheduler application...
+2025-10-30 11:54:29,588 - audio_scheduler - INFO - <module>:1093 - Database tables created/verified
+2025-10-30 11:54:29,615 - audio_scheduler - INFO - <module>:1097 - Schedules initialized from database
+2025-10-30 11:54:29,615 - audio_scheduler - INFO - <module>:1099 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:54:45,229 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:54:45,232 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:54:45,232 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:54:45,247 - audio_scheduler - INFO - <module>:1088 - Starting Audio Scheduler application...
+2025-10-30 11:54:45,260 - audio_scheduler - INFO - <module>:1093 - Database tables created/verified
+2025-10-30 11:54:45,280 - audio_scheduler - INFO - <module>:1097 - Schedules initialized from database
+2025-10-30 11:54:45,281 - audio_scheduler - INFO - <module>:1099 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:54:45,793 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 11:54:45,797 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 11:54:45,797 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 11:54:45,813 - audio_scheduler - INFO - <module>:1088 - Starting Audio Scheduler application...
+2025-10-30 11:54:45,828 - audio_scheduler - INFO - <module>:1093 - Database tables created/verified
+2025-10-30 11:54:45,847 - audio_scheduler - INFO - <module>:1097 - Schedules initialized from database
+2025-10-30 11:54:45,847 - audio_scheduler - INFO - <module>:1099 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:00:26,914 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:00:26,930 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:00:26,930 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:00:26,994 - audio_scheduler - INFO - <module>:1089 - Starting Audio Scheduler application...
+2025-10-30 12:00:27,049 - audio_scheduler - INFO - <module>:1094 - Database tables created/verified
+2025-10-30 12:00:27,116 - audio_scheduler - INFO - <module>:1098 - Schedules initialized from database
+2025-10-30 12:00:27,116 - audio_scheduler - INFO - <module>:1100 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:00:46,170 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:00:46,175 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:00:46,176 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:00:46,195 - audio_scheduler - INFO - <module>:1089 - Starting Audio Scheduler application...
+2025-10-30 12:00:46,210 - audio_scheduler - INFO - <module>:1094 - Database tables created/verified
+2025-10-30 12:00:46,239 - audio_scheduler - INFO - <module>:1098 - Schedules initialized from database
+2025-10-30 12:00:46,239 - audio_scheduler - INFO - <module>:1100 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:01:46,694 - audio_scheduler - INFO - delete_schedule:913 - Schedule deleted: ID:56, File:playlists/kincso_zenei
+2025-10-30 12:02:33,605 - audio_scheduler - INFO - add_playlist_schedule:837 - Playlist schedule added successfully: playlists/kincso_zenei at 12:16 on days [0, 1, 2, 3, 4]
+2025-10-30 12:11:13,168 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:11:13,172 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:11:13,172 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:11:13,184 - audio_scheduler - INFO - <module>:1089 - Starting Audio Scheduler application...
+2025-10-30 12:11:13,193 - audio_scheduler - INFO - <module>:1094 - Database tables created/verified
+2025-10-30 12:11:13,214 - audio_scheduler - INFO - <module>:1098 - Schedules initialized from database
+2025-10-30 12:11:13,214 - audio_scheduler - INFO - <module>:1100 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:11:13,681 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:11:13,686 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:11:13,686 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:11:13,698 - audio_scheduler - INFO - <module>:1089 - Starting Audio Scheduler application...
+2025-10-30 12:11:13,707 - audio_scheduler - INFO - <module>:1094 - Database tables created/verified
+2025-10-30 12:11:13,722 - audio_scheduler - INFO - <module>:1098 - Schedules initialized from database
+2025-10-30 12:11:13,722 - audio_scheduler - INFO - <module>:1100 - Starting Flask server on 0.0.0.0:5000

@@ -1,0 +1,111 @@
+2025-10-30 11:51:09,448 - INFO - Audio system initialized successfully
+2025-10-30 11:51:09,457 - INFO - Initializing credentials...
+2025-10-30 11:51:09,457 - INFO - Credentials initialization completed
+2025-10-30 11:51:18,014 - INFO - Audio system initialized successfully
+2025-10-30 11:51:18,037 - INFO - Initializing credentials...
+2025-10-30 11:51:18,038 - INFO - Credentials initialization completed
+2025-10-30 11:51:37,329 - INFO - Audio system initialized successfully
+2025-10-30 11:51:37,342 - INFO - Initializing credentials...
+2025-10-30 11:51:37,342 - INFO - Credentials initialization completed
+2025-10-30 11:52:04,385 - INFO - Audio system initialized successfully
+2025-10-30 11:52:04,402 - INFO - Initializing credentials...
+2025-10-30 11:52:04,406 - INFO - Credentials initialization completed
+2025-10-30 11:52:19,048 - INFO - Audio system initialized successfully
+2025-10-30 11:52:19,055 - INFO - Initializing credentials...
+2025-10-30 11:52:19,056 - INFO - Credentials initialization completed
+2025-10-30 11:52:29,564 - INFO - Audio system initialized successfully
+2025-10-30 11:52:29,576 - INFO - Initializing credentials...
+2025-10-30 11:52:29,576 - INFO - Credentials initialization completed
+2025-10-30 11:52:39,419 - INFO - Audio system initialized successfully
+2025-10-30 11:52:39,437 - INFO - Initializing credentials...
+2025-10-30 11:52:39,437 - INFO - Credentials initialization completed
+2025-10-30 11:52:39,503 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:52:39,533 - INFO - Database tables created/verified
+2025-10-30 11:52:39,621 - INFO - Schedules initialized from database
+2025-10-30 11:52:39,621 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:52:50,627 - INFO - Audio system initialized successfully
+2025-10-30 11:52:50,639 - INFO - Initializing credentials...
+2025-10-30 11:52:50,641 - INFO - Credentials initialization completed
+2025-10-30 11:52:50,711 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:52:50,745 - INFO - Database tables created/verified
+2025-10-30 11:52:50,799 - INFO - Schedules initialized from database
+2025-10-30 11:52:50,801 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:04,183 - INFO - Audio system initialized successfully
+2025-10-30 11:53:04,202 - INFO - Initializing credentials...
+2025-10-30 11:53:04,204 - INFO - Credentials initialization completed
+2025-10-30 11:53:04,291 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:53:04,343 - INFO - Database tables created/verified
+2025-10-30 11:53:04,399 - INFO - Schedules initialized from database
+2025-10-30 11:53:04,400 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:18,761 - INFO - Audio system initialized successfully
+2025-10-30 11:53:18,777 - INFO - Initializing credentials...
+2025-10-30 11:53:18,777 - INFO - Credentials initialization completed
+2025-10-30 11:53:18,807 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:53:18,824 - INFO - Database tables created/verified
+2025-10-30 11:53:18,857 - INFO - Schedules initialized from database
+2025-10-30 11:53:18,857 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:46,432 - INFO - Audio system initialized successfully
+2025-10-30 11:53:46,443 - INFO - Initializing credentials...
+2025-10-30 11:53:46,443 - INFO - Credentials initialization completed
+2025-10-30 11:53:46,504 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:53:46,538 - INFO - Database tables created/verified
+2025-10-30 11:53:46,572 - INFO - Schedules initialized from database
+2025-10-30 11:53:46,573 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:53:59,879 - INFO - Audio system initialized successfully
+2025-10-30 11:53:59,890 - INFO - Initializing credentials...
+2025-10-30 11:53:59,890 - INFO - Credentials initialization completed
+2025-10-30 11:53:59,907 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:53:59,922 - INFO - Database tables created/verified
+2025-10-30 11:53:59,954 - INFO - Schedules initialized from database
+2025-10-30 11:53:59,954 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:54:29,546 - INFO - Audio system initialized successfully
+2025-10-30 11:54:29,555 - INFO - Initializing credentials...
+2025-10-30 11:54:29,556 - INFO - Credentials initialization completed
+2025-10-30 11:54:29,575 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:54:29,588 - INFO - Database tables created/verified
+2025-10-30 11:54:29,615 - INFO - Schedules initialized from database
+2025-10-30 11:54:29,615 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:54:45,229 - INFO - Audio system initialized successfully
+2025-10-30 11:54:45,232 - INFO - Initializing credentials...
+2025-10-30 11:54:45,232 - INFO - Credentials initialization completed
+2025-10-30 11:54:45,247 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:54:45,260 - INFO - Database tables created/verified
+2025-10-30 11:54:45,280 - INFO - Schedules initialized from database
+2025-10-30 11:54:45,281 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 11:54:45,793 - INFO - Audio system initialized successfully
+2025-10-30 11:54:45,797 - INFO - Initializing credentials...
+2025-10-30 11:54:45,797 - INFO - Credentials initialization completed
+2025-10-30 11:54:45,813 - INFO - Starting Audio Scheduler application...
+2025-10-30 11:54:45,828 - INFO - Database tables created/verified
+2025-10-30 11:54:45,847 - INFO - Schedules initialized from database
+2025-10-30 11:54:45,847 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:00:26,914 - INFO - Audio system initialized successfully
+2025-10-30 12:00:26,930 - INFO - Initializing credentials...
+2025-10-30 12:00:26,930 - INFO - Credentials initialization completed
+2025-10-30 12:00:26,994 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:00:27,049 - INFO - Database tables created/verified
+2025-10-30 12:00:27,116 - INFO - Schedules initialized from database
+2025-10-30 12:00:27,116 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:00:46,170 - INFO - Audio system initialized successfully
+2025-10-30 12:00:46,175 - INFO - Initializing credentials...
+2025-10-30 12:00:46,176 - INFO - Credentials initialization completed
+2025-10-30 12:00:46,195 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:00:46,210 - INFO - Database tables created/verified
+2025-10-30 12:00:46,239 - INFO - Schedules initialized from database
+2025-10-30 12:00:46,239 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:01:46,694 - INFO - Schedule deleted: ID:56, File:playlists/kincso_zenei
+2025-10-30 12:02:33,605 - INFO - Playlist schedule added successfully: playlists/kincso_zenei at 12:16 on days [0, 1, 2, 3, 4]
+2025-10-30 12:11:13,168 - INFO - Audio system initialized successfully
+2025-10-30 12:11:13,172 - INFO - Initializing credentials...
+2025-10-30 12:11:13,172 - INFO - Credentials initialization completed
+2025-10-30 12:11:13,184 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:11:13,193 - INFO - Database tables created/verified
+2025-10-30 12:11:13,214 - INFO - Schedules initialized from database
+2025-10-30 12:11:13,214 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:11:13,681 - INFO - Audio system initialized successfully
+2025-10-30 12:11:13,686 - INFO - Initializing credentials...
+2025-10-30 12:11:13,686 - INFO - Credentials initialization completed
+2025-10-30 12:11:13,698 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:11:13,707 - INFO - Database tables created/verified
+2025-10-30 12:11:13,722 - INFO - Schedules initialized from database
+2025-10-30 12:11:13,722 - INFO - Starting Flask server on 0.0.0.0:5000
