@@ -142,22 +142,25 @@ def init_schedules():
 def reload_all_schedules():
     """Reload all schedules from the active list into the scheduler"""
     # Clear all existing schedule jobs
+    jobs_removed = 0
     try:
         for job in scheduler.get_jobs():
             if job.id.startswith('schedule_'):
                 scheduler.remove_job(job.id)
-    except:
-        pass
+                jobs_removed += 1
+        logger.info(f"Cleared {jobs_removed} existing schedule jobs")
+    except Exception as e:
+        logger.error(f"Error clearing existing jobs: {str(e)}")
     
     # Get active list and reload schedules
     active_list = ScheduleList.query.filter_by(is_active=True).first()
     if active_list:
         schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
+        jobs_added = 0
         for schedule in schedules:
-            add_job_to_scheduler(schedule)
-
-# Initialize default credentials
-init_credentials()
+            if add_job_to_scheduler(schedule):
+                jobs_added += 1
+        logger.info(f"Added {jobs_added} schedule jobs to scheduler")
 
 def play_audio(file_path):
     try:
@@ -220,7 +223,7 @@ def play_playlist(schedule_id):
     except Exception as e:
         playlist_logger.error(f"Error starting playlist {schedule_id}: {str(e)}")
 
-def _run_playlist(audio_files, duration_minutes, interval_minutes, max_tracks, shuffle_mode):
+def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tracks, shuffle_mode):
     """Run the playlist in a separate thread"""
     
     if not audio_available:
@@ -253,26 +256,40 @@ def _run_playlist(audio_files, duration_minutes, interval_minutes, max_tracks, s
             pygame.mixer.music.load(str(audio_file))
             pygame.mixer.music.play()
             
-            # Wait for the track to finish or for the interval time
+            # Wait for the track to finish playing completely
             track_start = time.time()
-            while pygame.mixer.music.get_busy() and (time.time() - track_start) < (interval_minutes * 60):
-                time.sleep(0.1)
             
-            # Stop the music if it's still playing after interval
-            if pygame.mixer.music.get_busy():
-                pygame.mixer.music.stop()
+            # Wait for track to finish playing naturally
+            while pygame.mixer.music.get_busy():
+                time.sleep(0.1)
+                # Check if we've exceeded the total playlist duration while playing
+                if time.time() >= end_time:
+                    pygame.mixer.music.stop()
+                    playlist_logger.info("Track stopped due to playlist duration limit")
+                    break
+            
+            track_end = time.time()
+            track_duration = track_end - track_start
+            playlist_logger.info(f"Track '{audio_file.name}' finished after {track_duration:.1f}s")
             
             tracks_played += 1
             
-            # Check if we've exceeded the duration
+            # Check if we've exceeded the total playlist duration
             if time.time() >= end_time:
                 break
                 
-            # Wait for the remaining interval time if track ended early
-            elapsed = time.time() - track_start
-            remaining_interval = (interval_minutes * 60) - elapsed
-            if remaining_interval > 0 and time.time() + remaining_interval < end_time:
-                time.sleep(remaining_interval)
+            # Wait for the interval time before starting the next track
+            if track_interval_seconds and track_interval_seconds > 0:
+                # Check if we have enough time left for the full interval
+                if time.time() + track_interval_seconds < end_time:
+                    playlist_logger.debug(f"Waiting {track_interval_seconds}s interval before next track")
+                    time.sleep(track_interval_seconds)
+                else:
+                    # Wait only for the remaining time if playlist duration is about to end
+                    remaining_time = end_time - time.time()
+                    if remaining_time > 0:
+                        playlist_logger.debug(f"Waiting {remaining_time:.1f}s (shortened interval due to playlist duration limit)")
+                        time.sleep(remaining_time)
                 
         except Exception as e:
             playlist_logger.error(f"Error playing playlist track {audio_file}: {str(e)}")
@@ -639,6 +656,13 @@ def add_job_to_scheduler(schedule):
     # Skip muted schedules
     if schedule.is_muted:
         return True
+    
+    # Check if job already exists and remove it first
+    job_id = f"schedule_{schedule.id}"
+    existing_job = scheduler.get_job(job_id)
+    if existing_job:
+        scheduler.remove_job(job_id)
+        logger.debug(f"Removed existing job {job_id} before re-adding")
     
     # Handle different schedule types
     if schedule.schedule_type == 'playlist':
@@ -1007,16 +1031,10 @@ def activate_schedule_list(list_id):
     schedule_list.is_active = True
     db.session.commit()
     
-    # Reload all schedules
-    # Remove all current jobs
-    for job in scheduler.get_jobs():
-        scheduler.remove_job(job.id)
+    # Reload all schedules using the proper function
+    reload_all_schedules()
     
-    # Add jobs from active list
-    schedules = Schedule.query.filter_by(schedule_list_id=list_id).all()
-    for schedule in schedules:
-        add_job_to_scheduler(schedule)
-    
+    logger.info(f"Activated schedule list: {schedule_list.name}")
     return jsonify({'success': True})
 
 @app.route('/schedule_lists/<int:list_id>', methods=['DELETE'])
@@ -1037,16 +1055,10 @@ def delete_schedule_list(list_id):
     db.session.delete(schedule_list)
     db.session.commit()
     
-    # Reload schedules
-    for job in scheduler.get_jobs():
-        scheduler.remove_job(job.id)
+    # Reload schedules using the proper function
+    reload_all_schedules()
     
-    active_list = ScheduleList.query.filter_by(is_active=True).first()
-    if active_list:
-        schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
-        for schedule in schedules:
-            add_job_to_scheduler(schedule)
-    
+    logger.info(f"Deleted schedule list: {schedule_list.name}")
     return jsonify({'success': True})
 
 @app.route('/get_server_ip')
@@ -1098,7 +1110,4 @@ if __name__ == '__main__':
     logger.info("Schedules initialized from database")
     
     logger.info("Starting Flask server on 0.0.0.0:5000")
-    app.run(debug=True, host='0.0.0.0', port=5000)
-
-if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

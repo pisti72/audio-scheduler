@@ -109,3 +109,124 @@
 2025-10-30 12:11:13,707 - INFO - Database tables created/verified
 2025-10-30 12:11:13,722 - INFO - Schedules initialized from database
 2025-10-30 12:11:13,722 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:15:00,004 - INFO - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:15:00,005 - INFO - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:16:00,011 - INFO - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:16:00,011 - INFO - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:16:00,012 - INFO - Playing playlist track: VZS - VÁRJ MEG  feat. RZMVS (OFFICIAL VISUALIZER).mp3
+2025-10-30 12:16:00,012 - INFO - Playing playlist track: You Know How We Do It.mp3
+2025-10-30 12:22:19,443 - INFO - Audio system initialized successfully
+2025-10-30 12:22:19,448 - INFO - Initializing credentials...
+2025-10-30 12:22:19,449 - INFO - Credentials initialization completed
+2025-10-30 12:22:19,465 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:22:19,479 - INFO - Database tables created/verified
+2025-10-30 12:22:19,503 - INFO - Schedules initialized from database
+2025-10-30 12:22:19,503 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:22:20,034 - INFO - Audio system initialized successfully
+2025-10-30 12:22:20,038 - INFO - Initializing credentials...
+2025-10-30 12:22:20,038 - INFO - Credentials initialization completed
+2025-10-30 12:22:20,051 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:22:20,060 - INFO - Database tables created/verified
+2025-10-30 12:22:20,077 - INFO - Schedules initialized from database
+2025-10-30 12:22:20,077 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:23:00,004 - INFO - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:23:00,005 - INFO - Playing playlist track: You Know How We Do It.mp3
+2025-10-30 12:25:00,045 - INFO - Playing playlist track: Justin Bieber - Where Are U Now (Lyrics) with Skrillex and Diplo.mp3
+2025-10-30 12:27:00,074 - INFO - Playing playlist track: The Weeknd - The Morning (Lyrics).mp3
+2025-10-30 12:29:00,153 - INFO - Playing playlist track: VZS - VÁRJ MEG  feat. RZMVS (OFFICIAL VISUALIZER).mp3
+2025-10-30 12:30:02,820 - INFO - Audio system initialized successfully
+2025-10-30 12:30:02,826 - INFO - Initializing credentials...
+2025-10-30 12:30:02,827 - INFO - Credentials initialization completed
+2025-10-30 12:30:02,859 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:30:02,876 - INFO - Database tables created/verified
+2025-10-30 12:30:02,903 - INFO - Schedules initialized from database
+2025-10-30 12:30:02,903 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:30:12,264 - INFO - Audio system initialized successfully
+2025-10-30 12:30:12,275 - INFO - Initializing credentials...
+2025-10-30 12:30:12,275 - INFO - Credentials initialization completed
+2025-10-30 12:30:12,299 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:30:12,318 - INFO - Database tables created/verified
+2025-10-30 12:30:12,355 - INFO - Schedules initialized from database
+2025-10-30 12:30:12,355 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:31:30,216 - INFO - Audio system initialized successfully
+2025-10-30 12:31:30,219 - INFO - Initializing credentials...
+2025-10-30 12:31:30,220 - INFO - Credentials initialization completed
+2025-10-30 12:31:30,232 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:31:30,240 - INFO - Database tables created/verified
+2025-10-30 12:31:30,260 - INFO - Schedules initialized from database
+2025-10-30 12:31:30,260 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:31:30,713 - INFO - Audio system initialized successfully
+2025-10-30 12:31:30,717 - INFO - Initializing credentials...
+2025-10-30 12:31:30,717 - INFO - Credentials initialization completed
+2025-10-30 12:31:30,731 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:31:30,740 - INFO - Database tables created/verified
+2025-10-30 12:31:30,756 - INFO - Schedules initialized from database
+2025-10-30 12:31:30,756 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:32:00,005 - INFO - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:32:00,005 - INFO - Playing playlist track: DJ Snake ft. Justin Bieber - Let Me Love You [Lyric Video].mp3
+2025-10-30 12:32:02,010 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:02,010 - INFO - Playing playlist track: Wish I Never Met You.mp3
+2025-10-30 12:32:04,018 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:04,018 - INFO - Playing playlist track: The Weeknd - The Morning (Lyrics).mp3
+2025-10-30 12:32:06,021 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:06,021 - INFO - Playing playlist track: MARIO – Héy lány _ Official Music Video.mp3
+2025-10-30 12:32:08,025 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:08,025 - INFO - Playing playlist track: VZS - VÁRJ MEG  feat. RZMVS (OFFICIAL VISUALIZER).mp3
+2025-10-30 12:32:10,028 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:10,029 - INFO - Playing playlist track: Justin Bieber - Where Are U Now (Lyrics) with Skrillex and Diplo.mp3
+2025-10-30 12:32:12,032 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:12,032 - INFO - Playing playlist track: You Know How We Do It.mp3
+2025-10-30 12:32:14,035 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:14,036 - INFO - Playing playlist track: Major Lazer - Cold Water (Lyrics) ft. Justin Bieber & MŘ.mp3
+2025-10-30 12:32:16,040 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:16,040 - INFO - Playing playlist track: Bad Bunny - DtMF (Letra).mp3
+2025-10-30 12:32:18,045 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:18,045 - INFO - Playing playlist track: Justin Bieber - Company (Lyrics).mp3
+2025-10-30 12:32:20,049 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:20,049 - INFO - Playing playlist track: CHRYSTAL - THE DAYS (NOTION REMIX) (Lyrics).mp3
+2025-10-30 12:32:22,053 - INFO - Track stopped after 2s interval limit
+2025-10-30 12:32:22,054 - INFO - Playing playlist track: Take My Mind.mp3
+2025-10-30 12:37:31,143 - INFO - Audio system initialized successfully
+2025-10-30 12:37:31,146 - INFO - Initializing credentials...
+2025-10-30 12:37:31,146 - INFO - Credentials initialization completed
+2025-10-30 12:37:31,159 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:37:31,168 - INFO - Database tables created/verified
+2025-10-30 12:37:31,188 - INFO - Schedules initialized from database
+2025-10-30 12:37:31,189 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:37:31,715 - INFO - Audio system initialized successfully
+2025-10-30 12:37:31,720 - INFO - Initializing credentials...
+2025-10-30 12:37:31,720 - INFO - Credentials initialization completed
+2025-10-30 12:37:31,733 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:37:31,742 - INFO - Database tables created/verified
+2025-10-30 12:37:31,758 - INFO - Schedules initialized from database
+2025-10-30 12:37:31,759 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:38:00,004 - INFO - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:38:00,005 - INFO - Playing playlist track: Central Cee, Sexyy Red - Guilt Trippin (Lyrics).mp3
+2025-10-30 12:40:33,923 - INFO - Track 'Central Cee, Sexyy Red - Guilt Trippin (Lyrics).mp3' finished after 153.9s
+2025-10-30 12:40:35,923 - INFO - Playing playlist track: Bad Bunny - DtMF (Letra).mp3
+2025-10-30 12:44:36,321 - INFO - Track 'Bad Bunny - DtMF (Letra).mp3' finished after 240.4s
+2025-10-30 12:44:38,322 - INFO - Playing playlist track: Justin Bieber - Company (Lyrics).mp3
+2025-10-30 12:45:00,002 - INFO - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:45:00,003 - INFO - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:45:07,558 - INFO - Track 'Justin Bieber - Company (Lyrics).mp3' finished after 29.2s
+2025-10-30 12:45:09,558 - INFO - Playing playlist track: Major Lazer - Cold Water (Lyrics) ft. Justin Bieber & MŘ.mp3
+2025-10-30 12:48:22,315 - INFO - Track 'Major Lazer - Cold Water (Lyrics) ft. Justin Bieber & MŘ.mp3' finished after 192.8s
+2025-10-30 12:48:24,315 - INFO - Playing playlist track: Manuel - Nosztalgia (Official Lyrics Video).mp3
+2025-10-30 12:51:33,785 - INFO - Track 'Manuel - Nosztalgia (Official Lyrics Video).mp3' finished after 189.5s
+2025-10-30 12:51:35,786 - INFO - Playing playlist track: PARTYNEXTDOOR & DRAKE - DIE TRYING.mp3
+2025-10-30 12:54:51,467 - INFO - Track 'PARTYNEXTDOOR & DRAKE - DIE TRYING.mp3' finished after 195.7s
+2025-10-30 12:54:53,468 - INFO - Playing playlist track: DJ Snake ft. Justin Bieber - Let Me Love You [Lyric Video].mp3
+2025-10-30 12:56:50,501 - INFO - Audio system initialized successfully
+2025-10-30 12:56:50,504 - INFO - Initializing credentials...
+2025-10-30 12:56:50,504 - INFO - Credentials initialization completed
+2025-10-30 12:56:50,524 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:56:50,542 - INFO - Database tables created/verified
+2025-10-30 12:56:50,569 - INFO - Schedules initialized from database
+2025-10-30 12:56:50,569 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:56:51,324 - INFO - Audio system initialized successfully
+2025-10-30 12:56:51,335 - INFO - Initializing credentials...
+2025-10-30 12:56:51,335 - INFO - Credentials initialization completed
+2025-10-30 12:56:51,358 - INFO - Starting Audio Scheduler application...
+2025-10-30 12:56:51,375 - INFO - Database tables created/verified
+2025-10-30 12:56:51,404 - INFO - Schedules initialized from database
+2025-10-30 12:56:51,404 - INFO - Starting Flask server on 0.0.0.0:5000

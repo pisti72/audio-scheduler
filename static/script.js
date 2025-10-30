@@ -911,8 +911,20 @@ async function loadPlaylistSchedules() {
             const folderName = schedule.folder_path ? schedule.folder_path.split('/').pop() : 'Unknown';
             const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             const daysText = schedule.days.map(d => appTranslations.days_list[dayKeys[d]] || dayKeys[d]).join(', ');
+            
+            // Create combined configuration text
             const durationText = schedule.playlist_duration ? `${schedule.playlist_duration} min` : (appTranslations.playlist?.unlimited || 'Unlimited');
             const tracksText = schedule.max_tracks ? `${schedule.max_tracks} tracks` : (appTranslations.playlist?.unlimited || 'Unlimited');
+            const intervalText = schedule.track_interval ? `${schedule.track_interval}s` : 'No interval';
+            const shuffleText = schedule.shuffle_mode ? (appTranslations.playlist?.shuffle_enabled || 'On') : (appTranslations.playlist?.shuffle_disabled || 'Off');
+            
+            const configurationText = `
+                <div class="config-item"><strong>${appTranslations.playlist?.config_duration || 'Duration'}:</strong> ${durationText}</div>
+                <div class="config-item"><strong>${appTranslations.playlist?.config_tracks || 'Max tracks'}:</strong> ${tracksText}</div>
+                <div class="config-item"><strong>${appTranslations.playlist?.config_interval || 'Interval'}:</strong> ${intervalText}</div>
+                <div class="config-item"><strong>${appTranslations.playlist?.config_shuffle || 'Shuffle'}:</strong> ${shuffleText}</div>
+            `;
+            
             const nextRun = schedule.next_run 
                 ? new Date(schedule.next_run).toLocaleString(mapLangToLocale(currentLang))
                 : (appTranslations.current_schedules?.not_scheduled || 'Not scheduled');
@@ -926,8 +938,7 @@ async function loadPlaylistSchedules() {
                 <td>${folderName}</td>
                 <td>${schedule.time}</td>
                 <td>${daysText}</td>
-                <td>${durationText}</td>
-                <td>${tracksText}</td>
+                <td>${configurationText}</td>
                 <td>${nextRun}</td>
                 <td>
                     <button onclick="toggleMute(${schedule.id})" class="action-btn" title="${muteTitle}">

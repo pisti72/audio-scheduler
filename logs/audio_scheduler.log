@@ -109,3 +109,124 @@
 2025-10-30 12:11:13,707 - audio_scheduler - INFO - <module>:1094 - Database tables created/verified
 2025-10-30 12:11:13,722 - audio_scheduler - INFO - <module>:1098 - Schedules initialized from database
 2025-10-30 12:11:13,722 - audio_scheduler - INFO - <module>:1100 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:15:00,004 - audio_scheduler.audio - INFO - play_audio:169 - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:15:00,005 - audio_scheduler.audio - INFO - play_audio:169 - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:16:00,011 - audio_scheduler.playlist - INFO - play_playlist:210 - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:16:00,011 - audio_scheduler.playlist - INFO - play_playlist:210 - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:16:00,012 - audio_scheduler.playlist - INFO - _run_playlist:252 - Playing playlist track: VZS - VÁRJ MEG  feat. RZMVS (OFFICIAL VISUALIZER).mp3
+2025-10-30 12:16:00,012 - audio_scheduler.playlist - INFO - _run_playlist:252 - Playing playlist track: You Know How We Do It.mp3
+2025-10-30 12:22:19,443 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:22:19,448 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:22:19,449 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:22:19,465 - audio_scheduler - INFO - <module>:1087 - Starting Audio Scheduler application...
+2025-10-30 12:22:19,479 - audio_scheduler - INFO - <module>:1092 - Database tables created/verified
+2025-10-30 12:22:19,503 - audio_scheduler - INFO - <module>:1096 - Schedules initialized from database
+2025-10-30 12:22:19,503 - audio_scheduler - INFO - <module>:1098 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:22:20,034 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:22:20,038 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:22:20,038 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:22:20,051 - audio_scheduler - INFO - <module>:1087 - Starting Audio Scheduler application...
+2025-10-30 12:22:20,060 - audio_scheduler - INFO - <module>:1092 - Database tables created/verified
+2025-10-30 12:22:20,077 - audio_scheduler - INFO - <module>:1096 - Schedules initialized from database
+2025-10-30 12:22:20,077 - audio_scheduler - INFO - <module>:1098 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:23:00,004 - audio_scheduler.playlist - INFO - play_playlist:213 - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:23:00,005 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: You Know How We Do It.mp3
+2025-10-30 12:25:00,045 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Justin Bieber - Where Are U Now (Lyrics) with Skrillex and Diplo.mp3
+2025-10-30 12:27:00,074 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: The Weeknd - The Morning (Lyrics).mp3
+2025-10-30 12:29:00,153 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: VZS - VÁRJ MEG  feat. RZMVS (OFFICIAL VISUALIZER).mp3
+2025-10-30 12:30:02,820 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:30:02,826 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:30:02,827 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:30:02,859 - audio_scheduler - INFO - <module>:1093 - Starting Audio Scheduler application...
+2025-10-30 12:30:02,876 - audio_scheduler - INFO - <module>:1098 - Database tables created/verified
+2025-10-30 12:30:02,903 - audio_scheduler - INFO - <module>:1102 - Schedules initialized from database
+2025-10-30 12:30:02,903 - audio_scheduler - INFO - <module>:1104 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:30:12,264 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:30:12,275 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:30:12,275 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:30:12,299 - audio_scheduler - INFO - <module>:1093 - Starting Audio Scheduler application...
+2025-10-30 12:30:12,318 - audio_scheduler - INFO - <module>:1098 - Database tables created/verified
+2025-10-30 12:30:12,355 - audio_scheduler - INFO - <module>:1102 - Schedules initialized from database
+2025-10-30 12:30:12,355 - audio_scheduler - INFO - <module>:1104 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:31:30,216 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:31:30,219 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:31:30,220 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:31:30,232 - audio_scheduler - INFO - <module>:1093 - Starting Audio Scheduler application...
+2025-10-30 12:31:30,240 - audio_scheduler - INFO - <module>:1098 - Database tables created/verified
+2025-10-30 12:31:30,260 - audio_scheduler - INFO - <module>:1102 - Schedules initialized from database
+2025-10-30 12:31:30,260 - audio_scheduler - INFO - <module>:1104 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:31:30,713 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:31:30,717 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:31:30,717 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:31:30,731 - audio_scheduler - INFO - <module>:1093 - Starting Audio Scheduler application...
+2025-10-30 12:31:30,740 - audio_scheduler - INFO - <module>:1098 - Database tables created/verified
+2025-10-30 12:31:30,756 - audio_scheduler - INFO - <module>:1102 - Schedules initialized from database
+2025-10-30 12:31:30,756 - audio_scheduler - INFO - <module>:1104 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:32:00,005 - audio_scheduler.playlist - INFO - play_playlist:213 - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:32:00,005 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: DJ Snake ft. Justin Bieber - Let Me Love You [Lyric Video].mp3
+2025-10-30 12:32:02,010 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:02,010 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Wish I Never Met You.mp3
+2025-10-30 12:32:04,018 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:04,018 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: The Weeknd - The Morning (Lyrics).mp3
+2025-10-30 12:32:06,021 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:06,021 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: MARIO – Héy lány _ Official Music Video.mp3
+2025-10-30 12:32:08,025 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:08,025 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: VZS - VÁRJ MEG  feat. RZMVS (OFFICIAL VISUALIZER).mp3
+2025-10-30 12:32:10,028 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:10,029 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Justin Bieber - Where Are U Now (Lyrics) with Skrillex and Diplo.mp3
+2025-10-30 12:32:12,032 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:12,032 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: You Know How We Do It.mp3
+2025-10-30 12:32:14,035 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:14,036 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Major Lazer - Cold Water (Lyrics) ft. Justin Bieber & MŘ.mp3
+2025-10-30 12:32:16,040 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:16,040 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Bad Bunny - DtMF (Letra).mp3
+2025-10-30 12:32:18,045 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:18,045 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Justin Bieber - Company (Lyrics).mp3
+2025-10-30 12:32:20,049 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:20,049 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: CHRYSTAL - THE DAYS (NOTION REMIX) (Lyrics).mp3
+2025-10-30 12:32:22,053 - audio_scheduler.playlist - INFO - _run_playlist:270 - Track stopped after 2s interval limit
+2025-10-30 12:32:22,054 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Take My Mind.mp3
+2025-10-30 12:37:31,143 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:37:31,146 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:37:31,146 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:37:31,159 - audio_scheduler - INFO - <module>:1101 - Starting Audio Scheduler application...
+2025-10-30 12:37:31,168 - audio_scheduler - INFO - <module>:1106 - Database tables created/verified
+2025-10-30 12:37:31,188 - audio_scheduler - INFO - <module>:1110 - Schedules initialized from database
+2025-10-30 12:37:31,189 - audio_scheduler - INFO - <module>:1112 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:37:31,715 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:37:31,720 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:37:31,720 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:37:31,733 - audio_scheduler - INFO - <module>:1101 - Starting Audio Scheduler application...
+2025-10-30 12:37:31,742 - audio_scheduler - INFO - <module>:1106 - Database tables created/verified
+2025-10-30 12:37:31,758 - audio_scheduler - INFO - <module>:1110 - Schedules initialized from database
+2025-10-30 12:37:31,759 - audio_scheduler - INFO - <module>:1112 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:38:00,004 - audio_scheduler.playlist - INFO - play_playlist:213 - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 2sec
+2025-10-30 12:38:00,005 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Central Cee, Sexyy Red - Guilt Trippin (Lyrics).mp3
+2025-10-30 12:40:33,923 - audio_scheduler.playlist - INFO - _run_playlist:273 - Track 'Central Cee, Sexyy Red - Guilt Trippin (Lyrics).mp3' finished after 153.9s
+2025-10-30 12:40:35,923 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Bad Bunny - DtMF (Letra).mp3
+2025-10-30 12:44:36,321 - audio_scheduler.playlist - INFO - _run_playlist:273 - Track 'Bad Bunny - DtMF (Letra).mp3' finished after 240.4s
+2025-10-30 12:44:38,322 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Justin Bieber - Company (Lyrics).mp3
+2025-10-30 12:45:00,002 - audio_scheduler.audio - INFO - play_audio:172 - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:45:00,003 - audio_scheduler.audio - INFO - play_audio:172 - Playing audio: uploads/school_bell_2.mp3
+2025-10-30 12:45:07,558 - audio_scheduler.playlist - INFO - _run_playlist:273 - Track 'Justin Bieber - Company (Lyrics).mp3' finished after 29.2s
+2025-10-30 12:45:09,558 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Major Lazer - Cold Water (Lyrics) ft. Justin Bieber & MŘ.mp3
+2025-10-30 12:48:22,315 - audio_scheduler.playlist - INFO - _run_playlist:273 - Track 'Major Lazer - Cold Water (Lyrics) ft. Justin Bieber & MŘ.mp3' finished after 192.8s
+2025-10-30 12:48:24,315 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Manuel - Nosztalgia (Official Lyrics Video).mp3
+2025-10-30 12:51:33,785 - audio_scheduler.playlist - INFO - _run_playlist:273 - Track 'Manuel - Nosztalgia (Official Lyrics Video).mp3' finished after 189.5s
+2025-10-30 12:51:35,786 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: PARTYNEXTDOOR & DRAKE - DIE TRYING.mp3
+2025-10-30 12:54:51,467 - audio_scheduler.playlist - INFO - _run_playlist:273 - Track 'PARTYNEXTDOOR & DRAKE - DIE TRYING.mp3' finished after 195.7s
+2025-10-30 12:54:53,468 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: DJ Snake ft. Justin Bieber - Let Me Love You [Lyric Video].mp3
+2025-10-30 12:56:50,501 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:56:50,504 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:56:50,504 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:56:50,524 - audio_scheduler - INFO - <module>:1101 - Starting Audio Scheduler application...
+2025-10-30 12:56:50,542 - audio_scheduler - INFO - <module>:1106 - Database tables created/verified
+2025-10-30 12:56:50,569 - audio_scheduler - INFO - <module>:1110 - Schedules initialized from database
+2025-10-30 12:56:50,569 - audio_scheduler - INFO - <module>:1112 - Starting Flask server on 0.0.0.0:5000
+2025-10-30 12:56:51,324 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-10-30 12:56:51,335 - audio_scheduler.auth - INFO - <module>:121 - Initializing credentials...
+2025-10-30 12:56:51,335 - audio_scheduler.auth - INFO - <module>:123 - Credentials initialization completed
+2025-10-30 12:56:51,358 - audio_scheduler - INFO - <module>:1101 - Starting Audio Scheduler application...
+2025-10-30 12:56:51,375 - audio_scheduler - INFO - <module>:1106 - Database tables created/verified
+2025-10-30 12:56:51,404 - audio_scheduler - INFO - <module>:1110 - Schedules initialized from database
+2025-10-30 12:56:51,404 - audio_scheduler - INFO - <module>:1112 - Starting Flask server on 0.0.0.0:5000

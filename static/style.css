@@ -1041,6 +1041,21 @@ textarea:focus {
     color: #388E3C;
 }
 
+/* Configuration column styling */
+.config-item {
+    font-size: 0.85em;
+    margin: 0.2em 0;
+    line-height: 1.3;
+}
+
+.config-item strong {
+    font-weight: 600;
+    color: #555;
+    display: inline-block;
+    width: 70px;
+    font-size: 0.9em;
+}
+
 /* Muted schedule row styling */
 tr.muted {
     opacity: 0.6;
