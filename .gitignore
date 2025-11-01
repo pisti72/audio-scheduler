@@ -19,6 +19,10 @@ playlists/*
 !playlists/README.md
 !playlists/.gitkeep
 
+# Logs
+logs/
+*.log
+
 # IDE
 .vscode/
 .idea/

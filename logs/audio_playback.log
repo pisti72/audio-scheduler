@@ -230,3 +230,45 @@
 2025-10-30 12:56:51,375 - INFO - Database tables created/verified
 2025-10-30 12:56:51,404 - INFO - Schedules initialized from database
 2025-10-30 12:56:51,404 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-01 16:01:22,315 - INFO - Audio system initialized successfully
+2025-11-01 16:01:22,336 - INFO - Initializing credentials...
+2025-11-01 16:01:22,338 - INFO - Credentials initialization completed
+2025-11-01 16:01:22,347 - INFO - Starting Audio Scheduler application...
+2025-11-01 16:01:22,365 - INFO - Database tables created/verified
+2025-11-01 16:01:22,386 - INFO - Schedules initialized from database
+2025-11-01 16:01:22,387 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-01 16:01:22,905 - INFO - Audio system initialized successfully
+2025-11-01 16:01:22,918 - INFO - Initializing credentials...
+2025-11-01 16:01:22,919 - INFO - Credentials initialization completed
+2025-11-01 16:01:22,927 - INFO - Starting Audio Scheduler application...
+2025-11-01 16:01:22,928 - INFO - Database tables created/verified
+2025-11-01 16:01:22,941 - INFO - Schedules initialized from database
+2025-11-01 16:01:22,941 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-01 16:02:26,470 - INFO - Login attempt received
+2025-11-01 16:02:26,507 - INFO - Successful login for user: admin
+2025-11-01 16:07:04,415 - INFO - Cleared 0 existing schedule jobs
+2025-11-01 16:07:04,418 - INFO - Added 0 schedule jobs to scheduler
+2025-11-01 16:07:04,418 - INFO - Activated schedule list: Default
+2025-11-01 16:07:37,819 - INFO - Cleared 0 existing schedule jobs
+2025-11-01 16:07:37,825 - INFO - Added 20 schedule jobs to scheduler
+2025-11-01 16:08:25,227 - INFO - Playlist schedule added successfully: playlists/kincso_zenei at 16:10 on days [5, 6]
+2025-11-01 16:13:26,414 - INFO - Audio system initialized successfully
+2025-11-01 16:13:26,428 - INFO - Initializing credentials...
+2025-11-01 16:13:26,428 - INFO - Credentials initialization completed
+2025-11-01 16:13:26,434 - INFO - Starting Audio Scheduler application...
+2025-11-01 16:13:26,436 - INFO - Database tables created/verified
+2025-11-01 16:13:26,452 - INFO - Schedules initialized from database
+2025-11-01 16:13:26,452 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-01 16:13:26,914 - INFO - Audio system initialized successfully
+2025-11-01 16:13:26,927 - INFO - Initializing credentials...
+2025-11-01 16:13:26,927 - INFO - Credentials initialization completed
+2025-11-01 16:13:26,934 - INFO - Starting Audio Scheduler application...
+2025-11-01 16:13:26,935 - INFO - Database tables created/verified
+2025-11-01 16:13:26,957 - INFO - Schedules initialized from database
+2025-11-01 16:13:26,958 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-01 16:15:00,004 - INFO - Starting playlist: playlists/kincso_zenei, Duration: 25min, Interval: 10sec
+2025-11-01 16:15:00,004 - INFO - Playing playlist track: Manuel - Nosztalgia (Official Lyrics Video).mp3
+2025-11-01 16:18:09,449 - INFO - Track 'Manuel - Nosztalgia (Official Lyrics Video).mp3' finished after 189.4s
+2025-11-01 16:18:19,450 - INFO - Playing playlist track: Wish I Never Met You.mp3
+2025-11-01 16:21:23,554 - INFO - Track 'Wish I Never Met You.mp3' finished after 184.1s
+2025-11-01 16:21:33,555 - INFO - Playing playlist track: CHRYSTAL - THE DAYS (NOTION REMIX) (Lyrics).mp3

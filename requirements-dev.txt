@@ -5,18 +5,18 @@
 -r requirements.txt
 
 # Development tools
-black==23.3.0           # Code formatter
-flake8==6.0.0           # Linting
-pylint==2.17.4          # Advanced linting
-pytest==7.4.0          # Testing framework
-pytest-flask==1.2.0    # Flask testing utilities
-coverage==7.2.7        # Code coverage
-pre-commit==3.3.3      # Git hooks for code quality
+black>=23.3.0           # Code formatter
+flake8>=6.0.0           # Linting
+pylint>=2.17.4          # Advanced linting
+pytest>=7.4.0          # Testing framework
+pytest-flask>=1.2.0    # Flask testing utilities
+coverage>=7.2.7        # Code coverage
+pre-commit>=3.3.3      # Git hooks for code quality
 
 # Documentation
-sphinx==7.1.2          # Documentation generator
-sphinx-rtd-theme==1.3.0 # Documentation theme
+sphinx>=7.1.2          # Documentation generator
+sphinx-rtd-theme>=1.3.0 # Documentation theme
 
 # Optional: Enhanced development experience
-ipython==8.14.0        # Better Python REPL
-jupyter==1.0.0         # Jupyter notebooks for experimentation
+ipython>=8.14.0        # Better Python REPL
+jupyter>=1.0.0         # Jupyter notebooks for experimentation
