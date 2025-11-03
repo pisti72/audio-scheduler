@@ -571,13 +571,17 @@ def import_schedules_csv():
         
         # Delete existing schedules for the active list and insert new ones
         try:
-            # Remove existing schedules from scheduler
-            existing_schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
-            for schedule in existing_schedules:
-                try:
-                    scheduler.remove_job(f'schedule_{schedule.id}')
-                except:
-                    pass  # Job might not exist in scheduler
+            # Remove existing schedules from scheduler (only if scheduler is initialized)
+            if scheduler is not None:
+                existing_schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
+                for schedule in existing_schedules:
+                    try:
+                        job_id = f'schedule_{schedule.id}'
+                        if scheduler.get_job(job_id):
+                            scheduler.remove_job(job_id)
+                            logger.debug(f"Removed job {job_id} during CSV import")
+                    except Exception as e:
+                        logger.warning(f"Failed to remove job for schedule {schedule.id}: {e}")
             
             # Delete existing schedules from database
             Schedule.query.filter_by(schedule_list_id=active_list.id).delete()
@@ -941,10 +945,11 @@ def delete_schedule(schedule_id):
     schedule = db.session.get(Schedule, schedule_id) or abort(404)
     schedule_info = f"ID:{schedule_id}, File:{schedule.filename if schedule.schedule_type != 'playlist' else schedule.folder_path}"
     
-    # Remove from scheduler
-    job_id = f"schedule_{schedule.id}"
-    if scheduler.get_job(job_id):
-        scheduler.remove_job(job_id)
+    # Remove from scheduler (only if scheduler is initialized)
+    if scheduler is not None:
+        job_id = f"schedule_{schedule.id}"
+        if scheduler.get_job(job_id):
+            scheduler.remove_job(job_id)
     
     # Remove from database
     db.session.delete(schedule)
@@ -979,13 +984,14 @@ def update_schedule(schedule_id):
 
     db.session.commit()
 
-    # Refresh job in scheduler
-    job_id = f"schedule_{schedule.id}"
-    if scheduler.get_job(job_id):
-        scheduler.remove_job(job_id)
+    # Refresh job in scheduler (only if scheduler is initialized)
+    if scheduler is not None:
+        job_id = f"schedule_{schedule.id}"
+        if scheduler.get_job(job_id):
+            scheduler.remove_job(job_id)
 
-    # Only re-add if not muted and file exists
-    add_job_to_scheduler(schedule)
+        # Only re-add if not muted and file exists
+        add_job_to_scheduler(schedule)
 
     return jsonify({'success': True, 'schedule': schedule.to_dict()})
 
@@ -999,18 +1005,19 @@ def toggle_mute(schedule_id):
     schedule.is_muted = not schedule.is_muted
     db.session.commit()
     
-    # Update scheduler job
-    job_id = f"schedule_{schedule.id}"
-    
-    if schedule.is_muted:
-        # Remove job from scheduler when muted
-        if scheduler.get_job(job_id):
-            scheduler.remove_job(job_id)
-        logger.info(f"Schedule muted: {schedule_info}")
-    else:
-        # Add job back to scheduler when unmuted
-        add_job_to_scheduler(schedule)
-        logger.info(f"Schedule unmuted: {schedule_info}")
+    # Update scheduler job (only if scheduler is initialized)
+    if scheduler is not None:
+        job_id = f"schedule_{schedule.id}"
+        
+        if schedule.is_muted:
+            # Remove job from scheduler when muted
+            if scheduler.get_job(job_id):
+                scheduler.remove_job(job_id)
+            logger.info(f"Schedule muted: {schedule_info}")
+        else:
+            # Add job back to scheduler when unmuted
+            add_job_to_scheduler(schedule)
+            logger.info(f"Schedule unmuted: {schedule_info}")
     
     return jsonify({'success': True, 'is_muted': schedule.is_muted})
 
