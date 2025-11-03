@@ -5,7 +5,7 @@ import threading
 import time
 import logging
 import logging.handlers
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, make_response
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, make_response, abort
 import csv
 from io import StringIO
 
@@ -113,9 +113,17 @@ except Exception as e:
 db.init_app(app)
 migrate = Migrate(app, db)
 
-# Initialize scheduler
-scheduler = BackgroundScheduler()
-scheduler.start()
+# Initialize scheduler only once (not in reloader process)
+# Flask debug mode spawns two processes: main and reloader
+# We only want the scheduler in the main process
+import os
+if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
+    scheduler = BackgroundScheduler()
+    scheduler.start()
+    logger.info("Background scheduler started")
+else:
+    scheduler = None
+    logger.info("Skipping scheduler initialization in reloader process")
 
 # Initialize default credentials
 auth_logger.info("Initializing credentials...")
@@ -141,6 +149,10 @@ def init_schedules():
 
 def reload_all_schedules():
     """Reload all schedules from the active list into the scheduler"""
+    # Skip if scheduler not initialized (reloader process)
+    if scheduler is None:
+        return
+    
     # Clear all existing schedule jobs
     jobs_removed = 0
     try:
@@ -180,7 +192,7 @@ def play_playlist(schedule_id):
         # Ensure we're in an application context for database access
         with app.app_context():
             # Get the schedule
-            schedule = Schedule.query.get(schedule_id)
+            schedule = db.session.get(Schedule, schedule_id)
             if not schedule or schedule.schedule_type != 'playlist':
                 playlist_logger.error(f"Invalid playlist schedule ID: {schedule_id}")
                 return
@@ -653,6 +665,10 @@ def upload_file():
 
 def add_job_to_scheduler(schedule):
     """Add a schedule to the APScheduler"""
+    # Skip if scheduler not initialized (reloader process)
+    if scheduler is None:
+        return True
+    
     # Skip muted schedules
     if schedule.is_muted:
         return True
@@ -922,7 +938,7 @@ def get_playlist_folders():
 
 @app.route('/delete_schedule/<int:schedule_id>', methods=['DELETE'])
 def delete_schedule(schedule_id):
-    schedule = Schedule.query.get_or_404(schedule_id)
+    schedule = db.session.get(Schedule, schedule_id) or abort(404)
     schedule_info = f"ID:{schedule_id}, File:{schedule.filename if schedule.schedule_type != 'playlist' else schedule.folder_path}"
     
     # Remove from scheduler
@@ -940,7 +956,7 @@ def delete_schedule(schedule_id):
 @app.route('/update_schedule/<int:schedule_id>', methods=['POST'])
 def update_schedule(schedule_id):
     """Update an existing schedule's time and days, then refresh its job."""
-    schedule = Schedule.query.get_or_404(schedule_id)
+    schedule = db.session.get(Schedule, schedule_id) or abort(404)
     data = request.get_json() or {}
 
     # Extract fields
@@ -976,7 +992,7 @@ def update_schedule(schedule_id):
 @app.route('/toggle_mute/<int:schedule_id>', methods=['POST'])
 @login_required
 def toggle_mute(schedule_id):
-    schedule = Schedule.query.get_or_404(schedule_id)
+    schedule = db.session.get(Schedule, schedule_id) or abort(404)
     schedule_info = f"ID:{schedule_id}, File:{schedule.filename if schedule.schedule_type != 'playlist' else schedule.folder_path}"
     
     # Toggle mute status
@@ -1024,10 +1040,10 @@ def create_schedule_list():
 @login_required
 def activate_schedule_list(list_id):
     # Deactivate all lists
-    ScheduleList.query.update({ScheduleList.is_active: False})
+    db.session.query(ScheduleList).update({ScheduleList.is_active: False})
     
     # Activate the selected list
-    schedule_list = ScheduleList.query.get_or_404(list_id)
+    schedule_list = db.session.get(ScheduleList, list_id) or abort(404)
     schedule_list.is_active = True
     db.session.commit()
     
@@ -1040,7 +1056,7 @@ def activate_schedule_list(list_id):
 @app.route('/schedule_lists/<int:list_id>', methods=['DELETE'])
 @login_required
 def delete_schedule_list(list_id):
-    schedule_list = ScheduleList.query.get_or_404(list_id)
+    schedule_list = db.session.get(ScheduleList, list_id) or abort(404)
     
     # Don't allow deleting the active list if it's the only one
     if schedule_list.is_active and ScheduleList.query.count() == 1:
@@ -1091,7 +1107,7 @@ def rename_schedule_list(list_id):
     if not new_name:
         return jsonify({'error': 'Name is required'}), 400
     
-    schedule_list = ScheduleList.query.get_or_404(list_id)
+    schedule_list = db.session.get(ScheduleList, list_id) or abort(404)
     schedule_list.name = new_name
     db.session.commit()
     
