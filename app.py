@@ -5,6 +5,8 @@ import threading
 import time
 import logging
 import logging.handlers
+import signal
+import atexit
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, make_response, abort
 import csv
 from io import StringIO
@@ -13,8 +15,6 @@ from io import StringIO
 APP_ROOT = pathlib.Path(__file__).resolve().parent
 if str(APP_ROOT) not in sys.path:
     sys.path.insert(0, str(APP_ROOT))
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
 from flask_migrate import Migrate
 import pygame
 import os
@@ -84,6 +84,173 @@ def setup_logging():
 # Setup logging
 logger, audio_logger, playlist_logger, auth_logger = setup_logging()
 
+# Simple Polling-Based Scheduler
+class SimpleScheduler:
+    """
+    Simple polling-based scheduler that checks database every minute.
+    Much more reliable than APScheduler for this use case - no job lifecycle issues.
+    """
+    
+    def __init__(self, app_instance, db_instance, schedule_model):
+        self.app = app_instance
+        self.db = db_instance
+        self.Schedule = schedule_model
+        self.running = False
+        self.thread = None
+        self.current_executions = set()  # Track currently executing schedules
+        logger.info("SimpleScheduler initialized")
+    
+    def start(self):
+        """Start the scheduler polling thread"""
+        if self.running:
+            logger.warning("Scheduler already running")
+            return
+        
+        self.running = True
+        self.thread = threading.Thread(target=self._schedule_loop, daemon=True, name="SchedulerThread")
+        self.thread.start()
+        logger.info("✅ Simple scheduler started - polling every second")
+    
+    def stop(self):
+        """Stop the scheduler thread"""
+        if not self.running:
+            return
+        
+        logger.info("Stopping scheduler...")
+        self.running = False
+        if self.thread and self.thread.is_alive():
+            self.thread.join(timeout=5)
+        logger.info("✅ Scheduler stopped")
+    
+    def _schedule_loop(self):
+        """Main scheduling loop - checks time every second"""
+        last_minute = None
+        consecutive_errors = 0
+        
+        while self.running:
+            try:
+                now = datetime.now()
+                current_minute = (now.year, now.month, now.day, now.hour, now.minute)
+                
+                # Only check schedules once per minute
+                if current_minute != last_minute:
+                    last_minute = current_minute
+                    self._check_and_execute_schedules(now)
+                    consecutive_errors = 0  # Reset error counter on success
+                
+                # Sleep for 1 second before next check
+                time.sleep(1)
+                
+            except Exception as e:
+                consecutive_errors += 1
+                logger.error(f"Error in schedule loop (attempt {consecutive_errors}): {e}")
+                if consecutive_errors > 5:
+                    logger.critical("Too many consecutive errors, scheduler loop stopping")
+                    break
+                time.sleep(5)  # Wait longer on error
+    
+    def _check_and_execute_schedules(self, now):
+        """Check which schedules should run at current time and execute them"""
+        with self.app.app_context():
+            try:
+                from models import ScheduleList
+                
+                # Get active schedule list
+                active_list = ScheduleList.query.filter_by(is_active=True).first()
+                if not active_list:
+                    return
+                
+                # Get all non-muted schedules for active list
+                schedules = self.Schedule.query.filter_by(
+                    schedule_list_id=active_list.id,
+                    is_muted=False
+                ).all()
+                
+                current_time = now.strftime('%H:%M')
+                current_day = now.weekday()  # 0=Monday, 6=Sunday
+                
+                for schedule in schedules:
+                    # Check if schedule time matches
+                    if schedule.time != current_time:
+                        continue
+                    
+                    # Check if schedule day matches
+                    day_active = [
+                        schedule.monday,    # 0
+                        schedule.tuesday,   # 1
+                        schedule.wednesday, # 2
+                        schedule.thursday,  # 3
+                        schedule.friday,    # 4
+                        schedule.saturday,  # 5
+                        schedule.sunday     # 6
+                    ]
+                    
+                    if not day_active[current_day]:
+                        continue
+                    
+                    # Create unique key for this execution
+                    execution_key = f"{schedule.id}_{now.strftime('%Y%m%d_%H%M')}"
+                    
+                    # Prevent duplicate execution within same minute
+                    if execution_key in self.current_executions:
+                        logger.debug(f"Skipping duplicate execution: {execution_key}")
+                        continue
+                    
+                    # Mark as executing
+                    self.current_executions.add(execution_key)
+                    
+                    # Execute schedule in separate thread
+                    if schedule.schedule_type == 'playlist':
+                        logger.info(f"▶️  Triggering playlist: {schedule.folder_path} at {current_time}")
+                        threading.Thread(
+                            target=self._execute_playlist,
+                            args=(schedule.id, execution_key),
+                            daemon=True,
+                            name=f"Playlist-{schedule.id}"
+                        ).start()
+                    else:
+                        logger.info(f"▶️  Triggering audio: {schedule.filename} at {current_time}")
+                        threading.Thread(
+                            target=self._execute_audio,
+                            args=(schedule.filename, execution_key),
+                            daemon=True,
+                            name=f"Audio-{schedule.id}"
+                        ).start()
+                
+                # Cleanup old execution keys (older than 2 minutes)
+                cutoff_time = datetime.now()
+                cutoff_time = cutoff_time.replace(minute=(cutoff_time.minute - 2) % 60)
+                cutoff_str = cutoff_time.strftime('%Y%m%d_%H%M')
+                self.current_executions = {
+                    k for k in self.current_executions 
+                    if k.split('_', 1)[1] >= cutoff_str
+                }
+                
+            except Exception as e:
+                logger.error(f"Error checking schedules: {e}", exc_info=True)
+    
+    def _execute_audio(self, filename, execution_key):
+        """Execute single audio file playback"""
+        try:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            if os.path.exists(file_path):
+                play_audio(file_path)
+            else:
+                audio_logger.error(f"Audio file not found: {file_path}")
+        except Exception as e:
+            audio_logger.error(f"Error playing audio {filename}: {e}")
+        finally:
+            self.current_executions.discard(execution_key)
+    
+    def _execute_playlist(self, schedule_id, execution_key):
+        """Execute playlist playback"""
+        try:
+            play_playlist(schedule_id)
+        except Exception as e:
+            playlist_logger.error(f"Error playing playlist {schedule_id}: {e}")
+        finally:
+            self.current_executions.discard(execution_key)
+
 # Load translations
 TRANSLATIONS_PATH = APP_ROOT.joinpath('static', 'translations.json')
 with open(TRANSLATIONS_PATH, 'r', encoding='utf-8') as f:
@@ -118,9 +285,34 @@ migrate = Migrate(app, db)
 # We only want the scheduler in the main process
 import os
 if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
-    scheduler = BackgroundScheduler()
+    from models import Schedule
+    scheduler = SimpleScheduler(app, db, Schedule)
     scheduler.start()
-    logger.info("Background scheduler started")
+    logger.info("✅ Simple polling scheduler initialized and started")
+    
+    # Register cleanup handlers to ensure scheduler shuts down properly
+    def cleanup_scheduler():
+        """Clean up scheduler on application exit"""
+        if scheduler is not None:
+            logger.info("Cleaning up scheduler on exit...")
+            try:
+                scheduler.stop()
+                logger.info("Scheduler shutdown complete")
+            except Exception as e:
+                logger.error(f"Error during scheduler shutdown: {e}")
+    
+    # Register cleanup for normal exit
+    atexit.register(cleanup_scheduler)
+    
+    # Register cleanup for signal interrupts (Ctrl+C, kill, etc.)
+    def signal_handler(signum, frame):
+        """Handle shutdown signals"""
+        logger.info(f"Received signal {signum}, shutting down gracefully...")
+        cleanup_scheduler()
+        sys.exit(0)
+    
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
 else:
     scheduler = None
     logger.info("Skipping scheduler initialization in reloader process")
@@ -133,6 +325,11 @@ auth_logger.info("Credentials initialization completed")
 def init_schedules():
     """Initialize schedules from database"""
     with app.app_context():
+        # With SimpleScheduler, no job cleanup needed
+        # Schedules are automatically loaded from database each minute
+        if scheduler is not None:
+            logger.info("✅ SimpleScheduler will automatically load schedules from database")
+        
         # Get active schedule list
         active_list = ScheduleList.query.filter_by(is_active=True).first()
         
@@ -144,35 +341,21 @@ def init_schedules():
         
         # Load schedules from active list only
         schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
-        for schedule in schedules:
-            add_job_to_scheduler(schedule)
-
-def reload_all_schedules():
-    """Reload all schedules from the active list into the scheduler"""
-    # Skip if scheduler not initialized (reloader process)
-    if scheduler is None:
-        return
-    
-    # Clear all existing schedule jobs
-    jobs_removed = 0
-    try:
-        for job in scheduler.get_jobs():
-            if job.id.startswith('schedule_'):
-                scheduler.remove_job(job.id)
-                jobs_removed += 1
-        logger.info(f"Cleared {jobs_removed} existing schedule jobs")
-    except Exception as e:
-        logger.error(f"Error clearing existing jobs: {str(e)}")
-    
-    # Get active list and reload schedules
-    active_list = ScheduleList.query.filter_by(is_active=True).first()
-    if active_list:
-        schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
         jobs_added = 0
         for schedule in schedules:
             if add_job_to_scheduler(schedule):
                 jobs_added += 1
-        logger.info(f"Added {jobs_added} schedule jobs to scheduler")
+        logger.info(f"Initialized {jobs_added} schedule jobs from database")
+
+def reload_all_schedules():
+    """
+    No-op function for compatibility.
+    With SimpleScheduler, schedules are automatically loaded from database each minute.
+    No need to manually reload - database is the source of truth.
+    """
+    if scheduler is None:
+        return
+    logger.info("✅ Schedules will be automatically reloaded from database by SimpleScheduler")
 
 def play_audio(file_path):
     try:
@@ -571,17 +754,9 @@ def import_schedules_csv():
         
         # Delete existing schedules for the active list and insert new ones
         try:
-            # Remove existing schedules from scheduler (only if scheduler is initialized)
-            if scheduler is not None:
-                existing_schedules = Schedule.query.filter_by(schedule_list_id=active_list.id).all()
-                for schedule in existing_schedules:
-                    try:
-                        job_id = f'schedule_{schedule.id}'
-                        if scheduler.get_job(job_id):
-                            scheduler.remove_job(job_id)
-                            logger.debug(f"Removed job {job_id} during CSV import")
-                    except Exception as e:
-                        logger.warning(f"Failed to remove job for schedule {schedule.id}: {e}")
+            # With SimpleScheduler, no manual job removal needed
+            # Schedules automatically picked up from database
+            # Just delete from database and new schedules will be used automatically
             
             # Delete existing schedules from database
             Schedule.query.filter_by(schedule_list_id=active_list.id).delete()
@@ -668,7 +843,10 @@ def upload_file():
         return jsonify({'success': True, 'filename': filename})
 
 def add_job_to_scheduler(schedule):
-    """Add a schedule to the APScheduler"""
+    """
+    Validate schedule before adding to database.
+    With SimpleScheduler, no manual job registration needed - automatically loaded from DB.
+    """
     # Skip if scheduler not initialized (reloader process)
     if scheduler is None:
         return True
@@ -677,51 +855,32 @@ def add_job_to_scheduler(schedule):
     if schedule.is_muted:
         return True
     
-    # Check if job already exists and remove it first
-    job_id = f"schedule_{schedule.id}"
-    existing_job = scheduler.get_job(job_id)
-    if existing_job:
-        scheduler.remove_job(job_id)
-        logger.debug(f"Removed existing job {job_id} before re-adding")
-    
-    # Handle different schedule types
+    # Validate based on schedule type
     if schedule.schedule_type == 'playlist':
         return add_playlist_job_to_scheduler(schedule)
     else:
         return add_single_file_job_to_scheduler(schedule)
 
 def add_single_file_job_to_scheduler(schedule):
-    """Add a single file schedule to the APScheduler"""
+    """
+    Validate single file schedule.
+    With SimpleScheduler, no job registration needed - schedules loaded from DB automatically.
+    """
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], schedule.filename)
     if not os.path.exists(file_path):
+        logger.warning(f"Audio file not found for schedule {schedule.id}: {file_path}")
         return False
-
-    days = []
-    if schedule.monday: days.append('0')
-    if schedule.tuesday: days.append('1')
-    if schedule.wednesday: days.append('2')
-    if schedule.thursday: days.append('3')
-    if schedule.friday: days.append('4')
-    if schedule.saturday: days.append('5')
-    if schedule.sunday: days.append('6')
-
-    hour, minute = map(int, schedule.time.split(':'))
-    day_of_week = ','.join(days)
-    
-    job_id = f"schedule_{schedule.id}"
-    scheduler.add_job(
-        play_audio,
-        CronTrigger(day_of_week=day_of_week, hour=hour, minute=minute),
-        args=[file_path],
-        id=job_id
-    )
     return True
 
 def add_playlist_job_to_scheduler(schedule):
-    """Add a playlist schedule to the APScheduler"""
+    """
+    Validate playlist schedule.
+    With SimpleScheduler, no job registration needed - schedules loaded from DB automatically.
+    """
     # Validate folder exists
     folder_path = APP_ROOT.joinpath(schedule.folder_path)
     if not folder_path.exists() or not folder_path.is_dir():
+        logger.warning(f"Playlist folder not found for schedule {schedule.id}: {folder_path}")
         return False
     
     # Check for audio files
@@ -731,27 +890,9 @@ def add_playlist_job_to_scheduler(schedule):
         audio_files.extend(list(folder_path.glob(ext.upper())))
     
     if not audio_files:
+        logger.warning(f"No audio files found in playlist folder for schedule {schedule.id}: {folder_path}")
         return False
-
-    days = []
-    if schedule.monday: days.append('0')
-    if schedule.tuesday: days.append('1')
-    if schedule.wednesday: days.append('2')
-    if schedule.thursday: days.append('3')
-    if schedule.friday: days.append('4')
-    if schedule.saturday: days.append('5')
-    if schedule.sunday: days.append('6')
-
-    hour, minute = map(int, schedule.time.split(':'))
-    day_of_week = ','.join(days)
     
-    job_id = f"schedule_{schedule.id}"
-    scheduler.add_job(
-        play_playlist,
-        CronTrigger(day_of_week=day_of_week, hour=hour, minute=minute),
-        args=[schedule.id],
-        id=job_id
-    )
     return True
 
 @app.route('/schedule', methods=['POST'])
@@ -945,11 +1086,8 @@ def delete_schedule(schedule_id):
     schedule = db.session.get(Schedule, schedule_id) or abort(404)
     schedule_info = f"ID:{schedule_id}, File:{schedule.filename if schedule.schedule_type != 'playlist' else schedule.folder_path}"
     
-    # Remove from scheduler (only if scheduler is initialized)
-    if scheduler is not None:
-        job_id = f"schedule_{schedule.id}"
-        if scheduler.get_job(job_id):
-            scheduler.remove_job(job_id)
+    # With SimpleScheduler, no manual job removal needed
+    # Just delete from database and it won't be executed anymore
     
     # Remove from database
     db.session.delete(schedule)
@@ -984,14 +1122,10 @@ def update_schedule(schedule_id):
 
     db.session.commit()
 
-    # Refresh job in scheduler (only if scheduler is initialized)
+    # With SimpleScheduler, changes automatically picked up from database
+    # No need to manually update jobs - database is the source of truth
     if scheduler is not None:
-        job_id = f"schedule_{schedule.id}"
-        if scheduler.get_job(job_id):
-            scheduler.remove_job(job_id)
-
-        # Only re-add if not muted and file exists
-        add_job_to_scheduler(schedule)
+        logger.debug(f"Schedule {schedule.id} updated - SimpleScheduler will use new values automatically")
 
     return jsonify({'success': True, 'schedule': schedule.to_dict()})
 
@@ -1005,18 +1139,12 @@ def toggle_mute(schedule_id):
     schedule.is_muted = not schedule.is_muted
     db.session.commit()
     
-    # Update scheduler job (only if scheduler is initialized)
+    # With SimpleScheduler, mute status automatically checked from database
+    # No manual job removal needed - scheduler checks is_muted flag automatically
     if scheduler is not None:
-        job_id = f"schedule_{schedule.id}"
-        
         if schedule.is_muted:
-            # Remove job from scheduler when muted
-            if scheduler.get_job(job_id):
-                scheduler.remove_job(job_id)
             logger.info(f"Schedule muted: {schedule_info}")
         else:
-            # Add job back to scheduler when unmuted
-            add_job_to_scheduler(schedule)
             logger.info(f"Schedule unmuted: {schedule_info}")
     
     return jsonify({'success': True, 'is_muted': schedule.is_muted})
@@ -1133,4 +1261,12 @@ if __name__ == '__main__':
     logger.info("Schedules initialized from database")
     
     logger.info("Starting Flask server on 0.0.0.0:5000")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    
+    try:
+        app.run(debug=True, host='0.0.0.0', port=5000)
+    finally:
+        # Ensure scheduler is properly shut down on exit
+        if scheduler is not None:
+            logger.info("Shutting down scheduler...")
+            scheduler.shutdown(wait=False)
+            logger.info("Scheduler shut down complete")

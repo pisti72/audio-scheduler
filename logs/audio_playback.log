@@ -272,3 +272,123 @@
 2025-11-01 16:18:19,450 - INFO - Playing playlist track: Wish I Never Met You.mp3
 2025-11-01 16:21:23,554 - INFO - Track 'Wish I Never Met You.mp3' finished after 184.1s
 2025-11-01 16:21:33,555 - INFO - Playing playlist track: CHRYSTAL - THE DAYS (NOTION REMIX) (Lyrics).mp3
+2025-11-04 10:30:55,981 - INFO - Audio system initialized successfully
+2025-11-04 10:30:55,997 - INFO - Background scheduler started
+2025-11-04 10:30:55,997 - INFO - Initializing credentials...
+2025-11-04 10:30:55,997 - INFO - Credentials initialization completed
+2025-11-04 10:30:56,006 - INFO - Starting Audio Scheduler application...
+2025-11-04 10:30:56,008 - INFO - Database tables created/verified
+2025-11-04 10:30:56,031 - INFO - Schedules initialized from database
+2025-11-04 10:30:56,031 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:30:56,532 - INFO - Audio system initialized successfully
+2025-11-04 10:30:56,545 - INFO - Background scheduler started
+2025-11-04 10:30:56,545 - INFO - Initializing credentials...
+2025-11-04 10:30:56,546 - INFO - Credentials initialization completed
+2025-11-04 10:30:56,553 - INFO - Starting Audio Scheduler application...
+2025-11-04 10:30:56,555 - INFO - Database tables created/verified
+2025-11-04 10:30:56,572 - INFO - Schedules initialized from database
+2025-11-04 10:30:56,572 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:31:13,965 - INFO - Login attempt received
+2025-11-04 10:31:14,015 - INFO - Successful login for user: admin
+2025-11-04 10:31:37,418 - INFO - Cleared 21 existing schedule jobs
+2025-11-04 10:31:37,420 - INFO - Added 0 schedule jobs to scheduler
+2025-11-04 10:31:37,420 - INFO - Activated schedule list: Röviditett
+2025-11-04 10:31:38,943 - INFO - Cleared 0 existing schedule jobs
+2025-11-04 10:31:38,955 - INFO - Added 21 schedule jobs to scheduler
+2025-11-04 10:31:38,956 - INFO - Activated schedule list: Általános
+2025-11-04 10:35:00,002 - INFO - Playing audio: uploads/school_bell_2.mp3
+2025-11-04 10:35:00,002 - INFO - Playing audio: uploads/school_bell_2.mp3
+2025-11-04 10:45:47,293 - INFO - Audio system initialized successfully
+2025-11-04 10:45:47,347 - INFO - Background scheduler started
+2025-11-04 10:45:47,347 - INFO - Initializing credentials...
+2025-11-04 10:45:47,347 - INFO - Credentials initialization completed
+2025-11-04 10:45:47,362 - INFO - Starting Audio Scheduler application...
+2025-11-04 10:45:47,378 - INFO - Database tables created/verified
+2025-11-04 10:45:47,424 - INFO - Initialized 21 schedule jobs from database
+2025-11-04 10:45:47,425 - INFO - Schedules initialized from database
+2025-11-04 10:45:47,425 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:45:58,323 - INFO - Audio system initialized successfully
+2025-11-04 10:45:58,368 - INFO - Background scheduler started
+2025-11-04 10:45:58,368 - INFO - Initializing credentials...
+2025-11-04 10:45:58,368 - INFO - Credentials initialization completed
+2025-11-04 10:45:58,391 - INFO - Starting Audio Scheduler application...
+2025-11-04 10:45:58,401 - INFO - Database tables created/verified
+2025-11-04 10:45:58,460 - INFO - Initialized 21 schedule jobs from database
+2025-11-04 10:45:58,460 - INFO - Schedules initialized from database
+2025-11-04 10:45:58,460 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:46:08,674 - INFO - Shutting down scheduler...
+2025-11-04 10:46:08,677 - INFO - Scheduler shut down complete
+2025-11-04 10:46:10,047 - INFO - Audio system initialized successfully
+2025-11-04 10:46:10,070 - INFO - Background scheduler started
+2025-11-04 10:46:10,071 - INFO - Initializing credentials...
+2025-11-04 10:46:10,071 - INFO - Credentials initialization completed
+2025-11-04 10:46:10,087 - INFO - Starting Audio Scheduler application...
+2025-11-04 10:46:10,092 - INFO - Database tables created/verified
+2025-11-04 10:46:10,125 - INFO - Initialized 21 schedule jobs from database
+2025-11-04 10:46:10,126 - INFO - Schedules initialized from database
+2025-11-04 10:46:10,126 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:46:23,338 - INFO - Shutting down scheduler...
+2025-11-04 10:46:23,344 - INFO - Scheduler shut down complete
+2025-11-04 10:46:25,209 - INFO - Audio system initialized successfully
+2025-11-04 10:46:25,238 - INFO - Background scheduler started
+2025-11-04 10:46:25,239 - INFO - Initializing credentials...
+2025-11-04 10:46:25,239 - INFO - Credentials initialization completed
+2025-11-04 10:46:25,261 - INFO - Starting Audio Scheduler application...
+2025-11-04 10:46:25,264 - INFO - Database tables created/verified
+2025-11-04 10:46:25,309 - INFO - Initialized 21 schedule jobs from database
+2025-11-04 10:46:25,310 - INFO - Schedules initialized from database
+2025-11-04 10:46:25,311 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:47:57,336 - INFO - Shutting down scheduler...
+2025-11-04 10:47:57,337 - INFO - Scheduler shut down complete
+2025-11-04 10:47:58,464 - INFO - Audio system initialized successfully
+2025-11-04 10:47:58,482 - INFO - Background scheduler started
+2025-11-04 10:47:58,482 - INFO - Initializing credentials...
+2025-11-04 10:47:58,483 - INFO - Credentials initialization completed
+2025-11-04 10:47:58,493 - INFO - Starting Audio Scheduler application...
+2025-11-04 10:47:58,495 - INFO - Database tables created/verified
+2025-11-04 10:47:58,512 - INFO - Initialized 21 schedule jobs from database
+2025-11-04 10:47:58,513 - INFO - Schedules initialized from database
+2025-11-04 10:47:58,513 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:58:19,157 - INFO - Shutting down scheduler...
+2025-11-04 10:58:19,160 - INFO - Scheduler shut down complete
+2025-11-04 10:58:20,861 - INFO - Audio system initialized successfully
+2025-11-04 11:17:58,975 - INFO - Audio system initialized successfully
+2025-11-04 11:17:58,988 - INFO - SimpleScheduler initialized
+2025-11-04 11:17:58,994 - INFO - ✅ Simple scheduler started - polling every second
+2025-11-04 11:17:58,994 - INFO - ✅ Simple polling scheduler initialized and started
+2025-11-04 11:17:58,994 - INFO - Initializing credentials...
+2025-11-04 11:17:58,994 - INFO - Credentials initialization completed
+2025-11-04 11:17:59,004 - INFO - Starting Audio Scheduler application...
+2025-11-04 11:17:59,015 - INFO - Database tables created/verified
+2025-11-04 11:17:59,016 - INFO - ✅ SimpleScheduler will automatically load schedules from database
+2025-11-04 11:17:59,025 - INFO - Initialized 21 schedule jobs from database
+2025-11-04 11:17:59,026 - INFO - Schedules initialized from database
+2025-11-04 11:17:59,026 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 11:17:59,618 - INFO - Audio system initialized successfully
+2025-11-04 11:17:59,632 - INFO - SimpleScheduler initialized
+2025-11-04 11:17:59,638 - INFO - ✅ Simple scheduler started - polling every second
+2025-11-04 11:17:59,644 - INFO - ✅ Simple polling scheduler initialized and started
+2025-11-04 11:17:59,647 - INFO - Initializing credentials...
+2025-11-04 11:17:59,655 - INFO - Credentials initialization completed
+2025-11-04 11:17:59,667 - INFO - Starting Audio Scheduler application...
+2025-11-04 11:17:59,670 - INFO - Database tables created/verified
+2025-11-04 11:17:59,671 - INFO - ✅ SimpleScheduler will automatically load schedules from database
+2025-11-04 11:17:59,680 - INFO - Initialized 21 schedule jobs from database
+2025-11-04 11:17:59,681 - INFO - Schedules initialized from database
+2025-11-04 11:17:59,681 - INFO - Starting Flask server on 0.0.0.0:5000
+2025-11-04 11:19:21,604 - INFO - Received signal 2, shutting down gracefully...
+2025-11-04 11:19:21,604 - INFO - Received signal 2, shutting down gracefully...
+2025-11-04 11:19:21,604 - INFO - Cleaning up scheduler on exit...
+2025-11-04 11:19:21,604 - INFO - Stopping scheduler...
+2025-11-04 11:19:21,604 - INFO - Cleaning up scheduler on exit...
+2025-11-04 11:19:21,605 - INFO - Stopping scheduler...
+2025-11-04 11:19:21,703 - INFO - ✅ Scheduler stopped
+2025-11-04 11:19:21,704 - INFO - Scheduler shutdown complete
+2025-11-04 11:19:21,704 - INFO - Shutting down scheduler...
+2025-11-04 11:19:21,736 - INFO - Cleaning up scheduler on exit...
+2025-11-04 11:19:21,736 - INFO - Scheduler shutdown complete
+2025-11-04 11:19:22,045 - INFO - ✅ Scheduler stopped
+2025-11-04 11:19:22,045 - INFO - Scheduler shutdown complete
+2025-11-04 11:19:22,047 - INFO - Shutting down scheduler...
+2025-11-04 11:19:22,067 - INFO - Cleaning up scheduler on exit...
+2025-11-04 11:19:22,067 - INFO - Scheduler shutdown complete

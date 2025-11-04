@@ -272,3 +272,123 @@
 2025-11-01 16:18:19,450 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: Wish I Never Met You.mp3
 2025-11-01 16:21:23,554 - audio_scheduler.playlist - INFO - _run_playlist:273 - Track 'Wish I Never Met You.mp3' finished after 184.1s
 2025-11-01 16:21:33,555 - audio_scheduler.playlist - INFO - _run_playlist:255 - Playing playlist track: CHRYSTAL - THE DAYS (NOTION REMIX) (Lyrics).mp3
+2025-11-04 10:30:55,981 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-11-04 10:30:55,997 - audio_scheduler - INFO - <module>:123 - Background scheduler started
+2025-11-04 10:30:55,997 - audio_scheduler.auth - INFO - <module>:129 - Initializing credentials...
+2025-11-04 10:30:55,997 - audio_scheduler.auth - INFO - <module>:131 - Credentials initialization completed
+2025-11-04 10:30:56,006 - audio_scheduler - INFO - <module>:1124 - Starting Audio Scheduler application...
+2025-11-04 10:30:56,008 - audio_scheduler - INFO - <module>:1129 - Database tables created/verified
+2025-11-04 10:30:56,031 - audio_scheduler - INFO - <module>:1133 - Schedules initialized from database
+2025-11-04 10:30:56,031 - audio_scheduler - INFO - <module>:1135 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:30:56,532 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-11-04 10:30:56,545 - audio_scheduler - INFO - <module>:123 - Background scheduler started
+2025-11-04 10:30:56,545 - audio_scheduler.auth - INFO - <module>:129 - Initializing credentials...
+2025-11-04 10:30:56,546 - audio_scheduler.auth - INFO - <module>:131 - Credentials initialization completed
+2025-11-04 10:30:56,553 - audio_scheduler - INFO - <module>:1124 - Starting Audio Scheduler application...
+2025-11-04 10:30:56,555 - audio_scheduler - INFO - <module>:1129 - Database tables created/verified
+2025-11-04 10:30:56,572 - audio_scheduler - INFO - <module>:1133 - Schedules initialized from database
+2025-11-04 10:30:56,572 - audio_scheduler - INFO - <module>:1135 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:31:13,965 - audio_scheduler.auth - INFO - login:350 - Login attempt received
+2025-11-04 10:31:14,015 - audio_scheduler.auth - INFO - login:360 - Successful login for user: admin
+2025-11-04 10:31:37,418 - audio_scheduler - INFO - reload_all_schedules:163 - Cleared 21 existing schedule jobs
+2025-11-04 10:31:37,420 - audio_scheduler - INFO - reload_all_schedules:175 - Added 0 schedule jobs to scheduler
+2025-11-04 10:31:37,420 - audio_scheduler - INFO - activate_schedule_list:1060 - Activated schedule list: Röviditett
+2025-11-04 10:31:38,943 - audio_scheduler - INFO - reload_all_schedules:163 - Cleared 0 existing schedule jobs
+2025-11-04 10:31:38,955 - audio_scheduler - INFO - reload_all_schedules:175 - Added 21 schedule jobs to scheduler
+2025-11-04 10:31:38,956 - audio_scheduler - INFO - activate_schedule_list:1060 - Activated schedule list: Általános
+2025-11-04 10:35:00,002 - audio_scheduler.audio - INFO - play_audio:184 - Playing audio: uploads/school_bell_2.mp3
+2025-11-04 10:35:00,002 - audio_scheduler.audio - INFO - play_audio:184 - Playing audio: uploads/school_bell_2.mp3
+2025-11-04 10:45:47,293 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-11-04 10:45:47,347 - audio_scheduler - INFO - <module>:123 - Background scheduler started
+2025-11-04 10:45:47,347 - audio_scheduler.auth - INFO - <module>:129 - Initializing credentials...
+2025-11-04 10:45:47,347 - audio_scheduler.auth - INFO - <module>:131 - Credentials initialization completed
+2025-11-04 10:45:47,362 - audio_scheduler - INFO - <module>:1139 - Starting Audio Scheduler application...
+2025-11-04 10:45:47,378 - audio_scheduler - INFO - <module>:1144 - Database tables created/verified
+2025-11-04 10:45:47,424 - audio_scheduler - INFO - init_schedules:163 - Initialized 21 schedule jobs from database
+2025-11-04 10:45:47,425 - audio_scheduler - INFO - <module>:1148 - Schedules initialized from database
+2025-11-04 10:45:47,425 - audio_scheduler - INFO - <module>:1150 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:45:58,323 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-11-04 10:45:58,368 - audio_scheduler - INFO - <module>:123 - Background scheduler started
+2025-11-04 10:45:58,368 - audio_scheduler.auth - INFO - <module>:129 - Initializing credentials...
+2025-11-04 10:45:58,368 - audio_scheduler.auth - INFO - <module>:131 - Credentials initialization completed
+2025-11-04 10:45:58,391 - audio_scheduler - INFO - <module>:1139 - Starting Audio Scheduler application...
+2025-11-04 10:45:58,401 - audio_scheduler - INFO - <module>:1144 - Database tables created/verified
+2025-11-04 10:45:58,460 - audio_scheduler - INFO - init_schedules:163 - Initialized 21 schedule jobs from database
+2025-11-04 10:45:58,460 - audio_scheduler - INFO - <module>:1148 - Schedules initialized from database
+2025-11-04 10:45:58,460 - audio_scheduler - INFO - <module>:1150 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:46:08,674 - audio_scheduler - INFO - <module>:1157 - Shutting down scheduler...
+2025-11-04 10:46:08,677 - audio_scheduler - INFO - <module>:1159 - Scheduler shut down complete
+2025-11-04 10:46:10,047 - audio_scheduler.audio - INFO - <module>:109 - Audio system initialized successfully
+2025-11-04 10:46:10,070 - audio_scheduler - INFO - <module>:125 - Background scheduler started
+2025-11-04 10:46:10,071 - audio_scheduler.auth - INFO - <module>:131 - Initializing credentials...
+2025-11-04 10:46:10,071 - audio_scheduler.auth - INFO - <module>:133 - Credentials initialization completed
+2025-11-04 10:46:10,087 - audio_scheduler - INFO - <module>:1141 - Starting Audio Scheduler application...
+2025-11-04 10:46:10,092 - audio_scheduler - INFO - <module>:1146 - Database tables created/verified
+2025-11-04 10:46:10,125 - audio_scheduler - INFO - init_schedules:165 - Initialized 21 schedule jobs from database
+2025-11-04 10:46:10,126 - audio_scheduler - INFO - <module>:1150 - Schedules initialized from database
+2025-11-04 10:46:10,126 - audio_scheduler - INFO - <module>:1152 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:46:23,338 - audio_scheduler - INFO - <module>:1159 - Shutting down scheduler...
+2025-11-04 10:46:23,344 - audio_scheduler - INFO - <module>:1161 - Scheduler shut down complete
+2025-11-04 10:46:25,209 - audio_scheduler.audio - INFO - <module>:109 - Audio system initialized successfully
+2025-11-04 10:46:25,238 - audio_scheduler - INFO - <module>:125 - Background scheduler started
+2025-11-04 10:46:25,239 - audio_scheduler.auth - INFO - <module>:155 - Initializing credentials...
+2025-11-04 10:46:25,239 - audio_scheduler.auth - INFO - <module>:157 - Credentials initialization completed
+2025-11-04 10:46:25,261 - audio_scheduler - INFO - <module>:1165 - Starting Audio Scheduler application...
+2025-11-04 10:46:25,264 - audio_scheduler - INFO - <module>:1170 - Database tables created/verified
+2025-11-04 10:46:25,309 - audio_scheduler - INFO - init_schedules:189 - Initialized 21 schedule jobs from database
+2025-11-04 10:46:25,310 - audio_scheduler - INFO - <module>:1174 - Schedules initialized from database
+2025-11-04 10:46:25,311 - audio_scheduler - INFO - <module>:1176 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:47:57,336 - audio_scheduler - INFO - <module>:1183 - Shutting down scheduler...
+2025-11-04 10:47:57,337 - audio_scheduler - INFO - <module>:1185 - Scheduler shut down complete
+2025-11-04 10:47:58,464 - audio_scheduler.audio - INFO - <module>:109 - Audio system initialized successfully
+2025-11-04 10:47:58,482 - audio_scheduler - INFO - <module>:125 - Background scheduler started
+2025-11-04 10:47:58,482 - audio_scheduler.auth - INFO - <module>:155 - Initializing credentials...
+2025-11-04 10:47:58,483 - audio_scheduler.auth - INFO - <module>:157 - Credentials initialization completed
+2025-11-04 10:47:58,493 - audio_scheduler - INFO - <module>:1165 - Starting Audio Scheduler application...
+2025-11-04 10:47:58,495 - audio_scheduler - INFO - <module>:1170 - Database tables created/verified
+2025-11-04 10:47:58,512 - audio_scheduler - INFO - init_schedules:189 - Initialized 21 schedule jobs from database
+2025-11-04 10:47:58,513 - audio_scheduler - INFO - <module>:1174 - Schedules initialized from database
+2025-11-04 10:47:58,513 - audio_scheduler - INFO - <module>:1176 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 10:58:19,157 - audio_scheduler - INFO - <module>:1183 - Shutting down scheduler...
+2025-11-04 10:58:19,160 - audio_scheduler - INFO - <module>:1185 - Scheduler shut down complete
+2025-11-04 10:58:20,861 - audio_scheduler.audio - INFO - <module>:107 - Audio system initialized successfully
+2025-11-04 11:17:58,975 - audio_scheduler.audio - INFO - <module>:274 - Audio system initialized successfully
+2025-11-04 11:17:58,988 - audio_scheduler - INFO - __init__:101 - SimpleScheduler initialized
+2025-11-04 11:17:58,994 - audio_scheduler - INFO - start:112 - ✅ Simple scheduler started - polling every second
+2025-11-04 11:17:58,994 - audio_scheduler - INFO - <module>:291 - ✅ Simple polling scheduler initialized and started
+2025-11-04 11:17:58,994 - audio_scheduler.auth - INFO - <module>:321 - Initializing credentials...
+2025-11-04 11:17:58,994 - audio_scheduler.auth - INFO - <module>:323 - Credentials initialization completed
+2025-11-04 11:17:59,004 - audio_scheduler - INFO - <module>:1252 - Starting Audio Scheduler application...
+2025-11-04 11:17:59,015 - audio_scheduler - INFO - <module>:1257 - Database tables created/verified
+2025-11-04 11:17:59,016 - audio_scheduler - INFO - init_schedules:331 - ✅ SimpleScheduler will automatically load schedules from database
+2025-11-04 11:17:59,025 - audio_scheduler - INFO - init_schedules:348 - Initialized 21 schedule jobs from database
+2025-11-04 11:17:59,026 - audio_scheduler - INFO - <module>:1261 - Schedules initialized from database
+2025-11-04 11:17:59,026 - audio_scheduler - INFO - <module>:1263 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 11:17:59,618 - audio_scheduler.audio - INFO - <module>:274 - Audio system initialized successfully
+2025-11-04 11:17:59,632 - audio_scheduler - INFO - __init__:101 - SimpleScheduler initialized
+2025-11-04 11:17:59,638 - audio_scheduler - INFO - start:112 - ✅ Simple scheduler started - polling every second
+2025-11-04 11:17:59,644 - audio_scheduler - INFO - <module>:291 - ✅ Simple polling scheduler initialized and started
+2025-11-04 11:17:59,647 - audio_scheduler.auth - INFO - <module>:321 - Initializing credentials...
+2025-11-04 11:17:59,655 - audio_scheduler.auth - INFO - <module>:323 - Credentials initialization completed
+2025-11-04 11:17:59,667 - audio_scheduler - INFO - <module>:1252 - Starting Audio Scheduler application...
+2025-11-04 11:17:59,670 - audio_scheduler - INFO - <module>:1257 - Database tables created/verified
+2025-11-04 11:17:59,671 - audio_scheduler - INFO - init_schedules:331 - ✅ SimpleScheduler will automatically load schedules from database
+2025-11-04 11:17:59,680 - audio_scheduler - INFO - init_schedules:348 - Initialized 21 schedule jobs from database
+2025-11-04 11:17:59,681 - audio_scheduler - INFO - <module>:1261 - Schedules initialized from database
+2025-11-04 11:17:59,681 - audio_scheduler - INFO - <module>:1263 - Starting Flask server on 0.0.0.0:5000
+2025-11-04 11:19:21,604 - audio_scheduler - INFO - signal_handler:310 - Received signal 2, shutting down gracefully...
+2025-11-04 11:19:21,604 - audio_scheduler - INFO - signal_handler:310 - Received signal 2, shutting down gracefully...
+2025-11-04 11:19:21,604 - audio_scheduler - INFO - cleanup_scheduler:297 - Cleaning up scheduler on exit...
+2025-11-04 11:19:21,604 - audio_scheduler - INFO - stop:119 - Stopping scheduler...
+2025-11-04 11:19:21,604 - audio_scheduler - INFO - cleanup_scheduler:297 - Cleaning up scheduler on exit...
+2025-11-04 11:19:21,605 - audio_scheduler - INFO - stop:119 - Stopping scheduler...
+2025-11-04 11:19:21,703 - audio_scheduler - INFO - stop:123 - ✅ Scheduler stopped
+2025-11-04 11:19:21,704 - audio_scheduler - INFO - cleanup_scheduler:300 - Scheduler shutdown complete
+2025-11-04 11:19:21,704 - audio_scheduler - INFO - <module>:1270 - Shutting down scheduler...
+2025-11-04 11:19:21,736 - audio_scheduler - INFO - cleanup_scheduler:297 - Cleaning up scheduler on exit...
+2025-11-04 11:19:21,736 - audio_scheduler - INFO - cleanup_scheduler:300 - Scheduler shutdown complete
+2025-11-04 11:19:22,045 - audio_scheduler - INFO - stop:123 - ✅ Scheduler stopped
+2025-11-04 11:19:22,045 - audio_scheduler - INFO - cleanup_scheduler:300 - Scheduler shutdown complete
+2025-11-04 11:19:22,047 - audio_scheduler - INFO - <module>:1270 - Shutting down scheduler...
+2025-11-04 11:19:22,067 - audio_scheduler - INFO - cleanup_scheduler:297 - Cleaning up scheduler on exit...
+2025-11-04 11:19:22,067 - audio_scheduler - INFO - cleanup_scheduler:300 - Scheduler shutdown complete
