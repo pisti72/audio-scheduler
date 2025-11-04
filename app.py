@@ -87,7 +87,7 @@ logger, audio_logger, playlist_logger, auth_logger = setup_logging()
 # Simple Polling-Based Scheduler
 class SimpleScheduler:
     """
-    Simple polling-based scheduler that checks database every minute.
+    Simple polling-based scheduler that checks database every second.
     Much more reliable than APScheduler for this use case - no job lifecycle issues.
     """
     
@@ -97,7 +97,8 @@ class SimpleScheduler:
         self.Schedule = schedule_model
         self.running = False
         self.thread = None
-        self.current_executions = set()  # Track currently executing schedules
+        self.executed_this_minute = set()  # Track what was executed in current minute
+        self.last_cleanup_minute = None
         logger.info("SimpleScheduler initialized")
     
     def start(self):
@@ -124,17 +125,23 @@ class SimpleScheduler:
     
     def _schedule_loop(self):
         """Main scheduling loop - checks time every second"""
-        last_minute = None
+        last_minute_check = None
         consecutive_errors = 0
         
         while self.running:
             try:
                 now = datetime.now()
-                current_minute = (now.year, now.month, now.day, now.hour, now.minute)
+                current_minute_key = (now.year, now.month, now.day, now.hour, now.minute)
+                
+                # Clean up executed set when minute changes
+                if current_minute_key != self.last_cleanup_minute:
+                    self.executed_this_minute.clear()
+                    self.last_cleanup_minute = current_minute_key
+                    logger.debug(f"New minute: {now.strftime('%H:%M')} - cleared execution tracker")
                 
                 # Only check schedules once per minute
-                if current_minute != last_minute:
-                    last_minute = current_minute
+                if current_minute_key != last_minute_check:
+                    last_minute_check = current_minute_key
                     self._check_and_execute_schedules(now)
                     consecutive_errors = 0  # Reset error counter on success
                 
@@ -143,7 +150,7 @@ class SimpleScheduler:
                 
             except Exception as e:
                 consecutive_errors += 1
-                logger.error(f"Error in schedule loop (attempt {consecutive_errors}): {e}")
+                logger.error(f"Error in schedule loop (attempt {consecutive_errors}): {e}", exc_info=True)
                 if consecutive_errors > 5:
                     logger.critical("Too many consecutive errors, scheduler loop stopping")
                     break
@@ -169,6 +176,8 @@ class SimpleScheduler:
                 current_time = now.strftime('%H:%M')
                 current_day = now.weekday()  # 0=Monday, 6=Sunday
                 
+                logger.debug(f"Checking {len(schedules)} schedules for {current_time}")
+                
                 for schedule in schedules:
                     # Check if schedule time matches
                     if schedule.time != current_time:
@@ -188,23 +197,21 @@ class SimpleScheduler:
                     if not day_active[current_day]:
                         continue
                     
-                    # Create unique key for this execution
-                    execution_key = f"{schedule.id}_{now.strftime('%Y%m%d_%H%M')}"
-                    
-                    # Prevent duplicate execution within same minute
-                    if execution_key in self.current_executions:
-                        logger.debug(f"Skipping duplicate execution: {execution_key}")
+                    # Check if already executed this minute
+                    if schedule.id in self.executed_this_minute:
+                        logger.debug(f"Skipping schedule {schedule.id} - already executed this minute")
                         continue
                     
-                    # Mark as executing
-                    self.current_executions.add(execution_key)
+                    # Mark as executed for this minute IMMEDIATELY (before starting thread)
+                    self.executed_this_minute.add(schedule.id)
+                    logger.info(f"🔒 Marked schedule {schedule.id} as executed for minute {current_time}")
                     
                     # Execute schedule in separate thread
                     if schedule.schedule_type == 'playlist':
                         logger.info(f"▶️  Triggering playlist: {schedule.folder_path} at {current_time}")
                         threading.Thread(
                             target=self._execute_playlist,
-                            args=(schedule.id, execution_key),
+                            args=(schedule.id,),
                             daemon=True,
                             name=f"Playlist-{schedule.id}"
                         ).start()
@@ -212,24 +219,15 @@ class SimpleScheduler:
                         logger.info(f"▶️  Triggering audio: {schedule.filename} at {current_time}")
                         threading.Thread(
                             target=self._execute_audio,
-                            args=(schedule.filename, execution_key),
+                            args=(schedule.filename,),
                             daemon=True,
                             name=f"Audio-{schedule.id}"
                         ).start()
                 
-                # Cleanup old execution keys (older than 2 minutes)
-                cutoff_time = datetime.now()
-                cutoff_time = cutoff_time.replace(minute=(cutoff_time.minute - 2) % 60)
-                cutoff_str = cutoff_time.strftime('%Y%m%d_%H%M')
-                self.current_executions = {
-                    k for k in self.current_executions 
-                    if k.split('_', 1)[1] >= cutoff_str
-                }
-                
             except Exception as e:
                 logger.error(f"Error checking schedules: {e}", exc_info=True)
     
-    def _execute_audio(self, filename, execution_key):
+    def _execute_audio(self, filename):
         """Execute single audio file playback"""
         try:
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -238,18 +236,14 @@ class SimpleScheduler:
             else:
                 audio_logger.error(f"Audio file not found: {file_path}")
         except Exception as e:
-            audio_logger.error(f"Error playing audio {filename}: {e}")
-        finally:
-            self.current_executions.discard(execution_key)
+            audio_logger.error(f"Error playing audio {filename}: {e}", exc_info=True)
     
-    def _execute_playlist(self, schedule_id, execution_key):
+    def _execute_playlist(self, schedule_id):
         """Execute playlist playback"""
         try:
             play_playlist(schedule_id)
         except Exception as e:
-            playlist_logger.error(f"Error playing playlist {schedule_id}: {e}")
-        finally:
-            self.current_executions.discard(execution_key)
+            playlist_logger.error(f"Error playing playlist {schedule_id}: {e}", exc_info=True)
 
 # Load translations
 TRANSLATIONS_PATH = APP_ROOT.joinpath('static', 'translations.json')
@@ -1268,5 +1262,5 @@ if __name__ == '__main__':
         # Ensure scheduler is properly shut down on exit
         if scheduler is not None:
             logger.info("Shutting down scheduler...")
-            scheduler.shutdown(wait=False)
+            scheduler.stop()
             logger.info("Scheduler shut down complete")
