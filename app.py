@@ -275,10 +275,17 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # Initialize scheduler only once (not in reloader process)
-# Flask debug mode spawns two processes: main and reloader
-# We only want the scheduler in the main process
+# Flask debug mode spawns two processes: main (worker) and reloader
+# WERKZEUG_RUN_MAIN is None in reloader process, 'true' in main worker
+# We only want the scheduler in the main worker process
 import os
-if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
+werkzeug_run_main = os.environ.get('WERKZEUG_RUN_MAIN')
+
+# Only initialize if NOT in the reloader process
+# When None: first launch (before reloader starts) - SKIP
+# When 'true': main worker process after reloader - INITIALIZE
+if werkzeug_run_main == 'true':
+    # Main worker process - initialize scheduler
     from models import Schedule
     scheduler = SimpleScheduler(app, db, Schedule)
     scheduler.start()
@@ -309,7 +316,6 @@ if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
     signal.signal(signal.SIGTERM, signal_handler)
 else:
     scheduler = None
-    logger.info("Skipping scheduler initialization in reloader process")
 
 # Initialize default credentials
 auth_logger.info("Initializing credentials...")
