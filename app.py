@@ -401,6 +401,9 @@ def play_playlist(schedule_id):
                 playlist_logger.warning(f"No audio files found in playlist folder: {folder_path}")
                 return
             
+            # Sort alphabetically first to ensure consistent order
+            audio_files.sort(key=lambda f: f.name.lower())
+            
             # Shuffle if enabled
             if schedule.shuffle_mode:
                 random.shuffle(audio_files)
