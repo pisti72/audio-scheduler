@@ -393,6 +393,11 @@ async function confirmDelete() {
             const data = await response.json();
             if (data.success) {
                 loadSchedules();
+                // Also reload playlist schedules if we're on the playlists tab
+                const playlistsTab = document.getElementById('playlistsTab');
+                if (playlistsTab && playlistsTab.classList.contains('active')) {
+                    loadPlaylistSchedules();
+                }
             } else {
                 showMessageModal('Error', 'Error deleting schedule');
             }
@@ -404,6 +409,8 @@ async function confirmDelete() {
             if (data.success) {
                 loadScheduleLists();
                 loadSchedules();
+                // Also reload playlist schedules
+                loadPlaylistSchedules();
             } else if (data.error) {
                 showMessageModal('Error', data.error);
             }
