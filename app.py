@@ -282,9 +282,14 @@ import os
 werkzeug_run_main = os.environ.get('WERKZEUG_RUN_MAIN')
 
 # Determine if we should initialize the scheduler
-# In debug mode: only initialize in main worker (WERKZEUG_RUN_MAIN == 'true')
-# In production/service mode: WERKZEUG_RUN_MAIN is None, so initialize
-should_init_scheduler = (werkzeug_run_main == 'true' or werkzeug_run_main is None)
+# In debug mode with Flask reloader: only initialize when WERKZEUG_RUN_MAIN == 'true'
+# In production (Gunicorn/systemd): WERKZEUG_RUN_MAIN is None, but we're NOT the __main__ module
+# The key insight: when running app.py directly, __name__ == '__main__' and Flask spawns reloader
+#                  when running via Gunicorn/wsgi, __name__ != '__main__' and no reloader
+should_init_scheduler = (
+    werkzeug_run_main == 'true' or  # Flask debug worker process
+    (werkzeug_run_main is None and __name__ != '__main__')  # Production via Gunicorn/wsgi
+)
 
 if should_init_scheduler:
     # Main worker process or production mode - initialize scheduler
