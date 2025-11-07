@@ -7,13 +7,29 @@ Type=simple
 User=istvan
 WorkingDirectory=/home/istvan/Dokumentumok/Dev/audio-scheduler
 Environment="PATH=/home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin"
-ExecStart=/home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin/python /home/istvan/Dokumentumok/Dev/audio-scheduler/app.py
+Environment="FLASK_ENV=production"
+Environment="PYTHONUNBUFFERED=1"
+
+# Use Gunicorn WSGI server (production-ready)
+# IMPORTANT: -w 1 (single worker) is critical to prevent duplicate schedulers
+ExecStart=/home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin/gunicorn \
+    -w 1 \
+    -b 0.0.0.0:5000 \
+    --timeout 120 \
+    --log-level info \
+    --access-logfile /home/istvan/Dokumentumok/Dev/audio-scheduler/logs/gunicorn_access.log \
+    --error-logfile /home/istvan/Dokumentumok/Dev/audio-scheduler/logs/gunicorn_error.log \
+    --capture-output \
+    wsgi:app
+
+# Restart policy
 Restart=always
 RestartSec=10
 
 # Logging
-StandardOutput=append:/home/istvan/Dokumentumok/Dev/audio-scheduler/logs/service.log
-StandardError=append:/home/istvan/Dokumentumok/Dev/audio-scheduler/logs/service_error.log
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=audio-scheduler
 
 # Security settings
 NoNewPrivileges=true

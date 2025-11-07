@@ -92,16 +92,38 @@ Default credentials: **admin** / **admin**
    python app.py  # This will create the database
    ```
 
-### Running the Application (Manual)
-```bash
-# Activate virtual environment if not already active
-source venv/bin/activate  # Linux/macOS
-# or
-venv\Scripts\activate     # Windows
+### Running the Application
 
-# Run the application
+**Development Mode** (auto-reload, debugging):
+```bash
+# Using the run script (recommended)
+./run.sh          # Linux/macOS
+run.bat           # Windows
+
+# Or manually
 python app.py
 ```
+
+**Production Mode** (stable, recommended for deployment):
+```bash
+# Using Gunicorn WSGI server (recommended)
+./run_gunicorn.sh     # Linux/macOS
+run_gunicorn.bat      # Windows
+
+# Or manually
+gunicorn -w 1 -b 0.0.0.0:5000 wsgi:app
+```
+
+**As System Service** (auto-start on boot):
+```bash
+# See SERVICE_INSTALL.md for full instructions
+sudo cp audio-scheduler.service /etc/systemd/system/
+sudo systemctl enable --now audio-scheduler
+```
+
+📚 **See also**: 
+- [GUNICORN.md](GUNICORN.md) - Production deployment with Gunicorn
+- [SERVICE_INSTALL.md](SERVICE_INSTALL.md) - Systemd service setup
 
 ## 🚨 Troubleshooting
 

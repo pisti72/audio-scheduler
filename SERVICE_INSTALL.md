@@ -1,5 +1,19 @@
 # Audio Scheduler - Systemd Service Installation
 
+## Overview
+
+This guide shows how to deploy Audio Scheduler as a systemd service using **Gunicorn** (production WSGI server).
+
+## Prerequisites
+
+```bash
+# Install Gunicorn
+pip install gunicorn>=21.0.0
+
+# Or install all requirements
+pip install -r requirements.txt
+```
+
 ## Quick Installation
 
 ```bash
@@ -111,8 +125,32 @@ If you need to run multiple schedulers on different ports:
 
 ## Production vs Development
 
-- **Development**: Run with `./run.sh` or `python app.py` (debug mode, auto-reload)
-- **Production**: Use systemd service (stable, auto-restart, runs on boot)
+- **Development**: 
+  - Run with `./run.sh` or `python app.py` (Flask dev server, debug mode, auto-reload)
+  - Good for: Testing, debugging, development
+  
+- **Production with Gunicorn**: 
+  - Run with `./run_gunicorn.sh` (Gunicorn WSGI server)
+  - Good for: Production testing, manual deployment
+  - Use systemd service for: Auto-start on boot, automatic restarts, service management
+
+## Running Manually with Gunicorn
+
+```bash
+# Start with Gunicorn (recommended for production)
+./run_gunicorn.sh
+
+# Or manually:
+gunicorn -w 1 -b 0.0.0.0:5000 wsgi:app
+
+# With logging:
+gunicorn -w 1 -b 0.0.0.0:5000 \
+  --access-logfile logs/gunicorn_access.log \
+  --error-logfile logs/gunicorn_error.log \
+  wsgi:app
+```
+
+**IMPORTANT**: Always use `-w 1` (single worker) to prevent duplicate schedulers!
 
 ## Uninstall
 
