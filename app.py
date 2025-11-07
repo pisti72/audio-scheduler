@@ -281,11 +281,13 @@ migrate = Migrate(app, db)
 import os
 werkzeug_run_main = os.environ.get('WERKZEUG_RUN_MAIN')
 
-# Only initialize if NOT in the reloader process
-# When None: first launch (before reloader starts) - SKIP
-# When 'true': main worker process after reloader - INITIALIZE
-if werkzeug_run_main == 'true':
-    # Main worker process - initialize scheduler
+# Determine if we should initialize the scheduler
+# In debug mode: only initialize in main worker (WERKZEUG_RUN_MAIN == 'true')
+# In production/service mode: WERKZEUG_RUN_MAIN is None, so initialize
+should_init_scheduler = (werkzeug_run_main == 'true' or werkzeug_run_main is None)
+
+if should_init_scheduler:
+    # Main worker process or production mode - initialize scheduler
     from models import Schedule
     scheduler = SimpleScheduler(app, db, Schedule)
     scheduler.start()
@@ -315,7 +317,9 @@ if werkzeug_run_main == 'true':
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 else:
+    # Reloader process - skip scheduler initialization
     scheduler = None
+    logger.info("Skipping scheduler in reloader process")
 
 # Initialize default credentials
 auth_logger.info("Initializing credentials...")

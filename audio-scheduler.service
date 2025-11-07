@@ -1,0 +1,23 @@
+[Unit]
+Description=Audio Scheduler Service
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=istvan
+WorkingDirectory=/home/istvan/Dokumentumok/Dev/audio-scheduler
+Environment="PATH=/home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin"
+ExecStart=/home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin/python /home/istvan/Dokumentumok/Dev/audio-scheduler/app.py
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=append:/home/istvan/Dokumentumok/Dev/audio-scheduler/logs/service.log
+StandardError=append:/home/istvan/Dokumentumok/Dev/audio-scheduler/logs/service_error.log
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
