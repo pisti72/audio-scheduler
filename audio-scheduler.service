@@ -8,6 +8,8 @@ User=istvan
 WorkingDirectory=/home/istvan/Dokumentumok/Dev/audio-scheduler
 Environment="FLASK_ENV=production"
 Environment="PYTHONUNBUFFERED=1"
+Environment="XDG_RUNTIME_DIR=/run/user/1000"
+Environment="PULSE_RUNTIME_PATH=/run/user/1000/pulse"
 
 # Use bash to run the gunicorn command
 # This avoids SELinux permission issues with direct venv/bin execution

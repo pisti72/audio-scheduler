@@ -19,8 +19,17 @@ mkdir -p logs
 # 3. Ensure virtual environment is activated
 source venv/bin/activate
 
-# 4. For Fedora/RHEL/CentOS: Verify SELinux won't block execution
+# 4. Add user to audio group (REQUIRED for sound playback)
+sudo usermod -a -G audio $USER
+
+# 5. Enable user lingering (REQUIRED for PulseAudio/Pipewire access)
+sudo loginctl enable-linger $USER
+
+# 6. For Fedora/RHEL/CentOS: Verify SELinux won't block execution
 getenforce  # If "Enforcing", the service file already handles this
+
+# NOTE: After step 4, you need to log out and log back in for audio group to take effect
+# Or just reboot the system before starting the service
 ```
 
 ## Quick Installation
@@ -103,6 +112,57 @@ sudo restorecon -Rv /path/to/venv/bin/
 
 # Option 3: Disable SELinux (NOT recommended for production)
 # sudo setenforce 0
+```
+
+### Audio Not Playing
+
+**Symptoms**: Scheduler triggers but you hear no sound. Logs show:
+```
+Audio playback skipped (no audio device): uploads/file.mp3
+Audio system not available: ALSA: Couldn't open audio device
+```
+
+**Causes and Solutions**:
+
+1. **User not in audio group** (most common):
+```bash
+# Add user to audio group
+sudo usermod -a -G audio istvan
+
+# Verify
+groups istvan  # Should show 'audio' in the list
+
+# IMPORTANT: Log out and log back in, or reboot for changes to take effect
+```
+
+2. **User lingering not enabled** (required for PulseAudio/Pipewire):
+```bash
+# Enable lingering
+sudo loginctl enable-linger istvan
+
+# Verify
+loginctl show-user istvan | grep Linger
+# Should show: Linger=yes
+```
+
+3. **Missing audio environment variables** in service file:
+```ini
+[Service]
+Environment="XDG_RUNTIME_DIR=/run/user/1000"  # Replace 1000 with your user ID
+Environment="PULSE_RUNTIME_PATH=/run/user/1000/pulse"
+```
+
+Get your user ID: `id -u username`
+
+4. **Restart service after changes**:
+```bash
+sudo systemctl restart audio-scheduler
+```
+
+5. **Test audio manually**:
+```bash
+# Test as the service user
+sudo -u istvan XDG_RUNTIME_DIR=/run/user/$(id -u istvan) python3 -c "import pygame; pygame.mixer.init(); print('Audio OK')"
 ```
 
 ### Scheduler Not Working

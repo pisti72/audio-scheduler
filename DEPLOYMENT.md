@@ -59,7 +59,33 @@ WorkingDirectory=/path/to/your/audio-scheduler
 
 **Note**: All other paths are relative to `WorkingDirectory`, so you don't need to change them!
 
-### 6. Handle SELinux (Fedora/RHEL/CentOS only)
+### 6. Configure Audio Access (CRITICAL for sound playback)
+
+```bash
+# Add user to audio group
+sudo usermod -a -G audio your_username
+
+# Enable user lingering (required for PulseAudio/Pipewire)
+sudo loginctl enable-linger your_username
+
+# Update service file with audio environment variables
+# Edit audio-scheduler.service and add these lines after PYTHONUNBUFFERED:
+#   Environment="XDG_RUNTIME_DIR=/run/user/YOUR_USER_ID"
+#   Environment="PULSE_RUNTIME_PATH=/run/user/YOUR_USER_ID/pulse"
+
+# Get your user ID:
+id -u your_username  # e.g., 1000
+
+# Example service file section:
+# Environment="FLASK_ENV=production"
+# Environment="PYTHONUNBUFFERED=1"
+# Environment="XDG_RUNTIME_DIR=/run/user/1000"
+# Environment="PULSE_RUNTIME_PATH=/run/user/1000/pulse"
+
+# IMPORTANT: Log out and log back in (or reboot) after adding to audio group!
+```
+
+### 7. Handle SELinux (Fedora/RHEL/CentOS only)
 
 ```bash
 # Check if SELinux is enforcing
@@ -73,7 +99,21 @@ getenforce
 sudo ausearch -m avc -ts recent  # Check SELinux denials
 ```
 
-### 7. Install and Start Service
+### 7. Handle SELinux (Fedora/RHEL/CentOS only)
+
+```bash
+# Check if SELinux is enforcing
+getenforce
+
+# If output is "Enforcing":
+# ✅ The service file already handles this with bash wrapper
+# ✅ No additional configuration needed!
+
+# If you see permission errors anyway:
+sudo ausearch -m avc -ts recent  # Check SELinux denials
+```
+
+### 8. Install and Start Service
 
 ```bash
 # Copy service file
@@ -95,7 +135,7 @@ sudo systemctl status audio-scheduler
 journalctl -u audio-scheduler -f
 ```
 
-### 8. Verify Installation
+### 9. Verify Installation
 
 ```bash
 # Check if service is running
@@ -103,6 +143,9 @@ systemctl is-active audio-scheduler
 
 # Check if scheduler initialized
 grep "Simple scheduler started" logs/audio_scheduler.log
+
+# Check if audio system initialized
+grep "Audio system initialized successfully" logs/audio_scheduler.log
 
 # Check how many schedulers are running (should be 1)
 grep "SimpleScheduler initialized" logs/audio_scheduler.log | tail -1
@@ -115,7 +158,7 @@ curl http://localhost:5000
 # Or open in browser: http://server-ip:5000
 ```
 
-### 9. Configure Firewall (if needed)
+### 10. Configure Firewall (if needed)
 
 ```bash
 # For Fedora/RHEL/CentOS (firewalld)
@@ -132,20 +175,57 @@ sudo service iptables save  # RHEL/CentOS
 sudo iptables-save > /etc/iptables/rules.v4  # Debian/Ubuntu
 ```
 
-### 10. Test Audio Playback
+### 11. Test Audio Playback
 
 ```bash
-# Test pygame audio as service user
-sudo -u your_username python3 -c "import pygame; pygame.mixer.init(); print('Audio OK')"
+# Test pygame audio as service user with proper environment
+sudo -u your_username XDG_RUNTIME_DIR=/run/user/$(id -u your_username) python3 -c "import pygame; pygame.mixer.init(); print('Audio OK')"
 
-# If audio fails, add user to audio group
-sudo usermod -a -G audio your_username
+# Check audio logs
+tail -f logs/audio_scheduler.log | grep -i audio
 
-# Restart service
-sudo systemctl restart audio-scheduler
+# Wait for next scheduled time or test via web interface
+# You should see logs like:
+#   "Audio system initialized successfully"
+#   "Playing audio: uploads/file.mp3"
 ```
 
 ## Common Issues and Solutions
+
+### Issue: "Audio playback skipped (no audio device)"
+
+### Issue: "Audio playback skipped (no audio device)"
+
+**Cause**: Service can't access audio system (most common issue)
+
+**Solution**:
+```bash
+# 1. Add user to audio group
+sudo usermod -a -G audio your_username
+
+# 2. Enable user lingering
+sudo loginctl enable-linger your_username
+
+# 3. Add to service file (after PYTHONUNBUFFERED line):
+#    Environment="XDG_RUNTIME_DIR=/run/user/YOUR_USER_ID"
+#    Environment="PULSE_RUNTIME_PATH=/run/user/YOUR_USER_ID/pulse"
+
+# 4. Get your user ID:
+id -u your_username  # e.g., 1000
+
+# 5. Update service, copy it, and restart:
+sudo cp audio-scheduler.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl restart audio-scheduler
+
+# 6. IMPORTANT: Log out and log back in (or reboot) after audio group change
+```
+
+Verify fix:
+```bash
+# Should show "Audio system initialized successfully"
+grep "Audio system" logs/audio_scheduler.log | tail -1
+```
 
 ### Issue: "Permission denied" (exit code 203/EXEC)
 
@@ -249,12 +329,16 @@ sudo systemctl start audio-scheduler
 - [ ] Virtual environment created and activated
 - [ ] Dependencies installed (`pip install -r requirements.txt`)
 - [ ] Directories created (`logs`, `uploads`, `playlists`, `instance`)
-- [ ] Service file edited (User, WorkingDirectory)
+- [ ] **User added to audio group** (`sudo usermod -a -G audio username`)
+- [ ] **User lingering enabled** (`sudo loginctl enable-linger username`)
+- [ ] **Audio environment variables added to service file**
+- [ ] Service file edited (User, WorkingDirectory, XDG_RUNTIME_DIR)
 - [ ] Service file copied to `/etc/systemd/system/`
 - [ ] SELinux handled (automatic with bash wrapper)
 - [ ] Service enabled and started
+- [ ] **Logged out and back in (or rebooted) after audio group change**
 - [ ] Firewall configured (port 5000 or custom)
-- [ ] Audio playback tested
+- [ ] **Audio system initialized successfully (check logs)**
 - [ ] Web interface accessible
 - [ ] Scheduler initialized (check logs)
 - [ ] No duplicate executions (check logs)
