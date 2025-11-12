@@ -34,11 +34,65 @@ getenforce  # If "Enforcing", the service file already handles this
 
 ## Quick Installation
 
+There are two ways to install the service:
+
+### Option 1: User Service (RECOMMENDED for audio playback)
+
+**Pros**: 
+- ✅ Audio works even when screen is locked
+- ✅ No need for environment variables (XDG_RUNTIME_DIR, etc.)
+- ✅ Automatic access to PulseAudio/Pipewire
+- ✅ No sudo needed for service management
+
+**Cons**:
+- Service runs only when user is logged in (unless lingering is enabled)
+
+```bash
+# 1. Ensure lingering is enabled (allows service to run when logged out)
+sudo loginctl enable-linger $USER
+
+# 2. Create user systemd directory
+mkdir -p ~/.config/systemd/user
+
+# 3. Copy the user service file
+cp audio-scheduler-user.service ~/.config/systemd/user/audio-scheduler.service
+
+# 4. Update paths in the service file if needed
+nano ~/.config/systemd/user/audio-scheduler.service
+# Change WorkingDirectory if your installation is in a different location
+
+# 5. Reload user systemd
+systemctl --user daemon-reload
+
+# 6. Enable service to start automatically
+systemctl --user enable audio-scheduler
+
+# 7. Start the service
+systemctl --user start audio-scheduler
+
+# 8. Check status
+systemctl --user status audio-scheduler
+```
+
+### Option 2: System Service (for servers without GUI)
+
+### Option 2: System Service (for servers without GUI)
+
+**Pros**:
+- Runs regardless of user login status
+- Good for headless servers
+
+**Cons**:
+- ❌ Audio may not work when screen is locked
+- Requires environment variables for audio access
+- Needs sudo for service management
+
 ```bash
 # 1. Update the service file paths if needed
 # Edit audio-scheduler.service and update:
 #   - User (currently: istvan)
 #   - WorkingDirectory path (all paths are relative to this)
+#   - XDG_RUNTIME_DIR and PULSE_RUNTIME_PATH (use your user ID from: id -u)
 
 # 2. Ensure logs directory exists
 mkdir -p logs
@@ -60,6 +114,33 @@ sudo systemctl status audio-scheduler
 ```
 
 ## Service Management Commands
+
+### For User Service (recommended)
+
+```bash
+# Start service
+systemctl --user start audio-scheduler
+
+# Stop service
+systemctl --user stop audio-scheduler
+
+# Restart service
+systemctl --user restart audio-scheduler
+
+# Check status
+systemctl --user status audio-scheduler
+
+# View logs
+journalctl --user -u audio-scheduler -f
+
+# View application logs
+tail -f ~/Dokumentumok/Dev/audio-scheduler/logs/audio_scheduler.log
+
+# Disable service (prevent auto-start)
+systemctl --user disable audio-scheduler
+```
+
+### For System Service
 
 ```bash
 # Start service
@@ -124,7 +205,22 @@ Audio system not available: ALSA: Couldn't open audio device
 
 **Causes and Solutions**:
 
-1. **User not in audio group** (most common):
+1. **Screen is locked and using system service** (most common on desktop systems):
+
+**Solution**: Switch to user service instead!
+```bash
+# Stop system service
+sudo systemctl stop audio-scheduler
+sudo systemctl disable audio-scheduler
+
+# Install user service (see "Option 1: User Service" above)
+mkdir -p ~/.config/systemd/user
+cp audio-scheduler-user.service ~/.config/systemd/user/audio-scheduler.service
+systemctl --user daemon-reload
+systemctl --user enable --now audio-scheduler
+```
+
+2. **User not in audio group**:
 ```bash
 # Add user to audio group
 sudo usermod -a -G audio istvan

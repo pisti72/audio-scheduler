@@ -115,6 +115,43 @@ sudo ausearch -m avc -ts recent  # Check SELinux denials
 
 ### 8. Install and Start Service
 
+**Choose one of two options:**
+
+#### Option A: User Service (RECOMMENDED for desktop systems with GUI)
+
+✅ **Best for**: Systems where user logs in (desktop, laptop)
+✅ **Audio works**: Even when screen is locked
+✅ **No sudo needed**: For service management
+
+```bash
+# Ensure lingering is enabled (service runs even when logged out)
+sudo loginctl enable-linger your_username
+
+# Create user systemd directory
+mkdir -p ~/.config/systemd/user
+
+# Copy user service file
+cp audio-scheduler-user.service ~/.config/systemd/user/audio-scheduler.service
+
+# Update paths in service file if needed
+nano ~/.config/systemd/user/audio-scheduler.service
+
+# Reload, enable, and start
+systemctl --user daemon-reload
+systemctl --user enable audio-scheduler
+systemctl --user start audio-scheduler
+
+# Check status
+systemctl --user status audio-scheduler
+
+# View logs
+journalctl --user -u audio-scheduler -f
+```
+
+#### Option B: System Service (for headless servers)
+
+⚠️ **Note**: Audio may not work when screen is locked on desktop systems
+
 ```bash
 # Copy service file
 sudo cp audio-scheduler.service /etc/systemd/system/
@@ -192,7 +229,25 @@ tail -f logs/audio_scheduler.log | grep -i audio
 
 ## Common Issues and Solutions
 
-### Issue: "Audio playback skipped (no audio device)"
+### Issue: "Audio stops working when screen is locked"
+
+**Cause**: Using system service on desktop system. PulseAudio/Pipewire becomes unavailable to system services when user session is locked.
+
+**Solution**: Switch to user service!
+```bash
+# Stop system service
+sudo systemctl stop audio-scheduler
+sudo systemctl disable audio-scheduler
+
+# Install as user service instead
+mkdir -p ~/.config/systemd/user
+cp audio-scheduler-user.service ~/.config/systemd/user/audio-scheduler.service
+systemctl --user daemon-reload
+systemctl --user enable --now audio-scheduler
+
+# Verify
+systemctl --user status audio-scheduler
+```
 
 ### Issue: "Audio playback skipped (no audio device)"
 

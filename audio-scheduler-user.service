@@ -1,0 +1,31 @@
+[Unit]
+Description=Audio Scheduler Service (User Mode)
+After=network.target sound.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/istvan/Dokumentumok/Dev/audio-scheduler
+
+# Use bash to run the gunicorn command
+# IMPORTANT: -w 1 (single worker) is critical to prevent duplicate schedulers
+ExecStart=/bin/bash -c 'source venv/bin/activate && exec gunicorn \
+    -w 1 \
+    -b 0.0.0.0:5000 \
+    --timeout 120 \
+    --log-level info \
+    --access-logfile logs/gunicorn_access.log \
+    --error-logfile logs/gunicorn_error.log \
+    --capture-output \
+    wsgi:app'
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=audio-scheduler
+
+[Install]
+WantedBy=default.target
