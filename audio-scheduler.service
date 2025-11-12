@@ -6,21 +6,21 @@ After=network.target sound.target
 Type=simple
 User=istvan
 WorkingDirectory=/home/istvan/Dokumentumok/Dev/audio-scheduler
-Environment="PATH=/home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin"
 Environment="FLASK_ENV=production"
 Environment="PYTHONUNBUFFERED=1"
 
-# Use Gunicorn WSGI server (production-ready)
+# Use bash to run the gunicorn command
+# This avoids SELinux permission issues with direct venv/bin execution
 # IMPORTANT: -w 1 (single worker) is critical to prevent duplicate schedulers
-ExecStart=/home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin/gunicorn \
+ExecStart=/bin/bash -c 'source venv/bin/activate && exec gunicorn \
     -w 1 \
     -b 0.0.0.0:5000 \
     --timeout 120 \
     --log-level info \
-    --access-logfile /home/istvan/Dokumentumok/Dev/audio-scheduler/logs/gunicorn_access.log \
-    --error-logfile /home/istvan/Dokumentumok/Dev/audio-scheduler/logs/gunicorn_error.log \
+    --access-logfile logs/gunicorn_access.log \
+    --error-logfile logs/gunicorn_error.log \
     --capture-output \
-    wsgi:app
+    wsgi:app'
 
 # Restart policy
 Restart=always

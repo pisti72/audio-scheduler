@@ -7,11 +7,20 @@ This guide shows how to deploy Audio Scheduler as a systemd service using **Guni
 ## Prerequisites
 
 ```bash
-# Install Gunicorn
+# 1. Install Gunicorn
 pip install gunicorn>=21.0.0
 
 # Or install all requirements
 pip install -r requirements.txt
+
+# 2. Create logs directory (required for Gunicorn)
+mkdir -p logs
+
+# 3. Ensure virtual environment is activated
+source venv/bin/activate
+
+# 4. For Fedora/RHEL/CentOS: Verify SELinux won't block execution
+getenforce  # If "Enforcing", the service file already handles this
 ```
 
 ## Quick Installation
@@ -20,10 +29,12 @@ pip install -r requirements.txt
 # 1. Update the service file paths if needed
 # Edit audio-scheduler.service and update:
 #   - User (currently: istvan)
-#   - WorkingDirectory path
-#   - ExecStart path
+#   - WorkingDirectory path (all paths are relative to this)
 
-# 2. Copy service file to systemd
+# 2. Ensure logs directory exists
+mkdir -p logs
+
+# 3. Copy service file to systemd
 sudo cp audio-scheduler.service /etc/systemd/system/
 
 # 3. Reload systemd
@@ -66,6 +77,34 @@ sudo systemctl disable audio-scheduler
 
 ## Troubleshooting
 
+### SELinux Permission Denied (Fedora/RHEL/CentOS)
+
+**Symptoms**: Service fails with "Permission denied" (exit code 203/EXEC) in `journalctl`:
+```
+audio-scheduler.service: Unable to locate executable '.../venv/bin/gunicorn': Permission denied
+```
+
+**Cause**: SELinux blocks systemd from executing files in user home directories.
+
+**Solution**: The service file already uses `/bin/bash -c 'source venv/bin/activate && ...'` to avoid this issue. This works because:
+- `/bin/bash` has proper SELinux context
+- Bash then activates venv and runs gunicorn
+- No direct execution of home directory binaries
+
+**Alternative Solution** (if you modify ExecStart to use direct paths):
+```bash
+# Check SELinux status
+getenforce  # Should show: Enforcing
+
+# Option 1: Use bash wrapper (already implemented in service file)
+# Option 2: Set SELinux contexts (more complex)
+sudo semanage fcontext -a -t bin_t "/path/to/venv/bin/.*"
+sudo restorecon -Rv /path/to/venv/bin/
+
+# Option 3: Disable SELinux (NOT recommended for production)
+# sudo setenforce 0
+```
+
 ### Scheduler Not Working
 
 Check the logs to see if scheduler initialized:
@@ -101,8 +140,18 @@ sudo journalctl -u audio-scheduler -n 50 --no-pager
 sudo systemctl cat audio-scheduler
 
 # Verify paths exist
-ls -la /home/istvan/Dokumentumok/Dev/audio-scheduler/app.py
-ls -la /home/istvan/Dokumentumok/Dev/audio-scheduler/venv/bin/python
+ls -la /path/to/audio-scheduler/wsgi.py
+ls -la /path/to/audio-scheduler/venv/bin/gunicorn
+ls -la /path/to/audio-scheduler/logs/
+
+# Check if logs directory is writable
+touch /path/to/audio-scheduler/logs/test.log
+rm /path/to/audio-scheduler/logs/test.log
+
+# Verify Gunicorn works manually
+cd /path/to/audio-scheduler
+source venv/bin/activate
+gunicorn -w 1 -b 0.0.0.0:5000 wsgi:app
 ```
 
 ## Environment Variables

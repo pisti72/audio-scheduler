@@ -122,8 +122,9 @@ sudo systemctl enable --now audio-scheduler
 ```
 
 📚 **See also**: 
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Complete deployment checklist for new servers
 - [GUNICORN.md](GUNICORN.md) - Production deployment with Gunicorn
-- [SERVICE_INSTALL.md](SERVICE_INSTALL.md) - Systemd service setup
+- [SERVICE_INSTALL.md](SERVICE_INSTALL.md) - Systemd service setup and troubleshooting
 
 ## 🚨 Troubleshooting
 
