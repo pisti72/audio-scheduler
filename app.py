@@ -263,6 +263,10 @@ if not app.debug:
 
 # Initialize pygame mixer - handle gracefully if no audio device available
 try:
+    # Force SDL to use PulseAudio (which works with PipeWire too)
+    # This ensures audio goes to the default audio device, not HDMI
+    os.environ['SDL_AUDIODRIVER'] = 'pulseaudio'
+    
     pygame.mixer.init()
     audio_available = True
     audio_logger.info("Audio system initialized successfully")
