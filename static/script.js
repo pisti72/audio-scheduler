@@ -445,6 +445,37 @@ async function toggleMute(id) {
     }
 }
 
+// Update schedule volume
+async function updateVolume(id, value) {
+    try {
+        const volume = parseFloat(value) / 100.0; // Convert percentage to 0.0-1.0
+        const response = await fetch(`/update_volume/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ volume: volume })
+        });
+        const data = await response.json();
+        if (data.success) {
+            // Update the volume label
+            const slider = document.getElementById(`volume-${id}`);
+            if (slider) {
+                const label = slider.nextElementSibling;
+                if (label) {
+                    label.textContent = `${value}%`;
+                }
+                slider.title = `${value}%`;
+            }
+        } else {
+            showMessageModal('Error', 'Error updating volume');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showMessageModal('Error', 'Error updating volume');
+    }
+}
+
 // Load current schedules
 async function loadSchedules() {
     console.log('Loading schedules...');
@@ -486,6 +517,8 @@ async function loadSchedules() {
             const muteButtonClass = schedule.is_muted ? 'unmute' : 'mute';
             const rowClass = schedule.is_muted ? 'muted' : '';
             
+            const volumePercent = Math.round((schedule.volume || 1.0) * 100);
+            
             const row = document.createElement('tr');
             row.className = rowClass;
             row.innerHTML = `
@@ -493,6 +526,13 @@ async function loadSchedules() {
                 <td>${schedule.time}</td>
                 <td>${dayNames.join(', ')}</td>
                 <td>${nextRun}</td>
+                <td>
+                    <input type="range" min="0" max="100" value="${volumePercent}" 
+                           class="volume-slider" id="volume-${schedule.id}" 
+                           onchange="updateVolume(${schedule.id}, this.value)"
+                           title="${volumePercent}%">
+                    <span class="volume-label">${volumePercent}%</span>
+                </td>
                 <td>
                     <button class="action-btn" title="${appTranslations.current_schedules?.edit || 'Edit'}" onclick="openEditModal(${schedule.id})">
                         <i class="fas fa-pen"></i>

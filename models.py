@@ -33,6 +33,7 @@ class Schedule(db.Model):
     saturday = db.Column(db.Boolean, default=False)
     sunday = db.Column(db.Boolean, default=False)
     is_muted = db.Column(db.Boolean, default=False)
+    volume = db.Column(db.Float, default=1.0)  # Volume level 0.0 to 1.0
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Playlist functionality
@@ -57,6 +58,7 @@ class Schedule(db.Model):
                 ]) if day
             ],
             'is_muted': self.is_muted,
+            'volume': self.volume if self.volume is not None else 1.0,
             'playlist_duration': self.playlist_duration,
             'track_interval': self.track_interval,
             'max_tracks': self.max_tracks,

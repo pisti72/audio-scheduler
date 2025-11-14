@@ -219,7 +219,7 @@ class SimpleScheduler:
                         logger.info(f"▶️  Triggering audio: {schedule.filename} at {current_time}")
                         threading.Thread(
                             target=self._execute_audio,
-                            args=(schedule.filename,),
+                            args=(schedule.id,),
                             daemon=True,
                             name=f"Audio-{schedule.id}"
                         ).start()
@@ -227,16 +227,23 @@ class SimpleScheduler:
             except Exception as e:
                 logger.error(f"Error checking schedules: {e}", exc_info=True)
     
-    def _execute_audio(self, filename):
+    def _execute_audio(self, schedule_id):
         """Execute single audio file playback"""
         try:
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            if os.path.exists(file_path):
-                play_audio(file_path)
-            else:
-                audio_logger.error(f"Audio file not found: {file_path}")
+            with app.app_context():
+                schedule = self.db.session.get(self.Schedule, schedule_id)
+                if not schedule:
+                    audio_logger.error(f"Schedule not found: {schedule_id}")
+                    return
+                
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], schedule.filename)
+                if os.path.exists(file_path):
+                    volume = schedule.volume if schedule.volume is not None else 1.0
+                    play_audio(file_path, volume)
+                else:
+                    audio_logger.error(f"Audio file not found: {file_path}")
         except Exception as e:
-            audio_logger.error(f"Error playing audio {filename}: {e}", exc_info=True)
+            audio_logger.error(f"Error playing audio {schedule_id}: {e}", exc_info=True)
     
     def _execute_playlist(self, schedule_id):
         """Execute playlist playback"""
@@ -370,14 +377,15 @@ def reload_all_schedules():
         return
     logger.info("✅ Schedules will be automatically reloaded from database by SimpleScheduler")
 
-def play_audio(file_path):
+def play_audio(file_path, volume=1.0):
     try:
         if not audio_available:
             audio_logger.warning(f"Audio playback skipped (no audio device): {file_path}")
             return
         pygame.mixer.music.load(file_path)
+        pygame.mixer.music.set_volume(volume)
         pygame.mixer.music.play()
-        audio_logger.info(f"Playing audio: {file_path}")
+        audio_logger.info(f"Playing audio: {file_path} at volume {volume}")
     except Exception as e:
         audio_logger.error(f"Error playing audio: {str(e)}")
 
@@ -421,12 +429,15 @@ def play_playlist(schedule_id):
             if schedule.shuffle_mode:
                 random.shuffle(audio_files)
             
-            playlist_logger.info(f"Starting playlist: {schedule.folder_path}, Duration: {schedule.playlist_duration or 60}min, Interval: {schedule.track_interval}sec")
+            playlist_logger.info(f"Starting playlist: {schedule.folder_path}, Duration: {schedule.playlist_duration or 60}min, Interval: {schedule.track_interval}sec, Volume: {schedule.volume or 1.0}")
+            
+            # Get volume
+            volume = schedule.volume if schedule.volume is not None else 1.0
             
             # Start playlist in a separate thread
             playlist_thread = threading.Thread(
                 target=_run_playlist,
-                args=(audio_files, schedule.playlist_duration or 60, schedule.track_interval, schedule.max_tracks, schedule.shuffle_mode),
+                args=(audio_files, schedule.playlist_duration or 60, schedule.track_interval, schedule.max_tracks, schedule.shuffle_mode, volume),
                 daemon=True
             )
             playlist_thread.start()
@@ -434,7 +445,7 @@ def play_playlist(schedule_id):
     except Exception as e:
         playlist_logger.error(f"Error starting playlist {schedule_id}: {str(e)}")
 
-def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tracks, shuffle_mode):
+def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tracks, shuffle_mode, volume=1.0):
     """Run the playlist in a separate thread"""
     
     if not audio_available:
@@ -463,8 +474,9 @@ def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tra
         audio_file = file_list.pop(0)
         
         try:
-            playlist_logger.info(f"Playing playlist track: {audio_file.name}")
+            playlist_logger.info(f"Playing playlist track: {audio_file.name} at volume {volume}")
             pygame.mixer.music.load(str(audio_file))
+            pygame.mixer.music.set_volume(volume)
             pygame.mixer.music.play()
             
             # Wait for the track to finish playing completely
@@ -1164,6 +1176,24 @@ def toggle_mute(schedule_id):
             logger.info(f"Schedule unmuted: {schedule_info}")
     
     return jsonify({'success': True, 'is_muted': schedule.is_muted})
+
+@app.route('/update_volume/<int:schedule_id>', methods=['POST'])
+@login_required
+def update_volume(schedule_id):
+    schedule = db.session.get(Schedule, schedule_id) or abort(404)
+    data = request.json
+    volume = data.get('volume')
+    
+    if volume is None or not (0.0 <= volume <= 1.0):
+        return jsonify({'success': False, 'error': 'Volume must be between 0.0 and 1.0'}), 400
+    
+    schedule.volume = volume
+    db.session.commit()
+    
+    schedule_info = f"ID:{schedule_id}, File:{schedule.filename if schedule.schedule_type != 'playlist' else schedule.folder_path}"
+    logger.info(f"Schedule volume updated to {volume}: {schedule_info}")
+    
+    return jsonify({'success': True, 'volume': schedule.volume})
 
 @app.route('/schedule_lists', methods=['GET'])
 @login_required

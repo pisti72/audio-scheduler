@@ -110,6 +110,7 @@
             "delete": "Delete",
             "mute": "Mute",
             "unmute": "Unmute",
+            "volume": "Volume",
             "action": "Action"
         },
         "schedule_lists": {
@@ -287,6 +288,7 @@
             "delete": "Törlés",
             "mute": "Némítás",
             "unmute": "Némítás feloldása",
+            "volume": "Hangerő",
             "action": "Művelet"
         },
         "schedule_lists": {
@@ -466,6 +468,7 @@
             "action": "Aktion",
             "mute": "Stummschalten",
             "unmute": "Aktivieren",
+            "volume": "Lautstärke",
             "edit": "Bearbeiten"
         },
         "modals": {
