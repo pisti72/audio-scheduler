@@ -1,8 +1,38 @@
 # Audio Scheduler - Systemd Service Installation
 
-## Overview
+## 🚀 Quick Start (Recommended)
 
-This guide shows how to deploy Audio Scheduler as a systemd service using **Gunicorn** (production WSGI server).
+**Use the automated installer for hassle-free setup:**
+
+```bash
+# Install as user service (recommended - better audio support)
+./install-service.sh --user
+
+# Or install as system service (requires sudo)
+sudo ./install-service.sh --system
+```
+
+The automated installer handles everything:
+- ✅ Detects your audio system (PipeWire/PulseAudio)
+- ✅ Creates virtual environment and installs dependencies
+- ✅ Sets up proper directory structure
+- ✅ Initializes database and credentials
+- ✅ Creates systemd service with correct audio environment
+- ✅ Cleans up old/conflicting services
+- ✅ Enables and starts the service
+
+**For detailed information**, see [SERVICE_SETUP.md](SERVICE_SETUP.md)
+
+**Quick status check:**
+```bash
+./service-status.sh
+```
+
+---
+
+## Manual Installation (Advanced Users)
+
+If you prefer manual setup or need to customize the installation, follow the detailed steps below.
 
 ## Prerequisites
 
@@ -32,16 +62,16 @@ getenforce  # If "Enforcing", the service file already handles this
 # Or just reboot the system before starting the service
 ```
 
-## Quick Installation
+## Manual Installation Options
 
-There are two ways to install the service:
+There are two ways to install the service manually:
 
 ### Option 1: User Service (RECOMMENDED for audio playback)
 
 **Pros**: 
 - ✅ Audio works even when screen is locked
-- ✅ No need for environment variables (XDG_RUNTIME_DIR, etc.)
-- ✅ Automatic access to PulseAudio/Pipewire
+- ✅ Proper access to PulseAudio/Pipewire
+- ✅ Automatic audio environment setup
 - ✅ No sudo needed for service management
 
 **Cons**:
