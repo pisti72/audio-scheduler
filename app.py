@@ -461,6 +461,9 @@ def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tra
     tracks_played = 0
     file_list = list(audio_files)  # Make a copy
     
+    # Fade out settings
+    fade_duration = 5.0  # Fade out over 5 seconds
+    
     while time.time() < end_time and (max_tracks is None or tracks_played < max_tracks):
         # If we've played all files and shuffle is enabled, reshuffle
         if not file_list and shuffle_mode:
@@ -473,23 +476,64 @@ def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tra
         # Get next file
         audio_file = file_list.pop(0)
         
+        # Check if this will be the last track
+        is_last_track = (
+            (max_tracks is not None and tracks_played + 1 >= max_tracks) or
+            (time.time() + fade_duration >= end_time) or
+            (not file_list and (max_tracks is None or tracks_played + 1 < max_tracks))
+        )
+        
         try:
-            playlist_logger.info(f"Playing playlist track: {audio_file.name} at volume {volume}")
+            playlist_logger.info(f"Playing playlist track: {audio_file.name} at volume {volume}{' (LAST TRACK - will fade out)' if is_last_track else ''}")
             pygame.mixer.music.load(str(audio_file))
             pygame.mixer.music.set_volume(volume)
             pygame.mixer.music.play()
             
             # Wait for the track to finish playing completely
             track_start = time.time()
+            fade_started = False
             
             # Wait for track to finish playing naturally
             while pygame.mixer.music.get_busy():
-                time.sleep(0.1)
+                current_time = time.time()
+                
                 # Check if we've exceeded the total playlist duration while playing
-                if time.time() >= end_time:
+                if current_time >= end_time:
                     pygame.mixer.music.stop()
                     playlist_logger.info("Track stopped due to playlist duration limit")
                     break
+                
+                # Apply fade out for last track
+                if is_last_track and not fade_started:
+                    # Calculate when to start fading based on track length estimation
+                    time_remaining = end_time - current_time
+                    if max_tracks is not None and tracks_played + 1 >= max_tracks:
+                        # For max_tracks limit, start fading after a reasonable time
+                        if current_time - track_start > 10:  # After 10 seconds, start checking
+                            time_remaining = fade_duration
+                    
+                    # Start fade if we're within fade_duration seconds of the end
+                    if time_remaining <= fade_duration:
+                        fade_started = True
+                        fade_start_time = current_time
+                        playlist_logger.info(f"Starting fade-out for last track (remaining: {time_remaining:.1f}s)")
+                
+                # Apply gradual volume reduction during fade
+                if fade_started:
+                    elapsed_fade = current_time - fade_start_time
+                    if elapsed_fade < fade_duration:
+                        # Linear fade from volume to 0
+                        fade_progress = elapsed_fade / fade_duration
+                        current_volume = volume * (1.0 - fade_progress)
+                        pygame.mixer.music.set_volume(max(0.0, current_volume))
+                    else:
+                        # Fade complete, stop the music
+                        pygame.mixer.music.fadeout(100)  # Quick final fadeout
+                        playlist_logger.info("Fade-out complete, stopping track")
+                        time.sleep(0.2)
+                        break
+                
+                time.sleep(0.1)
             
             track_end = time.time()
             track_duration = track_end - track_start
@@ -499,6 +543,11 @@ def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tra
             
             # Check if we've exceeded the total playlist duration
             if time.time() >= end_time:
+                break
+                
+            # If this was the last track, exit the loop
+            if is_last_track:
+                playlist_logger.info("Last track completed, ending playlist")
                 break
                 
             # Wait for the interval time before starting the next track
