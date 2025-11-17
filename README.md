@@ -158,6 +158,29 @@ rm -rf venv
 python3 -m venv venv
 ```
 
+**Service running but localhost:5000 not responding**:
+
+If the systemd service is running but the web interface doesn't load:
+
+```bash
+# 1. Check if the worker process initialized correctly
+tail -50 logs/gunicorn_error.log | grep "WSGI application ready"
+
+# 2. If you don't see "WSGI application ready", restart the service
+systemctl --user restart audio-scheduler  # For user service
+# OR
+sudo systemctl restart audio-scheduler     # For system service
+
+# 3. Verify it's working
+curl http://localhost:5000
+```
+
+**Symptoms**: Service shows as "active (running)" but browser shows connection timeout or hangs.
+
+**Cause**: Worker process occasionally hangs during initialization (rare edge case).
+
+**Solution**: Simply restart the service - the restart clears any stale resources.
+
 ### Getting Help
 
 If you encounter issues not covered here:
