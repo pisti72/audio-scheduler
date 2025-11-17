@@ -476,10 +476,10 @@ def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tra
         # Get next file
         audio_file = file_list.pop(0)
         
-        # Check if this will be the last track
+        # Check if this will be the last track based on playlist constraints
+        # (NOT based on time remaining - that would cut songs short)
         is_last_track = (
             (max_tracks is not None and tracks_played + 1 >= max_tracks) or
-            (time.time() + fade_duration >= end_time) or
             (not file_list and (max_tracks is None or tracks_played + 1 < max_tracks))
         )
         
@@ -492,6 +492,13 @@ def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tra
             # Wait for the track to finish playing completely
             track_start = time.time()
             fade_started = False
+            fade_start_time = None
+            
+            # Get the music length if possible (in seconds)
+            try:
+                music_length = pygame.mixer.Sound(str(audio_file)).get_length()
+            except:
+                music_length = None
             
             # Wait for track to finish playing naturally
             while pygame.mixer.music.get_busy():
@@ -499,27 +506,33 @@ def _run_playlist(audio_files, duration_minutes, track_interval_seconds, max_tra
                 
                 # Check if we've exceeded the total playlist duration while playing
                 if current_time >= end_time:
-                    pygame.mixer.music.stop()
-                    playlist_logger.info("Track stopped due to playlist duration limit")
+                    pygame.mixer.music.fadeout(1000)  # 1 second fadeout when time limit reached
+                    playlist_logger.info("Track fading out due to playlist duration limit")
+                    time.sleep(1.1)
                     break
                 
                 # Apply fade out for last track
                 if is_last_track and not fade_started:
-                    # Calculate when to start fading based on track length estimation
-                    time_remaining = end_time - current_time
-                    if max_tracks is not None and tracks_played + 1 >= max_tracks:
-                        # For max_tracks limit, start fading after a reasonable time
-                        if current_time - track_start > 10:  # After 10 seconds, start checking
-                            time_remaining = fade_duration
-                    
-                    # Start fade if we're within fade_duration seconds of the end
-                    if time_remaining <= fade_duration:
-                        fade_started = True
-                        fade_start_time = current_time
-                        playlist_logger.info(f"Starting fade-out for last track (remaining: {time_remaining:.1f}s)")
+                    # Calculate when to start fading
+                    if music_length is not None:
+                        # If we know the track length, start fading in the last 5 seconds
+                        elapsed = current_time - track_start
+                        if elapsed >= music_length - fade_duration:
+                            fade_started = True
+                            fade_start_time = current_time
+                            playlist_logger.info(f"Starting fade-out for last track (track length: {music_length:.1f}s)")
+                    else:
+                        # If we don't know the length, start fading after 30 seconds of playback
+                        # or when there's less than 5 seconds of playlist time remaining
+                        elapsed = current_time - track_start
+                        time_remaining = end_time - current_time
+                        if elapsed >= 30 or time_remaining <= fade_duration:
+                            fade_started = True
+                            fade_start_time = current_time
+                            playlist_logger.info(f"Starting fade-out for last track (elapsed: {elapsed:.1f}s)")
                 
                 # Apply gradual volume reduction during fade
-                if fade_started:
+                if fade_started and fade_start_time is not None:
                     elapsed_fade = current_time - fade_start_time
                     if elapsed_fade < fade_duration:
                         # Linear fade from volume to 0
